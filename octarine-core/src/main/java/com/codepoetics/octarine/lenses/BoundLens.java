@@ -1,30 +1,40 @@
 package com.codepoetics.octarine.lenses;
 
+import com.codepoetics.octarine.com.codepoetics.octarine.tuples.Pair;
+import com.codepoetics.octarine.com.codepoetics.octarine.tuples.Pairable;
+
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class BoundLens<T, V> implements Supplier<V>, Function<V, T> {
+public interface BoundLens<T, V> extends Supplier<V>, Function<V, T>, Pairable<V, Function<V, T>> {
 
-    public static <T, V> BoundLens<T, V> binding(T instance, Lens<T, V> lens) {
-        return new BoundLens<T, V>(instance, lens);
+    public static <T, V> BoundLens<T, V> fromPair(Pair<V, Function<V, T>> pair) {
+        return binding(pair.first(), pair.second());
     }
 
-    private final T instance;
-    private final Lens<T, V> lens;
-
-    private BoundLens(T instance, Lens<T, V> lens) {
-        this.instance = instance;
-        this.lens = lens;
+    public static <T, V> BoundLens<T, V> binding(V value, Function<V, T> setter) {
+        return new SimpleBoundLens<T, V>(value, setter);
     }
 
-    public V get() { return lens.get(instance); }
-    public T apply(V value) { return lens.set(instance, value); }
+    static class SimpleBoundLens<T, V> implements BoundLens<T, V> {
+        private final V value;
+        private final Function<V, T> setter;
 
-    public T update(Function<V, V> updater) {
+        private SimpleBoundLens(V value, Function<V, T> setter) {
+            this.value = value;
+            this.setter = setter;
+        }
+
+        @Override
+        public V get() { return value; }
+
+        @Override
+        public T apply(V value) { return setter.apply(value); }
+
+        @Override public Pair<V, Function<V, T>> toPair() { return Pair.of(value, setter); }
+    }
+
+    default T update(Function<V, V> updater) {
         return apply(updater.apply(get()));
-    }
-
-    public BoundLens<T, V> retarget(T instance) {
-        return new BoundLens<T, V>(instance, lens);
     }
 }

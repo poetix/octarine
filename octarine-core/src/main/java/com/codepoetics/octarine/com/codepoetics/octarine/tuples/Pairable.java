@@ -1,4 +1,7 @@
 package com.codepoetics.octarine.com.codepoetics.octarine.tuples;
 
-public class Pairable {
+public interface Pairable<K, V> {
+
+    Pair<K, V> toPair();
+
 }

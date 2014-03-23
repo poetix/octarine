@@ -1,20 +1,36 @@
 package com.codepoetics.octarine.lenses;
 
+import com.codepoetics.octarine.morphisms.Bijection;
+import com.codepoetics.octarine.morphisms.FluentCollection;
 import org.junit.Test;
 import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.codepoetics.octarine.morphisms.Bijection.stringToCharacters;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class LensesTest {
 
     private static final Lens<PMap<String, String>, String> aIsFor = Lens.intoPMap("a");
-    private static final Lens<String, Character> thirdChar = Lens.<Character>intoArray(2).compose(stringToCharacters.reverse());
+    private static final Lens<String, Character> thirdChar = Lens.<Character>intoArray(2).compose(Bijection.of(
+        (Character[] cs) -> {
+                StringBuilder sb = new StringBuilder();
+                Arrays.stream(cs).forEach(sb::append);
+                return sb.toString();
+            },
+        (String s) -> {
+            Character[] characters = new Character[s.length()];
+            char[] chars = s.toCharArray();
+            for (int i = 0; i<s.length(); i++) {
+               characters[i] = chars[i];
+            }
+            return characters;
+        }
+    ));
 
     private static final Map<String, String> map = new HashMap<>();
     static { map.put("a", "apple"); }
@@ -34,7 +50,7 @@ public class LensesTest {
 
     @Test public void
     lenses_can_be_joined_together() {
-        Lens<PMap<String, String>, Character> thirdCharOfA = aIsFor.join(thirdChar);
+        Lens<PMap<String, String>, Character> thirdCharOfA = aIsFor.andThen(thirdChar);
 
         assertThat(thirdCharOfA.apply(pmap).get(), equalTo('p'));
         assertThat(thirdCharOfA.apply(pmap).apply('s').get("a"), equalTo("apsle"));

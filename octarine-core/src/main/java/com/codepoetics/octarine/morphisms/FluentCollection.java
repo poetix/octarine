@@ -5,23 +5,18 @@ import org.pcollections.PSet;
 import org.pcollections.PVector;
 import org.pcollections.TreePVector;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.BaseStream;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public interface FluentCollection<T> {
 
     public static <T> FluentCollection<T> from(Iterable<T> iterable) {
-        return new FluentCollection<T>() {
-            @Override
-            public Collection<T> toCollection() {
-                return
-            }
-        }
+        return from(StreamSupport.stream(iterable.spliterator(), false));
     }
+
     public static <T> FluentCollection<T> from(Collection<T> collection) {
         return new FluentCollection<T>() {
             @Override public Collection<T> toCollection() { return collection; }
@@ -42,7 +37,7 @@ public interface FluentCollection<T> {
         };
     }
 
-    public static <T> FluentCollection<T> from(T...array) {
+    public static <T> FluentCollection<T> from(T[] array) {
         return new FluentCollection<T>() {
             @Override public T[] toArray() { return array; }
             @Override public Stream<T> toStream() { return Arrays.stream(array); }
@@ -96,6 +91,4 @@ public interface FluentCollection<T> {
     default PSet<T> toPSet() {
         return HashTreePSet.from(toCollection());
     }
-
-
 }
