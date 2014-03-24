@@ -1,5 +1,6 @@
 package com.codepoetics.octarine.records;
 
+import com.codepoetics.octarine.lenses.Lens;
 import com.codepoetics.octarine.lenses.OptionalLens;
 import org.junit.Test;
 import org.pcollections.PVector;
@@ -22,15 +23,16 @@ public class RecordTest {
             name.of("Arthur Putey"),
             age.of(43),
             address.of(Record.of(
-                    addressLines.of(TreePVector.from(Arrays.asList("23 Acacia Avenue", "Sunderland", "VB6 5UX")))
+                addressLines.of(TreePVector.from(Arrays.asList("23 Acacia Avenue", "Sunderland", "VB6 5UX")))
             ))
     );
 
     @Test public void
     keys_are_lenses() {
-        OptionalLens<Record, String> secondLineOfAddress = address
-                .thenMaybe(addressLines, Record::empty)
-                .thenMaybe(OptionalLens.<String>intoPVector(1), TreePVector::<String>empty);
+        OptionalLens<Record, String> secondLineOfAddress =
+                address.withDefault(Record::empty)
+                .andThen(addressLines.withDefault(TreePVector::<String>empty))
+                .andThen(OptionalLens.<String>intoPVector(1));
 
         assertThat(secondLineOfAddress.get(testRecord), equalTo(Optional.ofNullable("Sunderland")));
         assertThat(secondLineOfAddress.setNullable(testRecord, "Cirencester"),

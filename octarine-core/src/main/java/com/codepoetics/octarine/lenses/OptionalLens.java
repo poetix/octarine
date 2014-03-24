@@ -25,6 +25,7 @@ public interface OptionalLens<T, V> extends Lens<T, Optional<V>> {
 
     default V getOrElse(T target, V defaultValue) { return get(target).orElse(defaultValue); }
     default T setNullable(T target, V newValue) { return set(target, Optional.ofNullable(newValue)); }
+
     default <V2> OptionalLens<T, V2> thenMaybe(OptionalLens<V, V2> next, Supplier<V> missingValueSupplier) {
         OptionalLens<T, V> self = this;
         return new OptionalLens<T, V2>() {
@@ -58,8 +59,8 @@ public interface OptionalLens<T, V> extends Lens<T, Optional<V>> {
 
     static <T> OptionalLens<T[], T> intoArray(int index) {
         return wrap(Lens.of(
-                (T[] ts) -> index < ts.length ? Optional.ofNullable(ts[index]) : Optional.empty(),
-                (ts, t) -> {
+                (T[] ts) -> Optional.ofNullable(ts[index]),
+                (T[] ts, Optional<T> t) -> {
                     T[] copy = Arrays.copyOf(ts, ts.length);
                     copy[index] = t.orElse(null);
                     return copy;

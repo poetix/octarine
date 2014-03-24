@@ -94,6 +94,13 @@ public interface Lens<T, V> extends Function<T, BoundLens<T, V>>, Pairable<Funct
         );
     }
 
+    default <V2> OptionalLens<T, V2> andThen(OptionalLens<V, V2> next) {
+        return OptionalLens.wrap(of(
+            t -> next.get(this.get(t)),
+            (t, v) -> set(t, next.set(this.get(t), v))
+        ));
+    }
+
     default <T2> Lens<T2, V> compose(Lens<T2, T> previous) {
         return previous.andThen(this);
     }
@@ -110,20 +117,5 @@ public interface Lens<T, V> extends Function<T, BoundLens<T, V>>, Pairable<Funct
             t -> get(bijection.reverse().apply(t)),
             (t, v) -> bijection.apply(set(bijection.reverse().apply(t), v))
         );
-    }
-
-    default OptionalLens<T, V> toOptional() {
-        return new OptionalLens<T, V>() {
-
-            @Override
-            public Optional<V> get(T instance) {
-                return Optional.ofNullable(Lens.this.get(instance));
-            }
-
-            @Override
-            public T set(T instance, Optional<V> newValue) {
-                return Lens.this.set(instance, newValue.orElse(null));
-            }
-        };
     }
 }

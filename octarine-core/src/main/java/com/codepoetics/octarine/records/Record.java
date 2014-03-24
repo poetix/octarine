@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public interface Record {
@@ -25,16 +26,9 @@ public interface Record {
 
             @Override
             @SuppressWarnings("unchecked")
-            public <T> Optional<T> get(Key<T> key) {
-                return Optional.<T>ofNullable((T) values.get(key));
+            public <T> Optional<T> get(KeyLike<T> key) {
+                return Optional.<T>ofNullable((T) values.get(key.asKey()));
             }
-
-            @Override
-            @SuppressWarnings("unchecked")
-            public <T> T get(Key<T> key, T defaultValue) {
-                return (T) values.getOrDefault(key, defaultValue);
-            }
-
             @Override
             public PMap<Key<?>, Object> values() {
                 return values;
@@ -62,8 +56,7 @@ public interface Record {
         };
     }
 
-    <T> Optional<T> get(Key<T> key);
-    <T> T get(Key<T> key, T defaultValue);
+    <T> Optional<T> get(KeyLike<T> key);
     PMap<Key<?>, Object> values();
 
     default Record with(Value...values) {
