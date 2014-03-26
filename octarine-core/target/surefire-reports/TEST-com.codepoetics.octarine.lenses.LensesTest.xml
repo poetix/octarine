@@ -13,7 +13,7 @@
     <property name="guice.disable.misplaced.annotation.check" value="true"/>
     <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
     <property name="file.encoding.pkg" value="sun.io"/>
-    <property name="idea.launcher.port" value="7532"/>
+    <property name="idea.launcher.port" value="7534"/>
     <property name="user.country" value="US"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.os.patch.level" value="unknown"/>
@@ -66,7 +66,7 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="com.codepoetics.octarine.lenses.LensesTest" name="lenses_can_be_composed_out_of_functions" time="0.067"/>
-  <testcase classname="com.codepoetics.octarine.lenses.LensesTest" name="lenses_compose_with_bijections" time="0.008"/>
-  <testcase classname="com.codepoetics.octarine.lenses.LensesTest" name="lenses_can_be_joined_together" time="0"/>
+  <testcase classname="com.codepoetics.octarine.lenses.LensesTest" name="lenses_can_be_joined_together" time="0.075"/>
+  <testcase classname="com.codepoetics.octarine.lenses.LensesTest" name="lenses_can_be_composed_out_of_functions" time="0"/>
+  <testcase classname="com.codepoetics.octarine.lenses.LensesTest" name="lenses_compose_with_bijections" time="0"/>
 </testsuite>

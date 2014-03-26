@@ -12,12 +12,13 @@ public class ValidationTest {
 
     public static interface Person extends Schema<Person> {
 
-        public static final KeySet keys = new KeySet();
-        public static final Key<String> name = keys.add("name");
-        public static final Key<Integer> age = keys.add("age");
-        public static final Key<Color> favouriteColour = keys.add("favourite colour");
+        public static final KeySet mandatoryKeys = new KeySet();
+        public static final Key<String> name = mandatoryKeys.add("name");
+        public static final Key<Integer> age = mandatoryKeys.add("age");
+        public static final Key<Color> favouriteColour = mandatoryKeys.add("favourite colour");
+
         public static final Person schema = (record, validationErrors) -> {
-            keys.accept(record, validationErrors);
+            mandatoryKeys.accept(record, validationErrors);
             if (age.from(record).get() < 0) validationErrors.accept("Age must be 0 or greater");
         };
     }

@@ -13,30 +13,29 @@ import java.util.function.Function;
 
 public interface Lens<T, V> extends Function<T, BoundLens<T, V>>, Pairable<Function<T, V>, BiFunction<T, V, T>> {
 
-    public static <T, V> Lens<T, V> of(Function<T, V> getter, BiFunction<T, V, T> setter) {
-        return new SimpleLens<T, V>(getter, setter);
-    }
-
     public static <T, V> Lens<T, V> fromPair(Pair<Function<T, V>, BiFunction<T, V, T>> pair) {
         return of(pair.first(), pair.second());
     }
 
-    static class SimpleLens<T, V> implements Lens<T, V> {
-        private final Function<T, V> getter;
-        private final BiFunction<T, V, T> setter;
 
-        private SimpleLens(Function<T, V> getter, BiFunction<T, V, T> setter) {
-            this.getter = getter;
-            this.setter = setter;
-        }
+    public static <T, V> Lens<T, V> of(Function<T, V> getter, BiFunction<T, V, T> setter) {
+        return new Lens<T, V>() {
 
-        @Override public Pair<Function<T, V>, BiFunction<T, V, T>> toPair() { return Pair.of(getter, setter); }
+            @Override
+            public Pair<Function<T, V>, BiFunction<T, V, T>> toPair() {
+                return Pair.of(getter, setter);
+            }
 
-        @Override
-        public V get(T instance) { return getter.apply(instance); }
+            @Override
+            public V get(T instance) {
+                return getter.apply(instance);
+            }
 
-        @Override
-        public T set(T instance, V newValue) { return setter.apply(instance, newValue); }
+            @Override
+            public T set(T instance, V newValue) {
+                return setter.apply(instance, newValue);
+            }
+        };
     }
 
     V get(T instance);

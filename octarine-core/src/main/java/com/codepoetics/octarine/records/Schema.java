@@ -28,6 +28,9 @@ public interface Schema<T> extends BiConsumer<Record, Consumer<String>> {
                 public PMap<Key<?>, Object> values() {
                     return record.values();
                 }
+
+                @Override public int hashCode() { return record.hashCode(); }
+                @Override public boolean equals(Object other) { return record.equals(other); }
             });
         }
         return Validation.invalid(validationErrors);

@@ -1,2 +1,4 @@
+com/codepoetics/octarine/records/ValidationTest$Person.class
 com/codepoetics/octarine/lenses/LensesTest.class
 com/codepoetics/octarine/records/RecordTest.class
+com/codepoetics/octarine/records/ValidationTest.class
