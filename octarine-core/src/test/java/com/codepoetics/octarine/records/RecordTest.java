@@ -1,6 +1,5 @@
 package com.codepoetics.octarine.records;
 
-import com.codepoetics.octarine.lenses.Lens;
 import com.codepoetics.octarine.lenses.OptionalLens;
 import org.junit.Test;
 import org.pcollections.PVector;
