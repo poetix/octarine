@@ -1,7 +1,7 @@
 package com.codepoetics.octarine.lenses;
 
-import com.codepoetics.octarine.com.codepoetics.octarine.tuples.Pair;
-import com.codepoetics.octarine.com.codepoetics.octarine.tuples.Pairable;
+import com.codepoetics.octarine.tuples.Pair;
+import com.codepoetics.octarine.tuples.Pairable;
 
 import java.util.function.Function;
 import java.util.function.Supplier;

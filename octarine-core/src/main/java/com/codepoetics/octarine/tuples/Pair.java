@@ -1,4 +1,4 @@
-package com.codepoetics.octarine.com.codepoetics.octarine.tuples;
+package com.codepoetics.octarine.tuples;
 
 import java.util.Map;
 import java.util.function.BiFunction;

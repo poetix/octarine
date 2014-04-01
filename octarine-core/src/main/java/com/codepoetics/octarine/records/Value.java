@@ -1,7 +1,7 @@
 package com.codepoetics.octarine.records;
 
-import com.codepoetics.octarine.com.codepoetics.octarine.tuples.Pair;
-import com.codepoetics.octarine.com.codepoetics.octarine.tuples.Pairable;
+import com.codepoetics.octarine.tuples.Pair;
+import com.codepoetics.octarine.tuples.Pairable;
 
 public interface Value extends Pairable<Key<?>, Object> {
 

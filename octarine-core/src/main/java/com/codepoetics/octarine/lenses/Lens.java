@@ -1,13 +1,12 @@
 package com.codepoetics.octarine.lenses;
 
-import com.codepoetics.octarine.com.codepoetics.octarine.tuples.Pair;
-import com.codepoetics.octarine.com.codepoetics.octarine.tuples.Pairable;
+import com.codepoetics.octarine.tuples.Pair;
+import com.codepoetics.octarine.tuples.Pairable;
 import com.codepoetics.octarine.morphisms.Bijection;
 import org.pcollections.PMap;
 import org.pcollections.PVector;
 
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 

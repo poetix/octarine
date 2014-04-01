@@ -13,7 +13,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class RecordTest {
 
-    private static final Key<String> name = Key.named("name");
+
+    private static final Key<String> displayName = Key.named("displayName");
+    private static final Key<String> name = Key.named("name", displayName.of("person_address"));
     private static final Key<Integer> age = Key.named("age");
     private static final Key<Record> address = Key.named("address");
     private static final Key<PVector<String>> addressLines = Key.named("addressLines");
@@ -28,6 +30,8 @@ public class RecordTest {
 
     @Test public void
     keys_are_lenses() {
+        Record martha = testRecord.with(name.of("Martha Putey"), age.of(25)).without(address);
+
         OptionalLens<Record, String> secondLineOfAddress =
                 address.withDefault(Record::empty)
                 .andThen(addressLines.withDefault(TreePVector::<String>empty))

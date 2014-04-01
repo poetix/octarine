@@ -1,6 +1,6 @@
 package com.codepoetics.octarine.morphisms;
 
-import com.codepoetics.octarine.com.codepoetics.octarine.tuples.Pair;
+import com.codepoetics.octarine.tuples.Pair;
 import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
 
