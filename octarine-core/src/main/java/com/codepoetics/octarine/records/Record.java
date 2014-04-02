@@ -48,7 +48,7 @@ public interface Record {
 
             @Override
             public boolean equals(Object other) {
-                if (other instanceof Record) {
+                if (other != null && other instanceof Record) {
                     return ((Record) other).values().equals(values);
                 }
                 return false;
