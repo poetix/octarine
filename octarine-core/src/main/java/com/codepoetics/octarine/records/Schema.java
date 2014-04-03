@@ -20,7 +20,7 @@ public interface Schema<T> extends BiConsumer<Record, Consumer<String>> {
         if (validationErrors.isEmpty()) {
             return Validation.valid(new Valid<T>() {
                 @Override
-                public <S> Optional<S> get(KeyLike<S> key) {
+                public <S> Optional<S> get(Key<S> key) {
                     return record.get(key);
                 }
 

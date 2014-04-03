@@ -4,10 +4,7 @@ import com.codepoetics.octarine.morphisms.FluentCollection;
 import com.codepoetics.octarine.morphisms.FluentMap;
 import org.pcollections.PMap;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -22,12 +19,13 @@ public interface Record {
     }
 
     static Record of(PMap<Key<?>, Object> values) {
+        if (values == null) { throw new IllegalArgumentException("values must not be null"); }
         return new Record() {
 
             @Override
             @SuppressWarnings("unchecked")
-            public <T> Optional<T> get(KeyLike<T> key) {
-                return Optional.<T>ofNullable((T) values.get(key.asKey()));
+            public <T> Optional<T> get(Key<T> key) {
+                return Optional.<T>ofNullable((T) values.get(key));
             }
             @Override
             public PMap<Key<?>, Object> values() {
@@ -56,7 +54,7 @@ public interface Record {
         };
     }
 
-    <T> Optional<T> get(KeyLike<T> key);
+    <T> Optional<T> get(Key<T> key);
     PMap<Key<?>, Object> values();
 
     default Record with(Value...values) {
@@ -68,8 +66,8 @@ public interface Record {
     default Record without(Key<?>...keys) {
         return without(FluentCollection.<Key<?>>from(keys).toSet());
     }
-
     default Record without(Set<Key<?>> keys) {
         return Record.of(values().minusAll(keys));
     }
+
 }

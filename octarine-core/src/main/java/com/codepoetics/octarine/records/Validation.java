@@ -38,7 +38,7 @@ public interface Validation<T> extends Supplier<Valid<T>> {
 
             @Override
             public Valid<T> get() {
-                throw new IllegalStateException("Cannot get valid value from failed validation");
+                throw new IllegalStateException("Validation failed with errors: " + String.join(", ", validationErrors));
             }
         };
     }
