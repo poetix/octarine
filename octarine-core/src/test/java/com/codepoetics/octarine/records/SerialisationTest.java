@@ -20,12 +20,11 @@ public class SerialisationTest {
     public static JsonSerialiser addressSerialiser = p ->
             p.add(Address.addressLines, p.asList(asString));
 
-    public static JsonSerialiser personSerialiser = p -> {
+    public static JsonSerialiser personSerialiser = p ->
             p.add(Person.name, asString)
              .add(Person.age, asInteger)
              .add(Person.favouriteColour, p.map(Color::toString, asString))
              .add(Person.address, addressSerialiser);
-    };
 
     @Test public void
     writes_person_as_json() throws IOException {
