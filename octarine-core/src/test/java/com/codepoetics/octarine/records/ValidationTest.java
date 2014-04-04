@@ -1,42 +1,16 @@
 package com.codepoetics.octarine.records;
 
+import com.codepoetics.octarine.records.example.Address;
+import com.codepoetics.octarine.records.example.Person;
 import org.junit.Test;
 
 import java.awt.*;
-import java.util.function.Consumer;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ValidationTest {
-
-    public static interface Address {
-
-        public static final KeySet mandatoryKeys = new KeySet();
-        public static final ListKey<String> addressLines = mandatoryKeys.addList("addressLines");
-
-        public static final Schema<Address> schema = new Schema<Address>() {
-            @Override
-            public void accept(Record record, Consumer<String> validationErrors) {
-                 mandatoryKeys.accept(record, validationErrors);
-            }
-        };
-    }
-    public static interface Person extends Schema<Person> {
-
-        public static final KeySet mandatoryKeys = new KeySet();
-        public static final Key<String> name = mandatoryKeys.add("name");
-        public static final Key<Integer> age = mandatoryKeys.add("age");
-        public static final Key<Color> favouriteColour = mandatoryKeys.add("favourite colour");
-        public static final ValidRecordKey<Address> address =
-                mandatoryKeys.addValidRecord("address", Address.schema);
-
-        public static final Person schema = (record, validationErrors) -> {
-            mandatoryKeys.accept(record, validationErrors);
-            if (age.from(record).get() < 0) validationErrors.accept("Age must be 0 or greater");
-        };
-    }
 
     @Test public void
     schemas_validate_valid_records() {

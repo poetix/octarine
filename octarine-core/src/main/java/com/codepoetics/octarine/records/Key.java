@@ -1,5 +1,6 @@
 package com.codepoetics.octarine.records;
 
+import com.codepoetics.octarine.lenses.Lens;
 import com.codepoetics.octarine.lenses.OptionalLens;
 
 import java.util.Optional;
@@ -56,4 +57,5 @@ public interface Key<T> extends OptionalLens<Record, T> {
             @Override public Object value() { return value; }
         };
     }
+
 }

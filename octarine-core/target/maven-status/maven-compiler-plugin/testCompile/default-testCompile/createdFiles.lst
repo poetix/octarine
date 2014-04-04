@@ -1,6 +1,9 @@
+com/codepoetics/octarine/records/SerialisationTest.class
 com/codepoetics/octarine/records/ValidationTest$Address.class
-com/codepoetics/octarine/records/ValidationTest$Person.class
 com/codepoetics/octarine/lenses/LensesTest.class
 com/codepoetics/octarine/records/ValidationTest$Address$1.class
-com/codepoetics/octarine/records/RecordTest.class
 com/codepoetics/octarine/records/ValidationTest.class
+com/codepoetics/octarine/records/SerialisationTest$PersonSerialiser$1.class
+com/codepoetics/octarine/records/ValidationTest$Person.class
+com/codepoetics/octarine/records/SerialisationTest$PersonSerialiser.class
+com/codepoetics/octarine/records/RecordTest.class

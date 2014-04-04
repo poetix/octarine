@@ -13,7 +13,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class RecordTest {
 
-
     private static final Key<String> displayName = Key.named("displayName");
     private static final Key<String> name = Key.named("name", displayName.of("person_address"));
     private static final Key<Integer> age = Key.named("age");

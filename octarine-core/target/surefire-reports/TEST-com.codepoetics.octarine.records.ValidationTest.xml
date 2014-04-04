@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="3" failures="0" name="com.codepoetics.octarine.records.ValidationTest" time="0.109" errors="0" skipped="0">
+<testsuite tests="3" failures="0" name="com.codepoetics.octarine.records.ValidationTest" time="0.137" errors="0" skipped="0">
   <properties>
     <property name="idea.version" value="13.1"/>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
@@ -13,7 +13,7 @@
     <property name="guice.disable.misplaced.annotation.check" value="true"/>
     <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
     <property name="file.encoding.pkg" value="sun.io"/>
-    <property name="idea.launcher.port" value="7537"/>
+    <property name="idea.launcher.port" value="7533"/>
     <property name="user.country" value="US"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.os.patch.level" value="unknown"/>
@@ -66,7 +66,7 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="com.codepoetics.octarine.records.ValidationTest" name="schemas_validate_valid_records" time="0.107"/>
-  <testcase classname="com.codepoetics.octarine.records.ValidationTest" name="schemas_collect_validation_errors" time="0.002"/>
-  <testcase classname="com.codepoetics.octarine.records.ValidationTest" name="exception_is_thrown_if_valid_record_key_populated_with_invalid_values" time="0"/>
+  <testcase classname="com.codepoetics.octarine.records.ValidationTest" name="schemas_validate_valid_records" time="0.132"/>
+  <testcase classname="com.codepoetics.octarine.records.ValidationTest" name="schemas_collect_validation_errors" time="0.004"/>
+  <testcase classname="com.codepoetics.octarine.records.ValidationTest" name="exception_is_thrown_if_valid_record_key_populated_with_invalid_values" time="0.001"/>
 </testsuite>
