@@ -15,7 +15,7 @@ public interface JsonSerialiser extends Serialiser<JsonGenerator> {
     @Override default void toWriter(Record record, Writer writer) throws IOException {
         JsonGenerator jsonWriter = new JsonFactory().createGenerator(writer);
         try {
-            writeRecord(record, jsonWriter);
+            accept(record, jsonWriter);
         } catch (JsonWritingException e) {
             e.throwCause();
         }
@@ -28,10 +28,6 @@ public interface JsonSerialiser extends Serialiser<JsonGenerator> {
         } catch (IOException e) {
             throw new JsonWritingException(e);
         }
-    }
-
-    @Override default void nextProjection(JsonGenerator writer) {
-        // Do nothing
     }
 
     @Override default void endRecord(JsonGenerator writer) {
@@ -50,10 +46,6 @@ public interface JsonSerialiser extends Serialiser<JsonGenerator> {
         }
     }
 
-    @Override default void nextValue(JsonGenerator writer) {
-        // Do nothing
-    }
-
     @Override default void endList(JsonGenerator writer) {
         try {
             writer.writeEndArray();
@@ -62,7 +54,7 @@ public interface JsonSerialiser extends Serialiser<JsonGenerator> {
         }
     }
 
-    @Override default void writeKeyName(Key<?> key, String keyName, JsonGenerator writer) {
+    @Override default void writeKeyName(String keyName, JsonGenerator writer) {
         try {
             writer.writeFieldName(keyName);
         } catch (IOException e) {

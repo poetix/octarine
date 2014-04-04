@@ -10,26 +10,21 @@ import org.pcollections.TreePVector;
 import java.awt.*;
 import java.io.IOException;
 
+import static com.codepoetics.octarine.json.JsonSerialiser.asInteger;
+import static com.codepoetics.octarine.json.JsonSerialiser.asString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class SerialisationTest {
 
-    public static JsonSerialiser addressSerialiser = new JsonSerialiser() {
-        @Override
-        public void projecting(Projections<JsonGenerator> projections) {
-            projections.add(Address.addressLines, asList(asString));
-        }
-    };
+    public static JsonSerialiser addressSerialiser = p ->
+            p.add(Address.addressLines, p.asList(asString));
 
-    public static JsonSerialiser personSerialiser = new JsonSerialiser() {
-        @Override
-        public void projecting(Projections<JsonGenerator> projections) {
-            projections.add(Person.name, asString)
-                       .add(Person.age, asInteger)
-                       .add(Person.favouriteColour, map(Color::toString, asString))
-                       .add(Person.address, addressSerialiser);
-        }
+    public static JsonSerialiser personSerialiser = p -> {
+            p.add(Person.name, asString)
+             .add(Person.age, asInteger)
+             .add(Person.favouriteColour, p.map(Color::toString, asString))
+             .add(Person.address, addressSerialiser);
     };
 
     @Test public void

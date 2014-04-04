@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="3" failures="0" name="com.codepoetics.octarine.lenses.LensesTest" time="0.087" errors="0" skipped="0">
+<testsuite tests="3" failures="0" name="com.codepoetics.octarine.lenses.LensesTest" time="0.053" errors="0" skipped="0">
   <properties>
-    <property name="idea.version" value="13.1"/>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/jre/lib"/>
     <property name="java.vm.version" value="25.0-b70"/>
@@ -13,12 +12,11 @@
     <property name="guice.disable.misplaced.annotation.check" value="true"/>
     <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
     <property name="file.encoding.pkg" value="sun.io"/>
-    <property name="idea.launcher.port" value="7533"/>
     <property name="user.country" value="US"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.os.patch.level" value="unknown"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
-    <property name="user.dir" value="/Users/dominicfox/IdeaProjects/octarine/octarine-core"/>
+    <property name="user.dir" value="/Users/dominicfox/IdeaProjects/octarine"/>
     <property name="java.runtime.version" value="1.8.0-b132"/>
     <property name="java.awt.graphicsenv" value="sun.awt.CGraphicsEnvironment"/>
     <property name="java.endorsed.dirs" value="/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/jre/lib/endorsed"/>
@@ -40,15 +38,14 @@
     <property name="user.timezone" value="Europe/London"/>
     <property name="java.awt.printerjob" value="sun.lwawt.macosx.CPrinterJob"/>
     <property name="java.specification.version" value="1.8"/>
-    <property name="idea.launcher.bin.path" value="/Applications/IntelliJ IDEA 13 CE.app/bin"/>
     <property name="file.encoding" value="UTF-8"/>
     <property name="user.name" value="dominicfox"/>
-    <property name="java.class.path" value="/usr/local/Cellar/maven/3.2.1/libexec/boot/plexus-classworlds-2.5.1.jar:/Applications/IntelliJ IDEA 13 CE.app/lib/idea_rt.jar"/>
+    <property name="java.class.path" value="/usr/local/Cellar/maven/3.2.1/libexec/boot/plexus-classworlds-2.5.1.jar"/>
     <property name="org.slf4j.simpleLogger.defaultLogLevel" value="info"/>
     <property name="java.vm.specification.version" value="1.8"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="java.home" value="/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home/jre"/>
-    <property name="sun.java.command" value="com.intellij.rt.execution.application.AppMain org.codehaus.classworlds.Launcher -Didea.version=13.1 install"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher clean install"/>
     <property name="java.specification.vendor" value="Oracle Corporation"/>
     <property name="user.language" value="en"/>
     <property name="awt.toolkit" value="sun.lwawt.macosx.LWCToolkit"/>
@@ -66,7 +63,7 @@
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="com.codepoetics.octarine.lenses.LensesTest" name="lenses_can_be_composed_out_of_functions" time="0.078"/>
-  <testcase classname="com.codepoetics.octarine.lenses.LensesTest" name="lenses_compose_with_bijections" time="0.008"/>
+  <testcase classname="com.codepoetics.octarine.lenses.LensesTest" name="lenses_can_be_composed_out_of_functions" time="0.05"/>
+  <testcase classname="com.codepoetics.octarine.lenses.LensesTest" name="lenses_compose_with_bijections" time="0.002"/>
   <testcase classname="com.codepoetics.octarine.lenses.LensesTest" name="lenses_can_be_joined_together" time="0.001"/>
 </testsuite>

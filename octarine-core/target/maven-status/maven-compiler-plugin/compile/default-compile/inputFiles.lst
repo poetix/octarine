@@ -13,8 +13,10 @@
 /Users/dominicfox/IdeaProjects/octarine/octarine-core/src/main/java/com/codepoetics/octarine/records/Serialiser.java
 /Users/dominicfox/IdeaProjects/octarine/octarine-core/src/main/java/com/codepoetics/octarine/records/KeySet.java
 /Users/dominicfox/IdeaProjects/octarine/octarine-core/src/main/java/com/codepoetics/octarine/records/Schema.java
+/Users/dominicfox/IdeaProjects/octarine/octarine-core/src/main/java/com/codepoetics/octarine/json/JsonWritingException.java
 /Users/dominicfox/IdeaProjects/octarine/octarine-core/src/main/java/com/codepoetics/octarine/records/Value.java
 /Users/dominicfox/IdeaProjects/octarine/octarine-core/src/main/java/com/codepoetics/octarine/records/Key.java
 /Users/dominicfox/IdeaProjects/octarine/octarine-core/src/main/java/com/codepoetics/octarine/records/Valid.java
 /Users/dominicfox/IdeaProjects/octarine/octarine-core/src/main/java/com/codepoetics/octarine/json/JsonSerialiser.java
 /Users/dominicfox/IdeaProjects/octarine/octarine-core/src/main/java/com/codepoetics/octarine/morphisms/FluentCollection.java
+/Users/dominicfox/IdeaProjects/octarine/octarine-core/src/main/java/com/codepoetics/octarine/records/Projections.java

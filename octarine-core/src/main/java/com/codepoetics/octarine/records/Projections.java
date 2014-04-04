@@ -1,5 +1,6 @@
 package com.codepoetics.octarine.records;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -15,15 +16,11 @@ public interface Projections<T> extends Function<BiConsumer<Record, T>, Projecti
         return add(key, key.name(), valueSerialiser);
     }
 
-    default <V> Projections<T> add(Key<V> key, String keyName, BiConsumer<? super V, T> valueSerialiser) {
-        return apply((r, t) -> {
-            Optional<V> value = key.from(r);
-            if (value.isPresent()) {
-                writeKeyName(key, keyName, t);
-                valueSerialiser.accept(value.get(), t);
-            }
-        });
+    <V> Projections<T> add(Key<V> key, String keyName, BiConsumer<? super V, T> valueSerialiser);
+
+    default <V1, V2> BiConsumer<V1, T> map(Function<V1, V2> f, BiConsumer<V2, T> consumer) {
+        return (v1, t) -> consumer.accept(f.apply(v1), t);
     }
 
-    void writeKeyName(Key<?> key, String keyName, T writer);
+    <V> BiConsumer<List<V>, T> asList(BiConsumer<V, T> valueSerialiser);
 }
