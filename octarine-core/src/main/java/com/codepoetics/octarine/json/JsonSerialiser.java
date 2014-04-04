@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.List;
 import java.util.function.BiConsumer;
 
 public interface JsonSerialiser extends Serialiser<JsonGenerator> {
