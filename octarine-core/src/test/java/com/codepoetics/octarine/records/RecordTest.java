@@ -28,8 +28,8 @@ public class RecordTest {
     @Test public void
     keys_are_lenses() {
         OptionalLens<Record, String> secondLineOfAddress =
-                address.thenMaybe(addressLines, Record::empty)
-                       .thenMaybe(OptionalLens.<String>intoPVector(1), TreePVector::<String>empty);
+                address.join(addressLines, Record::empty)
+                       .join(OptionalLens.<String>intoPVector(1), TreePVector::<String>empty);
 
         assertThat(secondLineOfAddress.get(testRecord), equalTo(Optional.ofNullable("Sunderland")));
         assertThat(secondLineOfAddress.setNullable(testRecord, "Cirencester"),

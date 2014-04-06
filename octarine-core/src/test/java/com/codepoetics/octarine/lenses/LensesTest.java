@@ -15,19 +15,19 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class LensesTest {
 
     private static final Lens<PMap<String, String>, String> aIsFor = Lens.intoPMap("a");
-    private static final Lens<String, Character> thirdChar = Lens.<Character>intoArray(2).compose(Bijection.of(
-        (Character[] cs) -> {
-                StringBuilder sb = new StringBuilder();
-                Arrays.stream(cs).forEach(sb::append);
-                return sb.toString();
-            },
+    private static final Lens<String, Character> thirdChar = Lens.<Character>intoArray(2).over(Bijection.<String, Character[]>of(
         (String s) -> {
             Character[] characters = new Character[s.length()];
             char[] chars = s.toCharArray();
             for (int i = 0; i<s.length(); i++) {
-               characters[i] = chars[i];
+                characters[i] = chars[i];
             }
             return characters;
+        },
+        (Character[] cs) -> {
+            StringBuilder sb = new StringBuilder();
+            Arrays.stream(cs).forEach(sb::append);
+            return sb.toString();
         }
     ));
 
@@ -37,21 +37,21 @@ public class LensesTest {
 
     @Test public void
     lenses_can_be_composed_out_of_functions() {
-        assertThat(aIsFor.apply(pmap).get(), equalTo("apple"));
-        assertThat(aIsFor.apply(pmap).apply("artichoke").get("a"), equalTo("artichoke"));
+        assertThat(aIsFor.bind(pmap).get(), equalTo("apple"));
+        assertThat(aIsFor.bind(pmap).apply("artichoke").get("a"), equalTo("artichoke"));
     }
 
     @Test public void
     lenses_compose_with_bijections() {
-        assertThat(thirdChar.apply("Hello World").get(), equalTo('l'));
-        assertThat(thirdChar.apply("Hello World").apply('f'), equalTo("Heflo World"));
+        assertThat(thirdChar.bind("Hello World").get(), equalTo('l'));
+        assertThat(thirdChar.bind("Hello World").apply('f'), equalTo("Heflo World"));
     }
 
     @Test public void
     lenses_can_be_joined_together() {
-        Lens<PMap<String, String>, Character> thirdCharOfA = aIsFor.andThen(thirdChar);
+        Lens<PMap<String, String>, Character> thirdCharOfA = aIsFor.join(thirdChar);
 
-        assertThat(thirdCharOfA.apply(pmap).get(), equalTo('p'));
-        assertThat(thirdCharOfA.apply(pmap).apply('s').get("a"), equalTo("apsle"));
+        assertThat(thirdCharOfA.bind(pmap).get(), equalTo('p'));
+        assertThat(thirdCharOfA.bind(pmap).apply('s').get("a"), equalTo("apsle"));
     }
 }

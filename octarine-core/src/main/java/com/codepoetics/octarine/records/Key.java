@@ -3,6 +3,7 @@ package com.codepoetics.octarine.records;
 import com.codepoetics.octarine.lenses.OptionalLens;
 
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public interface Key<T> extends OptionalLens<Record, T> {

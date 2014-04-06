@@ -1,11 +1,14 @@
 package com.codepoetics.octarine.records;
 
 import com.codepoetics.octarine.json.JsonDeserialiser;
+import com.codepoetics.octarine.lenses.OptionalLens;
 import com.codepoetics.octarine.records.example.Address;
 import com.codepoetics.octarine.records.example.Person;
 import org.junit.Test;
+import org.pcollections.PVector;
 
 import java.awt.*;
+import java.util.Optional;
 
 import static com.codepoetics.octarine.json.JsonDeserialiser.fromInteger;
 import static com.codepoetics.octarine.json.JsonDeserialiser.fromString;
@@ -42,7 +45,10 @@ public class DeserialisationTest {
         assertThat(Person.name.from(person).orElse(""), equalTo("Dominic"));
         assertThat(Person.age.from(person).orElse(0), equalTo(39));
         assertThat(Person.favouriteColour.from(person).get(), equalTo(Color.RED));
-        assertThat(Person.address.from(person).flatMap(Address.addressLines::from).get().get(1), equalTo("PO3 1TP"));
+        assertThat(Person.address.chain(Address.addressLines)
+                                 .chain(OptionalLens.intoPVector(1))
+                                 .apply(person).get(),
+                equalTo("PO3 1TP"));
     }
 
     @Test public void

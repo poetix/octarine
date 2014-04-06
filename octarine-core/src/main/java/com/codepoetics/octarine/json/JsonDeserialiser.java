@@ -79,4 +79,29 @@ public interface JsonDeserialiser extends Deserialiser<JsonParser> {
             throw new JsonReadingException(e);
         }
     };
+
+    static Function<JsonParser, Boolean> fromBoolean = p -> {
+        try {
+            return p.nextBooleanValue();
+        } catch (IOException e) {
+            throw new JsonReadingException(e);
+        }
+    };
+
+    static Function<JsonParser, Long> fromLong = p -> {
+        try {
+            return p.nextLongValue(0);
+        } catch (IOException e) {
+            throw new JsonReadingException(e);
+        }
+    };
+
+    static Function<JsonParser, Double> fromDouble = p -> {
+        try {
+            p.nextToken();
+            return p.getDoubleValue();
+        } catch (IOException e) {
+            throw new JsonReadingException(e);
+        }
+    };
 }

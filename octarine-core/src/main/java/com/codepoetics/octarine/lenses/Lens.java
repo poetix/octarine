@@ -10,20 +10,10 @@ import java.util.Arrays;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public interface Lens<T, V> extends Function<T, BoundLens<T, V>>, Pairable<Function<T, V>, BiFunction<T, V, T>> {
-
-    public static <T, V> Lens<T, V> fromPair(Pair<Function<T, V>, BiFunction<T, V, T>> pair) {
-        return of(pair.first(), pair.second());
-    }
-
+public interface Lens<T, V> extends Function<T, V> {
 
     public static <T, V> Lens<T, V> of(Function<T, V> getter, BiFunction<T, V, T> setter) {
         return new Lens<T, V>() {
-
-            @Override
-            public Pair<Function<T, V>, BiFunction<T, V, T>> toPair() {
-                return Pair.of(getter, setter);
-            }
 
             @Override
             public V get(T instance) {
@@ -38,13 +28,10 @@ public interface Lens<T, V> extends Function<T, BoundLens<T, V>>, Pairable<Funct
     }
 
     V get(T instance);
+    default V apply(T instance) { return get(instance); }
     T set(T instance, V newValue);
 
-    @Override
-    default Pair<Function<T, V>, BiFunction<T, V, T>> toPair() { return Pair.of(this::get, this::set); }
-
-    @Override
-    default BoundLens<T, V> apply(T instance) {
+    default BoundLens<T, V> bind(T instance) {
         return BoundLens.binding(get(instance), v -> this.set(instance, v));
     }
 
@@ -85,35 +72,31 @@ public interface Lens<T, V> extends Function<T, BoundLens<T, V>>, Pairable<Funct
         );
     }
 
-    default <V2> Lens<T, V2> andThen(Lens<V, V2> next) {
+    default <V2> Lens<T, V2> join(Lens<V, V2> next) {
         return of(
             t -> next.get(get(t)),
             (t, v) -> set(t, next.set(get(t), v))
         );
     }
 
-    default <V2> OptionalLens<T, V2> andThen(OptionalLens<V, V2> next) {
+    default <V2> OptionalLens<T, V2> join(OptionalLens<V, V2> next) {
         return OptionalLens.wrap(of(
             t -> next.get(this.get(t)),
             (t, v) -> set(t, next.set(this.get(t), v))
         ));
     }
 
-    default <T2> Lens<T2, V> compose(Lens<T2, T> previous) {
-        return previous.andThen(this);
-    }
-
-    default <V2> Lens<T, V2> andThen(Bijection<V, V2> bijection) {
+    default <V2> Lens<T, V2> under(Bijection<V, V2> bijection) {
         return of(
             t -> bijection.apply(get(t)),
             (t, v) -> set(t, bijection.reverse().apply(v))
         );
     }
 
-    default <T2> Lens<T2, V> compose(Bijection<T, T2> bijection) {
+    default <T0> Lens<T0, V> over(Bijection<T0, T> bijection) {
         return of(
-            t -> get(bijection.reverse().apply(t)),
-            (t, v) -> bijection.apply(set(bijection.reverse().apply(t), v))
+                t -> get(bijection.apply(t)),
+                (t, v) -> bijection.reverse().apply(set(bijection.apply(t), v))
         );
     }
 }

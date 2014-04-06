@@ -5,9 +5,10 @@ import org.pcollections.PVector;
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
-public interface OptionalLens<T, V> extends Lens<T, Optional<V>> {
+public interface OptionalLens<T, V> extends Lens<T, Optional<V>>, Chainable<T, V> {
 
     static <T, V> OptionalLens<T, V> wrap(Lens<T, Optional<V>> lens) {
         return new OptionalLens<T, V>() {
@@ -26,7 +27,7 @@ public interface OptionalLens<T, V> extends Lens<T, Optional<V>> {
     default V getOrElse(T target, V defaultValue) { return get(target).orElse(defaultValue); }
     default T setNullable(T target, V newValue) { return set(target, Optional.ofNullable(newValue)); }
 
-    default <V2> OptionalLens<T, V2> thenMaybe(OptionalLens<V, V2> next, Supplier<V> missingValueSupplier) {
+    default <V2> OptionalLens<T, V2> join(OptionalLens<V, V2> next, Supplier<V> missingValueSupplier) {
         OptionalLens<T, V> self = this;
         return new OptionalLens<T, V2>() {
 
