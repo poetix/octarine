@@ -1,6 +1,5 @@
 package com.codepoetics.octarine.json;
 
-import com.codepoetics.octarine.records.Key;
 import com.codepoetics.octarine.records.Record;
 import com.codepoetics.octarine.records.Serialiser;
 import com.fasterxml.jackson.core.JsonFactory;
@@ -8,7 +7,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.List;
 import java.util.function.BiConsumer;
 
 public interface JsonSerialiser extends Serialiser<JsonGenerator> {

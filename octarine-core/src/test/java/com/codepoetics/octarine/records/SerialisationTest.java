@@ -3,9 +3,7 @@ package com.codepoetics.octarine.records;
 import com.codepoetics.octarine.json.JsonSerialiser;
 import com.codepoetics.octarine.records.example.Address;
 import com.codepoetics.octarine.records.example.Person;
-import com.fasterxml.jackson.core.JsonGenerator;
 import org.junit.Test;
-import org.pcollections.TreePVector;
 
 import java.awt.*;
 import java.io.IOException;

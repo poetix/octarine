@@ -1,6 +1,9 @@
 package com.codepoetics.octarine.records.example;
 
-import com.codepoetics.octarine.records.*;
+import com.codepoetics.octarine.records.Key;
+import com.codepoetics.octarine.records.KeySet;
+import com.codepoetics.octarine.records.Schema;
+import com.codepoetics.octarine.records.ValidRecordKey;
 
 import java.awt.*;
 

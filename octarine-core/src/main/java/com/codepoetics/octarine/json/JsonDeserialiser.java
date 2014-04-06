@@ -12,7 +12,10 @@ import org.pcollections.TreePVector;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -22,7 +25,7 @@ public interface JsonDeserialiser extends Deserialiser<JsonParser> {
         JsonFactory factory = new JsonFactory();
         try (JsonParser parser = factory.createParser(reader)) {
             return readRecord(parser);
-        } catch (JsonWritingException e) {
+        } catch (JsonReadingException e) {
             throw (e.getIOExceptionCause());
         }
     }
@@ -44,7 +47,7 @@ public interface JsonDeserialiser extends Deserialiser<JsonParser> {
 
             return builder.get();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new JsonReadingException(e);
         }
     }
 
@@ -57,7 +60,7 @@ public interface JsonDeserialiser extends Deserialiser<JsonParser> {
             }
             return TreePVector.from(values);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new JsonReadingException(e);
         }
     }
 
@@ -65,7 +68,7 @@ public interface JsonDeserialiser extends Deserialiser<JsonParser> {
         try {
             return p.nextTextValue();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new JsonReadingException(e);
         }
     };
 
@@ -73,7 +76,7 @@ public interface JsonDeserialiser extends Deserialiser<JsonParser> {
         try {
             return p.nextIntValue(0);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new JsonReadingException(e);
         }
     };
 }

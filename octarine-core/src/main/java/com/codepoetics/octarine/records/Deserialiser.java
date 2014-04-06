@@ -18,14 +18,22 @@ public interface Deserialiser<T> extends Function<T, Record> {
         }
     }
 
-    default <T> Valid<T> readFromString(String input, Schema<T> schema) {
-        return schema.validate(readFromString(input)).get();
+    default <T> Validation<T> readFromString(String input, Schema<T> schema) {
+        try {
+            return schema.validate(readFromString(input));
+        } catch (RecordValidationException e) {
+            return e.toValidation();
+        }
     }
 
     Record readFromReader(Reader reader) throws IOException;
 
-    default <T> Valid<T> readFromReader(Reader reader, Schema<T> schema) throws IOException {
-        return schema.validate(readFromReader(reader)).get();
+    default <T> Validation<T> readFromReader(Reader reader, Schema<T> schema) throws IOException {
+        try {
+            return schema.validate(readFromReader(reader));
+        } catch (RecordValidationException e) {
+            return e.toValidation();
+        }
     }
 
     void injecting(Injections<T> injections);
@@ -40,7 +48,9 @@ public interface Deserialiser<T> extends Function<T, Record> {
     default <R> Function<T, Valid<R>> validAgainst(Schema<R> schema) {
         return t -> {
             Record record = apply(t);
-            return schema.validate(record).get();
+            Validation<R> result = schema.validate(record);
+            if (result.isValid()) return result.get();
+            throw new RecordValidationException(result.validationErrors());
         };
     }
 }

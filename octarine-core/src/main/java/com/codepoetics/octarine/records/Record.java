@@ -4,8 +4,8 @@ import com.codepoetics.octarine.morphisms.FluentCollection;
 import com.codepoetics.octarine.morphisms.FluentMap;
 import org.pcollections.PMap;
 
-import java.util.*;
-import java.util.function.Supplier;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public interface Record {

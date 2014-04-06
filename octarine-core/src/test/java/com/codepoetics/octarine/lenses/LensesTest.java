@@ -1,7 +1,6 @@
 package com.codepoetics.octarine.lenses;
 
 import com.codepoetics.octarine.morphisms.Bijection;
-import com.codepoetics.octarine.morphisms.FluentCollection;
 import org.junit.Test;
 import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;

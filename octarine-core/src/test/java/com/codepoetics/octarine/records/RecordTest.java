@@ -2,10 +2,8 @@ package com.codepoetics.octarine.records;
 
 import com.codepoetics.octarine.lenses.OptionalLens;
 import org.junit.Test;
-import org.pcollections.PVector;
 import org.pcollections.TreePVector;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.equalTo;
