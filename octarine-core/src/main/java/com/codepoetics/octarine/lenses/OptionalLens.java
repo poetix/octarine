@@ -5,7 +5,6 @@ import org.pcollections.PVector;
 
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public interface OptionalLens<T, V> extends Lens<T, Optional<V>>, Chainable<T, V> {

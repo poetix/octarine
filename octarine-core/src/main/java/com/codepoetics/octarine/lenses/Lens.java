@@ -1,8 +1,6 @@
 package com.codepoetics.octarine.lenses;
 
 import com.codepoetics.octarine.morphisms.Bijection;
-import com.codepoetics.octarine.tuples.Pair;
-import com.codepoetics.octarine.tuples.Pairable;
 import org.pcollections.PMap;
 import org.pcollections.PVector;
 

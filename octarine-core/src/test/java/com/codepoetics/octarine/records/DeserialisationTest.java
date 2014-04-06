@@ -1,34 +1,20 @@
 package com.codepoetics.octarine.records;
 
-import com.codepoetics.octarine.json.JsonDeserialiser;
 import com.codepoetics.octarine.lenses.OptionalLens;
 import com.codepoetics.octarine.records.example.Address;
 import com.codepoetics.octarine.records.example.Person;
 import org.junit.Test;
-import org.pcollections.PVector;
 
 import java.awt.*;
-import java.util.Optional;
 
-import static com.codepoetics.octarine.json.JsonDeserialiser.fromInteger;
-import static com.codepoetics.octarine.json.JsonDeserialiser.fromString;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class DeserialisationTest {
 
-    JsonDeserialiser addressDeserialiser = i ->
-            i.add(Address.addressLines, i.fromList(fromString));
-
-    JsonDeserialiser personDeserialiser = i ->
-            i.add(Person.name, fromString)
-             .add(Person.age, fromInteger)
-             .add(Person.favouriteColour, fromString.andThen(Color::decode))
-             .add(Person.address, addressDeserialiser.validAgainst(Address.schema));
-
     @Test public void
     deserialises_json_to_record() {
-        Valid<Person> person = personDeserialiser.readFromString(String.join("\n",
+        Valid<Person> person = Person.deserialiser.readFromString(String.join("\n",
                 "{",
                 "    \"name\": \"Dominic\",",
                 "    \"age\": 39,",
@@ -53,7 +39,7 @@ public class DeserialisationTest {
 
     @Test public void
     returns_nested_validation_exceptions() {
-        Validation<Person> personResult = personDeserialiser.readFromString(String.join("\n",
+        Validation<Person> personResult = Person.deserialiser.readFromString(String.join("\n",
                         "{",
                         "    \"name\": \"Dominic\",",
                         "    \"age\": 39,",
