@@ -14,13 +14,12 @@ import java.util.function.BiConsumer;
 public interface JsonSerialiser extends Serialiser<JsonGenerator> {
 
     @Override default void toWriter(Record record, Writer writer) throws IOException {
-        JsonGenerator jsonWriter = new JsonFactory().createGenerator(writer);
-        try {
+        try (JsonGenerator jsonWriter = new JsonFactory().createGenerator(writer)) {
             accept(record, jsonWriter);
+            jsonWriter.flush();
         } catch (JsonWritingException e) {
-            e.throwCause();
+            throw e.getIOExceptionCause();
         }
-        jsonWriter.flush();
     }
 
     @Override default void startRecord(JsonGenerator writer) {

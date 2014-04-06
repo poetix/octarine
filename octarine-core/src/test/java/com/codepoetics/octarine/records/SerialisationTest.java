@@ -23,17 +23,17 @@ public class SerialisationTest {
     public static JsonSerialiser personSerialiser = p ->
             p.add(Person.name, asString)
              .add(Person.age, asInteger)
-             .add(Person.favouriteColour, p.map(Color::toString, asString))
+             .add(Person.favouriteColour, p.map(c -> "0x" + Integer.toHexString(c.getRGB()).toUpperCase().substring(2), asString))
              .add(Person.address, addressSerialiser);
 
     @Test public void
     writes_person_as_json() throws IOException {
-        String json = personSerialiser.toString(Person.schema.validate(
+        String json = personSerialiser.toString(Record.of(
                 Person.name.of("Dominic"),
                 Person.age.of(39),
                 Person.favouriteColour.of(Color.RED),
-                Person.address.of(Address.addressLines.of("13 Rue Morgue", "PO3 1TP"))).get());
+                Person.address.of(Address.addressLines.of("13 Rue Morgue", "PO3 1TP"))));
 
-        assertThat(json, equalTo("{\"name\":\"Dominic\",\"age\":39,\"favourite colour\":\"java.awt.Color[r=255,g=0,b=0]\",\"address\":{\"addressLines\":[\"13 Rue Morgue\",\"PO3 1TP\"]}}"));
+        assertThat(json, equalTo("{\"name\":\"Dominic\",\"age\":39,\"favourite colour\":\"0xFF0000\",\"address\":{\"addressLines\":[\"13 Rue Morgue\",\"PO3 1TP\"]}}"));
     }
 }
