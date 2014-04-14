@@ -1,15 +1,69 @@
 package com.codepoetics.octarine.matchers;
 
+import com.codepoetics.octarine.records.Key;
 import com.codepoetics.octarine.records.Record;
 import com.codepoetics.octarine.records.Schema;
+import com.codepoetics.octarine.records.Validation;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
-public class ARecord<T> implements TypeSafeDiagnosingMatcher<Record> {
+import java.util.Optional;
 
-    public static <T> ARecord<T> against(Schema<T> schema) {
-        return new ARecord<T>(schema);
+import static org.hamcrest.CoreMatchers.equalTo;
+
+public class ARecord extends TypeSafeDiagnosingMatcher<Record> {
+
+    public static ARecord instance() {
+        return new ARecord(Optional.<Schema<?>>empty());
     }
 
-    private final Schema<T> schema;
-    private ARecord
+    public static <T> ARecord validAgainst(Schema<T> schema) {
+        return new ARecord(Optional.of(schema));
+    }
+
+    private final Optional<Schema<?>> schema;
+    private final AnInstance<Record> instanceMatcher;
+
+    private ARecord(Optional<Schema<?>> schema) {
+        this.schema = schema;
+        this.instanceMatcher = AnInstance.of(Record.class);
+    }
+
+    private ARecord(Optional<Schema<?>> schema, AnInstance<Record> instanceMatcher) {
+        this.schema = schema;
+        this.instanceMatcher = instanceMatcher;
+    }
+
+    public <V> ARecord with(Key<V> key, Matcher<? extends V> matcher) {
+        return new ARecord(schema, instanceMatcher.with(key, Present.and(matcher)));
+    }
+
+    public <V> ARecord with(Key<V> key, V value) {
+        return new ARecord(schema, instanceMatcher.with(key, Present.and(equalTo(value))));
+    }
+
+    public <V> ARecord without(Key<V> key) {
+        return new ARecord(schema, instanceMatcher.with(key, equalTo(Optional.<V>empty())));
+    }
+
+    @Override
+    protected boolean matchesSafely(Record record, Description description) {
+        if (schema.isPresent()) {
+            Validation<?> validation = schema.get().validate(record);
+            if (!validation.isValid()) {
+                validation.validationErrors().forEach(e -> description.appendText("\n").appendText(e));
+                return false;
+            }
+        }
+        return instanceMatcher.matchesSafely(record, description);
+    }
+
+    @Override
+    public void describeTo(Description description) {
+        instanceMatcher.describeTo(description);
+        if (schema.isPresent()) {
+            description.appendText("\nValid against: ").appendValue(schema.get());
+        }
+    }
 }

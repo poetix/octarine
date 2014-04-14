@@ -11,19 +11,8 @@ import java.util.function.Function;
 
 public class AnInstance<T> extends TypeSafeDiagnosingMatcher<T> {
 
-    @Override
-    protected boolean matchesSafely(T t, Description description) {
-        boolean result = true;
-        for (PropertyMatcher<T, ?> pm : matchers) {
-            result = result && pm.matchesSafely(t, description);
-        }
-        return result;
-    }
-
-    @Override
-    public void describeTo(Description description) {
-        description.appendText("An instance of ").appendValue(klass);
-        matchers.forEach(m -> m.describeTo(description));
+    public static <T> AnInstance<T> of(Class<? extends T> klass) {
+        return new AnInstance<T>(klass);
     }
 
     public static final class PropertyMatcher<T, V> extends TypeSafeDiagnosingMatcher<T> {
@@ -49,13 +38,9 @@ public class AnInstance<T> extends TypeSafeDiagnosingMatcher<T> {
 
         @Override
         public void describeTo(Description description) {
-            description.appendText("\n: ").appendValue(name).appendText(": ");
+            description.appendText("\n").appendText(name).appendText(": ");
             matcher.describeTo(description);
         }
-    }
-
-    public static <T> AnInstance<T> of(Class<? extends T> klass) {
-        return new AnInstance<T>(klass);
     }
 
     private final Class<? extends T> klass;
@@ -77,5 +62,21 @@ public class AnInstance<T> extends TypeSafeDiagnosingMatcher<T> {
 
     public <V> AnInstance<T> with(Function<? super T, ? extends V> f, String name, Matcher<? extends V> matcher) {
         return new AnInstance<T>(klass, matchers.plus(new PropertyMatcher<T, V>(f, name, matcher)));
+    }
+
+
+    @Override
+    protected boolean matchesSafely(T t, Description description) {
+        boolean result = true;
+        for (PropertyMatcher<T, ?> pm : matchers) {
+            if (!pm.matchesSafely(t, description)) { result = false; }
+        }
+        return result;
+    }
+
+    @Override
+    public void describeTo(Description description) {
+        description.appendText("An instance of ").appendValue(klass).appendText(" with:");
+        matchers.forEach(m -> m.describeTo(description));
     }
 }
