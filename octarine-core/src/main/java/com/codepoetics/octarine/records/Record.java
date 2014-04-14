@@ -70,4 +70,7 @@ public interface Record {
         return Record.of(values().minusAll(keys));
     }
 
+    default MutableRecord mutable() { return MutableRecord.from(this); }
+    default Record immutable() { return this; }
+
 }

@@ -15,6 +15,10 @@ import java.util.stream.StreamSupport;
 
 public interface FluentCollection<T> {
 
+    public static <T> FluentCollection<T> fromVarArgs(T...values) {
+        return from(values);
+    }
+
     public static <T> FluentCollection<T> from(Iterable<T> iterable) {
         return from(StreamSupport.stream(iterable.spliterator(), false));
     }

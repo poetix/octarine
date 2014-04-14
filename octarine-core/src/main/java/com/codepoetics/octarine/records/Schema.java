@@ -31,6 +31,11 @@ public interface Schema<T> extends BiConsumer<Record, Consumer<String>> {
 
                 @Override public int hashCode() { return record.hashCode(); }
                 @Override public boolean equals(Object other) { return record.equals(other); }
+
+                @Override
+                public Schema<T> schema() {
+                    return Schema.this;
+                }
             });
         }
         return Validation.invalid(validationErrors);
