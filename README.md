@@ -43,7 +43,7 @@ public static interface Person {
 
         Record changed = Person.age.update(validPerson, age -> age.map(a -> a + 1));
 
-        assertThat(Person.writer.toString(changed), equalTo("{\"name\": \"Arthur Putey\", \"age\": 43}"));
+        assertThat(Person.writer.toString(changed), equalTo("{\"name\":\"Arthur Putey\",\"age\":43}"));
     }
 ```
 
