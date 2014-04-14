@@ -5,7 +5,7 @@ import com.codepoetics.octarine.lenses.OptionalLens;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public interface Key<T> extends OptionalLens<Record, T> {
+public interface Key<T> extends NamedFunction<Record, Optional<T>>, OptionalLens<Record, T> {
 
     static <T> Key<T> named(String name, Value...metadata) {
         return named(name, Record.of(metadata));
