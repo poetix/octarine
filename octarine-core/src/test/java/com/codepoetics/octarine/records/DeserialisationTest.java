@@ -1,9 +1,11 @@
 package com.codepoetics.octarine.records;
 
-import com.codepoetics.octarine.lenses.OptionalLens;
+import com.codepoetics.octarine.json.JsonDeserialiser;
+import com.codepoetics.octarine.paths.Path;
 import com.codepoetics.octarine.records.example.Address;
 import com.codepoetics.octarine.records.example.Person;
 import org.junit.Test;
+import org.pcollections.PVector;
 
 import java.awt.*;
 
@@ -31,10 +33,10 @@ public class DeserialisationTest {
         assertThat(Person.name.from(person).orElse(""), equalTo("Dominic"));
         assertThat(Person.age.from(person).orElse(0), equalTo(39));
         assertThat(Person.favouriteColour.from(person).get(), equalTo(Color.RED));
-        assertThat(Person.address.chain(Address.addressLines)
-                                 .chain(OptionalLens.intoPVector(1))
-                                 .apply(person).get(),
-                equalTo("PO3 1TP"));
+        assertThat(Person.address.join(Address.addressLines).join(Path.toIndex(1))
+                         .apply(person).get(),
+                equalTo("PO3 1TP")
+        );
     }
 
     @Test public void
@@ -55,5 +57,31 @@ public class DeserialisationTest {
 
         assertThat(personResult.isValid(), equalTo(false));
         assertThat(personResult.validationErrors(), hasItem(containsString("addressLines")));
+    }
+
+    @Test public void
+    handles_empty_arrays() {
+        assertThat(Address.deserialiser.readFromString("{\"addressLines\":[]}").get(Address.addressLines).get().size(), equalTo(0));
+    }
+
+    @Test public void
+    handles_arrays_of_objects() {
+        ListKey<Record> addresses = ListKey.named("addresses");
+        JsonDeserialiser ds = i -> i.add(addresses, i.fromList(Address.deserialiser));
+        Record r = ds.readFromString("{\"addresses\":[{\"addressLines\":[\"line 1\",\"line 2\"]},{\"addressLines\":[]}]}");
+
+        assertThat(addresses.join(Path.toIndex(0)).join(Address.addressLines).join(Path.toIndex(0)).apply(r).get(), equalTo("line 1"));
+        assertThat(addresses.join(Path.toIndex(0)).join(Address.addressLines).join(Path.toIndex(1)).apply(r).get(), equalTo("line 2"));
+        assertThat(addresses.join(Path.toIndex(1)).join(Address.addressLines).apply(r).get().size(), equalTo(0));
+    }
+
+    @Test public void
+    handles_arrays_of_arrays() {
+        ListKey<PVector<Integer>> rows = ListKey.named("rows");
+        JsonDeserialiser ds = i -> i.add(rows, i.fromList(i.fromList(JsonDeserialiser.fromInteger)));
+
+        Record r = ds.readFromString("{\"rows\":[[1,2,3],[4,5,6],[7,8,9]]}");
+
+        assertThat(rows.join(Path.toIndex(1)).join(Path.toIndex(1)).apply(r).get(), equalTo(5));
     }
 }

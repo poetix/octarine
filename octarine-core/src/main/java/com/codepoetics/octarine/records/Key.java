@@ -1,11 +1,12 @@
 package com.codepoetics.octarine.records;
 
 import com.codepoetics.octarine.lenses.OptionalLens;
+import com.codepoetics.octarine.paths.Path;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public interface Key<T> extends NamedFunction<Record, Optional<T>>, OptionalLens<Record, T> {
+public interface Key<T> extends OptionalLens<Record, T>, Path.Named<Record, T> {
 
     static <T> Key<T> named(String name, Value...metadata) {
         return named(name, Record.of(metadata));

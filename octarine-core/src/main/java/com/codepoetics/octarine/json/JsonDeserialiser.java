@@ -12,11 +12,8 @@ import org.pcollections.TreePVector;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 public interface JsonDeserialiser extends Deserialiser<JsonParser> {
@@ -33,14 +30,12 @@ public interface JsonDeserialiser extends Deserialiser<JsonParser> {
     default Record readRecord(JsonParser parser) {
         try {
             parser.nextToken();
-            Map<String, Consumer<JsonParser>> fieldDeserialisers = new HashMap<>();
 
             Injections<JsonParser> injections = Injections.against(this);
-
-            RecordBuilder<JsonParser> builder = injections.get();
             injecting(injections);
+            RecordBuilder<JsonParser> builder = injections.get();
 
-            while (parser.nextToken() != JsonToken.END_OBJECT) {
+            while (parser.nextValue() != JsonToken.END_OBJECT) {
                 String fieldName = parser.getCurrentName();
                 builder.accept(fieldName, parser);
             }
@@ -54,9 +49,8 @@ public interface JsonDeserialiser extends Deserialiser<JsonParser> {
     default <V> PVector<V> readList(JsonParser p, Function<JsonParser, V> extractor) {
         List<V> values = new LinkedList<>();
         try {
-            p.nextToken();
-            while (p.getCurrentToken() != JsonToken.END_ARRAY) {
-                 values.add(extractor.apply(p));
+            while (p.nextToken() != JsonToken.END_ARRAY) {
+                values.add(extractor.apply(p));
             }
             return TreePVector.from(values);
         } catch (IOException e) {
@@ -64,44 +58,22 @@ public interface JsonDeserialiser extends Deserialiser<JsonParser> {
         }
     }
 
-    static Function<JsonParser, String> fromString = p -> {
-        try {
-            return p.nextTextValue();
-        } catch (IOException e) {
-            throw new JsonReadingException(e);
+    interface SafeReader<T> extends Function<JsonParser, T> {
+        default T apply(JsonParser p) {
+            try {
+                return applyUnsafe(p);
+            } catch (IOException e) {
+                throw new JsonReadingException(e);
+            }
         }
-    };
 
-    static Function<JsonParser, Integer> fromInteger = p -> {
-        try {
-            return p.nextIntValue(0);
-        } catch (IOException e) {
-            throw new JsonReadingException(e);
-        }
-    };
+        T applyUnsafe(JsonParser p) throws IOException;
+    }
 
-    static Function<JsonParser, Boolean> fromBoolean = p -> {
-        try {
-            return p.nextBooleanValue();
-        } catch (IOException e) {
-            throw new JsonReadingException(e);
-        }
-    };
-
-    static Function<JsonParser, Long> fromLong = p -> {
-        try {
-            return p.nextLongValue(0);
-        } catch (IOException e) {
-            throw new JsonReadingException(e);
-        }
-    };
-
-    static Function<JsonParser, Double> fromDouble = p -> {
-        try {
-            p.nextToken();
-            return p.getDoubleValue();
-        } catch (IOException e) {
-            throw new JsonReadingException(e);
-        }
-    };
+    static SafeReader<String> fromString = JsonParser::getValueAsString;
+    static SafeReader<Integer> fromInteger = JsonParser::getIntValue;
+    static SafeReader<Boolean> fromBoolean = JsonParser::getBooleanValue;
+    static SafeReader<Long> fromLong = JsonParser::getLongValue;
+    static SafeReader<Double> fromDouble = JsonParser::getDoubleValue;
 }
+

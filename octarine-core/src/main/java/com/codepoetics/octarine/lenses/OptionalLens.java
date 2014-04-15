@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public interface OptionalLens<T, V> extends Lens<T, Optional<V>>, Chainable<T, V> {
+public interface OptionalLens<T, V> extends Lens<T, Optional<V>> {
 
     static <T, V> OptionalLens<T, V> wrap(Lens<T, Optional<V>> lens) {
         return new OptionalLens<T, V>() {

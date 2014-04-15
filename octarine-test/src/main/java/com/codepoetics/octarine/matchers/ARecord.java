@@ -1,5 +1,6 @@
 package com.codepoetics.octarine.matchers;
 
+import com.codepoetics.octarine.paths.Path;
 import com.codepoetics.octarine.records.Key;
 import com.codepoetics.octarine.records.Record;
 import com.codepoetics.octarine.records.Schema;
@@ -35,16 +36,16 @@ public class ARecord extends TypeSafeDiagnosingMatcher<Record> {
         this.instanceMatcher = instanceMatcher;
     }
 
-    public <V> ARecord with(Key<V> key, Matcher<? extends V> matcher) {
-        return new ARecord(schema, instanceMatcher.with(key, Present.and(matcher)));
+    public <V> ARecord with(Path<Record, V> path, Matcher<? extends V> matcher) {
+        return new ARecord(schema, instanceMatcher.with(path, Present.and(matcher)));
     }
 
-    public <V> ARecord with(Key<V> key, V value) {
-        return new ARecord(schema, instanceMatcher.with(key, Present.and(equalTo(value))));
+    public <V> ARecord with(Path<Record, V> path, V value) {
+        return new ARecord(schema, instanceMatcher.with(path, Present.and(equalTo(value))));
     }
 
-    public <V> ARecord without(Key<V> key) {
-        return new ARecord(schema, instanceMatcher.with(key, equalTo(Optional.<V>empty())));
+    public <V> ARecord without(Path<Record, V> path) {
+        return new ARecord(schema, instanceMatcher.with(path, equalTo(Optional.<V>empty())));
     }
 
     @Override

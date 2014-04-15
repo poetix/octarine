@@ -1,6 +1,6 @@
 package com.codepoetics.octarine.matchers;
 
-import com.codepoetics.octarine.records.NamedFunction;
+import com.codepoetics.octarine.paths.Path;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
@@ -56,14 +56,13 @@ public class AnInstance<T> extends TypeSafeDiagnosingMatcher<T> {
         this.matchers = matchers;
     }
 
-    public <V> AnInstance<T> with(NamedFunction<? super T, ? extends V> f, Matcher<? extends V> matcher) {
-        return new AnInstance<T>(klass, matchers.plus(new PropertyMatcher<T, V>(f, f.name(), matcher)));
-    }
-
     public <V> AnInstance<T> with(Function<? super T, ? extends V> f, String name, Matcher<? extends V> matcher) {
         return new AnInstance<T>(klass, matchers.plus(new PropertyMatcher<T, V>(f, name, matcher)));
     }
 
+    public <V> AnInstance<T> with(Path<? super T, ? extends V> path, Matcher<? extends V> matcher) {
+        return with(path, path.describePath(), matcher);
+    }
 
     @Override
     protected boolean matchesSafely(T t, Description description) {
