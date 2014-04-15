@@ -50,79 +50,79 @@
 
 <p>We define keys, schemas, serialisers and deserialisers for two record types, <code>Person</code> and <code>Address</code>.</p>
 
-<div class="highlight highlight-java"><pre>    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">interface</span> <span class="nc">Address</span> <span class="o">{</span>
-        <span class="kd">static</span> <span class="kd">final</span> <span class="n">KeySet</span> <span class="n">mandatoryKeys</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KeySet</span><span class="o">();</span>
-        <span class="kd">static</span> <span class="kd">final</span> <span class="n">ListKey</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">addressLines</span> <span class="o">=</span> <span class="n">mandatoryKeys</span><span class="o">.</span><span class="na">addList</span><span class="o">(</span><span class="s">"addressLines"</span><span class="o">);</span>
-        <span class="kd">static</span> <span class="kd">final</span> <span class="n">Key</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">postcode</span> <span class="o">=</span> <span class="n">mandatoryKeys</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"postcode"</span><span class="o">);</span>
+<div class="highlight highlight-java"><pre><span class="kd">public</span> <span class="kd">static</span> <span class="kd">interface</span> <span class="nc">Address</span> <span class="o">{</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="n">KeySet</span> <span class="n">mandatoryKeys</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KeySet</span><span class="o">();</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="n">ListKey</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">addressLines</span> <span class="o">=</span> <span class="n">mandatoryKeys</span><span class="o">.</span><span class="na">addList</span><span class="o">(</span><span class="s">"addressLines"</span><span class="o">);</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="n">Key</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">postcode</span> <span class="o">=</span> <span class="n">mandatoryKeys</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"postcode"</span><span class="o">);</span>
 
-        <span class="n">Schema</span><span class="o">&lt;</span><span class="n">Address</span><span class="o">&gt;</span> <span class="n">schema</span> <span class="o">=</span> <span class="nl">mandatoryKeys:</span><span class="o">:</span><span class="n">accept</span><span class="o">;</span>
+    <span class="n">Schema</span><span class="o">&lt;</span><span class="n">Address</span><span class="o">&gt;</span> <span class="n">schema</span> <span class="o">=</span> <span class="nl">mandatoryKeys:</span><span class="o">:</span><span class="n">accept</span><span class="o">;</span>
 
-        <span class="n">JsonDeserialiser</span> <span class="n">reader</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-&gt;</span>
-                <span class="n">i</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">addressLines</span><span class="o">,</span> <span class="n">i</span><span class="o">.</span><span class="na">fromList</span><span class="o">(</span><span class="n">fromString</span><span class="o">))</span>
-                 <span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">postcode</span><span class="o">,</span> <span class="n">fromString</span><span class="o">);</span>
+    <span class="n">JsonDeserialiser</span> <span class="n">reader</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-&gt;</span>
+            <span class="n">i</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">addressLines</span><span class="o">,</span> <span class="n">i</span><span class="o">.</span><span class="na">fromList</span><span class="o">(</span><span class="n">fromString</span><span class="o">))</span>
+             <span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">postcode</span><span class="o">,</span> <span class="n">fromString</span><span class="o">);</span>
 
-        <span class="n">JsonSerialiser</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">p</span> <span class="o">-&gt;</span>
-                <span class="n">p</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">addressLines</span><span class="o">,</span> <span class="n">p</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="n">asString</span><span class="o">))</span>
-                 <span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">postcode</span><span class="o">,</span> <span class="n">asString</span><span class="o">);</span>
-    <span class="o">}</span>
+    <span class="n">JsonSerialiser</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">p</span> <span class="o">-&gt;</span>
+            <span class="n">p</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">addressLines</span><span class="o">,</span> <span class="n">p</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="n">asString</span><span class="o">))</span>
+             <span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">postcode</span><span class="o">,</span> <span class="n">asString</span><span class="o">);</span>
+<span class="o">}</span>
 </pre></div>
 
-<div class="highlight highlight-java"><pre>    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">interface</span> <span class="nc">Person</span> <span class="o">{</span>
-        <span class="kd">static</span> <span class="kd">final</span> <span class="n">KeySet</span> <span class="n">mandatoryKeys</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KeySet</span><span class="o">();</span>
-        <span class="kd">static</span> <span class="kd">final</span> <span class="n">Key</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">name</span> <span class="o">=</span> <span class="n">mandatoryKeys</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"name"</span><span class="o">);</span>
-        <span class="kd">static</span> <span class="kd">final</span> <span class="n">Key</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">age</span> <span class="o">=</span> <span class="n">mandatoryKeys</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"age"</span><span class="o">);</span>
-        <span class="kd">static</span> <span class="kd">final</span> <span class="n">RecordKey</span> <span class="n">address</span> <span class="o">=</span> <span class="n">mandatoryKeys</span><span class="o">.</span><span class="na">addRecord</span><span class="o">(</span><span class="s">"address"</span><span class="o">);</span>
+<div class="highlight highlight-java"><pre><span class="kd">public</span> <span class="kd">static</span> <span class="kd">interface</span> <span class="nc">Person</span> <span class="o">{</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="n">KeySet</span> <span class="n">mandatoryKeys</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KeySet</span><span class="o">();</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="n">Key</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">name</span> <span class="o">=</span> <span class="n">mandatoryKeys</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"name"</span><span class="o">);</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="n">Key</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">age</span> <span class="o">=</span> <span class="n">mandatoryKeys</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"age"</span><span class="o">);</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="n">RecordKey</span> <span class="n">address</span> <span class="o">=</span> <span class="n">mandatoryKeys</span><span class="o">.</span><span class="na">addRecord</span><span class="o">(</span><span class="s">"address"</span><span class="o">);</span>
 
-        <span class="n">Schema</span><span class="o">&lt;</span><span class="n">Person</span><span class="o">&gt;</span> <span class="n">schema</span> <span class="o">=</span> <span class="o">(</span><span class="n">r</span><span class="o">,</span> <span class="n">v</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
-            <span class="n">mandatoryKeys</span><span class="o">.</span><span class="na">accept</span><span class="o">(</span><span class="n">r</span><span class="o">,</span> <span class="n">v</span><span class="o">);</span>
-            <span class="n">age</span><span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">r</span><span class="o">).</span><span class="na">ifPresent</span><span class="o">(</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="o">{</span> <span class="k">if</span> <span class="o">(</span><span class="n">a</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span> <span class="n">v</span><span class="o">.</span><span class="na">accept</span><span class="o">(</span><span class="s">"Age must be 0 or greater"</span><span class="o">);</span> <span class="o">});</span>
-            <span class="n">address</span><span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">r</span><span class="o">).</span><span class="na">ifPresent</span><span class="o">(</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="n">Address</span><span class="o">.</span><span class="na">schema</span><span class="o">.</span><span class="na">accept</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">v</span><span class="o">));</span>
-        <span class="o">};</span>
+    <span class="n">Schema</span><span class="o">&lt;</span><span class="n">Person</span><span class="o">&gt;</span> <span class="n">schema</span> <span class="o">=</span> <span class="o">(</span><span class="n">r</span><span class="o">,</span> <span class="n">v</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+        <span class="n">mandatoryKeys</span><span class="o">.</span><span class="na">accept</span><span class="o">(</span><span class="n">r</span><span class="o">,</span> <span class="n">v</span><span class="o">);</span>
+        <span class="n">age</span><span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">r</span><span class="o">).</span><span class="na">ifPresent</span><span class="o">(</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="o">{</span> <span class="k">if</span> <span class="o">(</span><span class="n">a</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span> <span class="n">v</span><span class="o">.</span><span class="na">accept</span><span class="o">(</span><span class="s">"Age must be 0 or greater"</span><span class="o">);</span> <span class="o">});</span>
+        <span class="n">address</span><span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">r</span><span class="o">).</span><span class="na">ifPresent</span><span class="o">(</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="n">Address</span><span class="o">.</span><span class="na">schema</span><span class="o">.</span><span class="na">accept</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">v</span><span class="o">));</span>
+    <span class="o">};</span>
 
-        <span class="n">JsonDeserialiser</span> <span class="n">reader</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-&gt;</span>
-                <span class="n">i</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">fromString</span><span class="o">)</span>
-                 <span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">age</span><span class="o">,</span> <span class="n">fromInteger</span><span class="o">)</span>
-                 <span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">address</span><span class="o">,</span> <span class="n">Address</span><span class="o">.</span><span class="na">reader</span><span class="o">);</span>
+    <span class="n">JsonDeserialiser</span> <span class="n">reader</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-&gt;</span>
+            <span class="n">i</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">fromString</span><span class="o">)</span>
+             <span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">age</span><span class="o">,</span> <span class="n">fromInteger</span><span class="o">)</span>
+             <span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">address</span><span class="o">,</span> <span class="n">Address</span><span class="o">.</span><span class="na">reader</span><span class="o">);</span>
 
-        <span class="n">JsonSerialiser</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">p</span> <span class="o">-&gt;</span>
-            <span class="n">p</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">asString</span><span class="o">)</span>
-             <span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">age</span><span class="o">,</span> <span class="n">asInteger</span><span class="o">)</span>
-             <span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">address</span><span class="o">,</span> <span class="n">Address</span><span class="o">.</span><span class="na">writer</span><span class="o">);</span>
-    <span class="o">}</span>
+    <span class="n">JsonSerialiser</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">p</span> <span class="o">-&gt;</span>
+        <span class="n">p</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">asString</span><span class="o">)</span>
+         <span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">age</span><span class="o">,</span> <span class="n">asInteger</span><span class="o">)</span>
+         <span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">address</span><span class="o">,</span> <span class="n">Address</span><span class="o">.</span><span class="na">writer</span><span class="o">);</span>
+<span class="o">}</span>
 </pre></div>
 
 <p>We can now read a <code>Person</code>'s details from Json, validate the record against the schema and make test assertions against it, created an updated copy with one value changed, and write the updated copy back out to Json.</p>
 
 <div class="highlight highlight-java"><pre><span class="nd">@Test</span> <span class="kd">public</span> <span class="kt">void</span>
-    <span class="n">deserialise_validate_update_serialise</span><span class="o">()</span> <span class="o">{</span>
-        <span class="n">Record</span> <span class="n">record</span> <span class="o">=</span> <span class="n">Person</span><span class="o">.</span><span class="na">reader</span><span class="o">.</span><span class="na">readFromString</span><span class="o">(</span>
-                <span class="s">"{\"name\": \"Arthur Putey\",\n"</span> <span class="o">+</span><span class="s">""</span> <span class="o">+</span>
-                <span class="s">" \"age\": 42,\n"</span> <span class="o">+</span>
-                <span class="s">" \"address\": {\n"</span> <span class="o">+</span>
-                <span class="s">"   \"addressLines\": [\"59 Broad Street\", \"Cirencester\"],\n"</span> <span class="o">+</span>
-                <span class="s">"   \"postcode\": \"RA8 81T\"\n"</span> <span class="o">+</span>
-                <span class="s">"  }\n"</span> <span class="o">+</span>
-                <span class="s">"}"</span><span class="o">);</span>
+<span class="n">deserialise_validate_update_serialise</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">Record</span> <span class="n">record</span> <span class="o">=</span> <span class="n">Person</span><span class="o">.</span><span class="na">reader</span><span class="o">.</span><span class="na">readFromString</span><span class="o">(</span>
+            <span class="s">"{\"name\": \"Arthur Putey\",\n"</span> <span class="o">+</span><span class="s">""</span> <span class="o">+</span>
+            <span class="s">" \"age\": 42,\n"</span> <span class="o">+</span>
+            <span class="s">" \"address\": {\n"</span> <span class="o">+</span>
+            <span class="s">"   \"addressLines\": [\"59 Broad Street\", \"Cirencester\"],\n"</span> <span class="o">+</span>
+            <span class="s">"   \"postcode\": \"RA8 81T\"\n"</span> <span class="o">+</span>
+            <span class="s">"  }\n"</span> <span class="o">+</span>
+            <span class="s">"}"</span><span class="o">);</span>
 
-        <span class="n">assertThat</span><span class="o">(</span><span class="n">record</span><span class="o">,</span> <span class="n">ARecord</span><span class="o">.</span><span class="na">validAgainst</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">schema</span><span class="o">)</span>
-                <span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">name</span><span class="o">,</span> <span class="s">"Arthur Putey"</span><span class="o">)</span>
-                <span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">age</span><span class="o">,</span> <span class="mi">42</span><span class="o">)</span>
-                        <span class="c1">// Chaining keys</span>
-                <span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">address</span><span class="o">.</span><span class="na">join</span><span class="o">(</span><span class="n">Address</span><span class="o">.</span><span class="na">addressLines</span><span class="o">).</span><span class="na">join</span><span class="o">(</span><span class="n">Path</span><span class="o">.</span><span class="na">toIndex</span><span class="o">(</span><span class="mi">0</span><span class="o">)),</span> <span class="s">"59 Broad Street"</span><span class="o">)</span>
-                        <span class="c1">// Using a sub-matcher</span>
-                <span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">address</span><span class="o">,</span> <span class="n">ARecord</span><span class="o">.</span><span class="na">validAgainst</span><span class="o">(</span><span class="n">Address</span><span class="o">.</span><span class="na">schema</span><span class="o">).</span><span class="na">with</span><span class="o">(</span><span class="n">Address</span><span class="o">.</span><span class="na">postcode</span><span class="o">,</span> <span class="s">"RA8 81T"</span><span class="o">)));</span>
+    <span class="n">assertThat</span><span class="o">(</span><span class="n">record</span><span class="o">,</span> <span class="n">ARecord</span><span class="o">.</span><span class="na">validAgainst</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">schema</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">name</span><span class="o">,</span> <span class="s">"Arthur Putey"</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">age</span><span class="o">,</span> <span class="mi">42</span><span class="o">)</span>
+                    <span class="c1">// Chaining keys</span>
+            <span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">address</span><span class="o">.</span><span class="na">join</span><span class="o">(</span><span class="n">Address</span><span class="o">.</span><span class="na">addressLines</span><span class="o">).</span><span class="na">join</span><span class="o">(</span><span class="n">Path</span><span class="o">.</span><span class="na">toIndex</span><span class="o">(</span><span class="mi">0</span><span class="o">)),</span> <span class="s">"59 Broad Street"</span><span class="o">)</span>
+                    <span class="c1">// Using a sub-matcher</span>
+            <span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">address</span><span class="o">,</span> <span class="n">ARecord</span><span class="o">.</span><span class="na">validAgainst</span><span class="o">(</span><span class="n">Address</span><span class="o">.</span><span class="na">schema</span><span class="o">).</span><span class="na">with</span><span class="o">(</span><span class="n">Address</span><span class="o">.</span><span class="na">postcode</span><span class="o">,</span> <span class="s">"RA8 81T"</span><span class="o">)));</span>
 
-        <span class="n">Record</span> <span class="n">changed</span> <span class="o">=</span> <span class="n">Person</span><span class="o">.</span><span class="na">age</span><span class="o">.</span><span class="na">update</span><span class="o">(</span>
-            <span class="n">record</span><span class="o">,</span> <span class="n">age</span> <span class="o">-&gt;</span> <span class="n">age</span><span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">v</span> <span class="o">-&gt;</span> <span class="n">v</span> <span class="o">+</span> <span class="mi">1</span><span class="o">));</span>
+    <span class="n">Record</span> <span class="n">changed</span> <span class="o">=</span> <span class="n">Person</span><span class="o">.</span><span class="na">age</span><span class="o">.</span><span class="na">update</span><span class="o">(</span>
+        <span class="n">record</span><span class="o">,</span> <span class="n">age</span> <span class="o">-&gt;</span> <span class="n">age</span><span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">v</span> <span class="o">-&gt;</span> <span class="n">v</span> <span class="o">+</span> <span class="mi">1</span><span class="o">));</span>
 
-        <span class="n">assertThat</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">writer</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">changed</span><span class="o">),</span> <span class="n">equalTo</span><span class="o">(</span>
-                <span class="s">"{\"name\":\"Arthur Putey\","</span> <span class="o">+</span><span class="s">""</span> <span class="o">+</span>
-                        <span class="s">"\"age\":43,"</span> <span class="o">+</span>
-                        <span class="s">"\"address\":{"</span> <span class="o">+</span>
-                        <span class="s">"\"addressLines\":[\"59 Broad Street\",\"Cirencester\"],"</span> <span class="o">+</span>
-                        <span class="s">"\"postcode\":\"RA8 81T\""</span> <span class="o">+</span>
-                        <span class="s">"}}"</span><span class="o">));</span>
-    <span class="o">}</span>
+    <span class="n">assertThat</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">writer</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">changed</span><span class="o">),</span> <span class="n">equalTo</span><span class="o">(</span>
+            <span class="s">"{\"name\":\"Arthur Putey\","</span> <span class="o">+</span><span class="s">""</span> <span class="o">+</span>
+                    <span class="s">"\"age\":43,"</span> <span class="o">+</span>
+                    <span class="s">"\"address\":{"</span> <span class="o">+</span>
+                    <span class="s">"\"addressLines\":[\"59 Broad Street\",\"Cirencester\"],"</span> <span class="o">+</span>
+                    <span class="s">"\"postcode\":\"RA8 81T\""</span> <span class="o">+</span>
+                    <span class="s">"}}"</span><span class="o">));</span>
+<span class="o">}</span>
 </pre></div>
 
 <h3>
