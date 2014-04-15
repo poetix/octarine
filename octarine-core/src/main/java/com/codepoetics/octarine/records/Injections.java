@@ -10,15 +10,16 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public interface Injections<T> extends Supplier<RecordBuilder<T>> {
+public interface Injections<T> extends InjectionCollector<T>, Supplier<RecordBuilder<T>> {
 
     static <T> Injections<T> against(Deserialiser<T> deserialiser) {
-        Map<String, Consumer<T>> fieldDeserialisers = new HashMap<>();
-        Map<Key<?>, Object> values = new HashMap<>();
-
         return new Injections<T>() {
+
+            private final Map<String, Consumer<T>> fieldDeserialisers = new HashMap<>();
+            private final Map<Key<?>, Object> values = new HashMap<>();
+
             @Override
-            public <V> Injections<T> add(Key<V> key, String fieldName, Function<T, V> extractor) {
+            public <V> InjectionCollector<T> add(Key<V> key, String fieldName, Function<T, ? extends V> extractor) {
                 fieldDeserialisers.put(fieldName, p -> values.put(key, extractor.apply(p)));
                 return this;
             }
@@ -40,17 +41,10 @@ public interface Injections<T> extends Supplier<RecordBuilder<T>> {
             }
 
             @Override
-            public <V> Function<T, PVector<V>> fromList(Function<T, V> extractor) {
+            public <V> Function<T, PVector<V>> fromList(Function<T, ? extends V> extractor) {
                 return reader -> deserialiser.readList(reader, extractor);
             }
         };
     }
 
-    default <V> Injections<T> add(Key<V> key, Function<T, V> extractor) {
-        return add(key, key.name(), extractor);
-    }
-
-    <V> Injections<T> add(Key<V> key, String fieldName, Function<T, V> extractor);
-
-    <V> Function<T, PVector<V>> fromList(Function<T, V> extractor);
 }

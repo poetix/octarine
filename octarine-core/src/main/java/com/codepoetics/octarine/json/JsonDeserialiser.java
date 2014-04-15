@@ -46,7 +46,7 @@ public interface JsonDeserialiser extends Deserialiser<JsonParser> {
         }
     }
 
-    default <V> PVector<V> readList(JsonParser p, Function<JsonParser, V> extractor) {
+    default <V> PVector<V> readList(JsonParser p, Function<JsonParser, ? extends V> extractor) {
         List<V> values = new LinkedList<>();
         try {
             while (p.nextToken() != JsonToken.END_ARRAY) {

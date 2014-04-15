@@ -36,14 +36,14 @@ public interface Deserialiser<T> extends Function<T, Record> {
         }
     }
 
-    void injecting(Injections<T> injections);
+    void injecting(InjectionCollector<T> injections);
 
     default Record apply(T reader) {
         return readRecord(reader);
     }
 
     Record readRecord(T reader);
-    <V> PVector<V> readList(T reader, Function<T, V> extractor);
+    <V> PVector<V> readList(T reader, Function<T, ? extends V> extractor);
 
     default <R> Function<T, Valid<R>> validAgainst(Schema<R> schema) {
         return t -> {

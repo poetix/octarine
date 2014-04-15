@@ -67,7 +67,7 @@ public class DeserialisationTest {
     @Test public void
     handles_arrays_of_objects() {
         ListKey<Record> addresses = ListKey.named("addresses");
-        JsonDeserialiser ds = i -> i.add(addresses, i.fromList(Address.deserialiser));
+        JsonDeserialiser ds = i -> i.addList(addresses, Address.deserialiser);
         Record r = ds.readFromString("{\"addresses\":[{\"addressLines\":[\"line 1\",\"line 2\"]},{\"addressLines\":[]}]}");
 
         assertThat(addresses.join(Path.toIndex(0)).join(Address.addressLines).join(Path.toIndex(0)).apply(r).get(), equalTo("line 1"));
@@ -78,7 +78,7 @@ public class DeserialisationTest {
     @Test public void
     handles_arrays_of_arrays() {
         ListKey<PVector<Integer>> rows = ListKey.named("rows");
-        JsonDeserialiser ds = i -> i.add(rows, i.fromList(i.fromList(JsonDeserialiser.fromInteger)));
+        JsonDeserialiser ds = i -> i.addList(rows, i.fromList(JsonDeserialiser.fromInteger));
 
         Record r = ds.readFromString("{\"rows\":[[1,2,3],[4,5,6],[7,8,9]]}");
 

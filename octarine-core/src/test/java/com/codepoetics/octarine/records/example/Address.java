@@ -28,5 +28,5 @@ public interface Address {
             p.add(addressLines, p.asList(asString));
 
     public static final JsonDeserialiser deserialiser = i ->
-            i.add(addressLines, i.fromList(fromString));
+            i.addList(addressLines, fromString);
 }

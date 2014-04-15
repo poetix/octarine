@@ -8,6 +8,7 @@ import com.codepoetics.octarine.records.Schema;
 import com.codepoetics.octarine.records.ValidRecordKey;
 
 import java.awt.*;
+import java.util.function.Function;
 
 import static com.codepoetics.octarine.json.JsonDeserialiser.fromInteger;
 import static com.codepoetics.octarine.json.JsonDeserialiser.fromString;
@@ -28,10 +29,12 @@ public interface Person extends Schema<Person> {
         if (age.from(record).get() < 0) validationErrors.accept("Age must be 0 or greater");
     };
 
+    public static final Function<Color, String> colourToString = c -> "0x" + Integer.toHexString(c.getRGB()).toUpperCase().substring(2);
+
     public static final JsonSerialiser serialiser = p ->
             p.add(Person.name, asString)
              .add(age, asInteger)
-             .add(favouriteColour, p.map(c -> "0x" + Integer.toHexString(c.getRGB()).toUpperCase().substring(2), asString))
+             .add(favouriteColour, (c, g) -> asString.accept(colourToString.apply(c), g))
              .add(address, Address.serialiser);
 
     public static final JsonDeserialiser deserialiser = i ->

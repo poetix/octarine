@@ -27,7 +27,7 @@ public class ARecordTest {
         Schema<Address> schema = mandatoryKeys::accept;
 
         JsonDeserialiser reader = i ->
-                i.add(addressLines, i.fromList(fromString))
+                i.addList(addressLines, fromString)
                  .add(postcode, fromString);
 
         JsonSerialiser writer = p ->
