@@ -20,9 +20,14 @@ public interface MatcherBuilder<S, T> {
         return new MatcherBuilder<S, T>() {
             @Override
             public Matching<S, T> matching(Extractor<? super S, ? extends T> extractor) {
-                return MatcherBuilder.this.matching(Extractor.join(predicate, extractor));
+                return MatcherBuilder.this.matching(
+                        Extractor.join(predicate, extractor));
             }
         };
+    }
+
+    default MatcherBuilder<S, T> unless(Predicate<? super S> predicate) {
+        return when(predicate.negate());
     }
 
     default <A, B> Matching<S, T> matching(
