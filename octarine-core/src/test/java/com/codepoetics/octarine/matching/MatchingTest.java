@@ -20,7 +20,7 @@ public class MatchingTest {
     private static final Matching<Record, String> matching = Matching.build(m ->
             m.matching(Person.schema, v -> "A valid person: " + v)
              .matching(Address.schema, a -> "A valid address: " + a)
-             .matching(rating.is(5), title, director, (t, d) -> String.format("The 5-star movie '%s', directed by %s", t, d))
+             .when(rating.is(5)).matching(title, director, (t, d) -> String.format("The 5-star movie '%s', directed by %s", t, d))
              .matching(title, director, (t, d) -> String.format("The movie '%s', directed by %s", t, d)));
 
     private static final Record person = Record.of(
