@@ -1,5 +1,6 @@
 package com.codepoetics.octarine.matching;
 
+import com.codepoetics.octarine.functions.Extractor;
 import com.codepoetics.octarine.functions.QuadFunction;
 import com.codepoetics.octarine.functions.TriFunction;
 
@@ -10,6 +11,10 @@ import java.util.function.Predicate;
 public interface MatcherBuilder<S, T> {
 
     Matching<S, T> matching(Extractor<? super S, ? extends T> extractor);
+
+    default Matching<S, T> matching(Function<? super S, ? extends T> receiver) {
+        return matching(Extractor.it(), receiver);
+    }
 
     default <A> Matching<S, T> matching(Extractor<? super S, ? extends A> extractor,
                                         Function<? super A, ? extends T> receiver) {

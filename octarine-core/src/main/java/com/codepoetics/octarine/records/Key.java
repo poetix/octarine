@@ -1,14 +1,13 @@
 package com.codepoetics.octarine.records;
 
 import com.codepoetics.octarine.lenses.OptionalLens;
-import com.codepoetics.octarine.matching.Extractor;
+import com.codepoetics.octarine.functions.Extractor;
 import com.codepoetics.octarine.paths.Path;
 
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
-public interface Key<T> extends OptionalLens<Record, T>, Path.Named<Record, T>, Extractor<Record, T> {
+public interface Key<T> extends OptionalLens<Record, T>, Path.Named<Record, T> {
 
     static <T> Key<T> named(String name, Value...metadata) {
         return named(name, Record.of(metadata));
@@ -30,14 +29,8 @@ public interface Key<T> extends OptionalLens<Record, T>, Path.Named<Record, T>, 
     default public boolean test(Record instance) { return instance.containsKey(this); }
 
     @Override
-    default public T extract(Record instance) { return from(instance).get(); }
-
-    @Override
-    default public Optional<T> tryExtract(Record instance) { return from(instance); }
-
-    @Override
     default public Optional<T> get(Record instance) {
-        return from(instance);
+        return instance.get(this);
     }
 
     @Override
@@ -45,18 +38,6 @@ public interface Key<T> extends OptionalLens<Record, T>, Path.Named<Record, T>, 
         return newValue.isPresent()
             ? instance.with(this.of(newValue.get()))
             : instance.without(this);
-    }
-
-    default Optional<T> from(Record record) {
-        return record.get(this);
-    }
-
-    default T from(Record record, T defaultValue) {
-        return record.get(this).orElse(defaultValue);
-    }
-
-    default T from(Record record, Supplier<T> defaultValue) {
-        return record.get(this).orElseGet(defaultValue);
     }
 
     String name();

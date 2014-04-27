@@ -1,6 +1,6 @@
 package com.codepoetics.octarine.records;
 
-import com.codepoetics.octarine.matching.Extractor;
+import com.codepoetics.octarine.functions.Extractor;
 import org.pcollections.PMap;
 
 import java.util.LinkedList;
@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public interface Schema<T> extends BiConsumer<Record, Consumer<String>>, Extractor<Record, Valid<T>> {
+public interface Schema<T> extends BiConsumer<Record, Consumer<String>>, Extractor.FromPredicate<Record, Valid<T>> {
 
     @Override default boolean test(Record record) {
         return validate(record).isValid();

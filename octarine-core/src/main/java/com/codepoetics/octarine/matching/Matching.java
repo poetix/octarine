@@ -1,12 +1,13 @@
 package com.codepoetics.octarine.matching;
 
+import com.codepoetics.octarine.functions.Extractor;
 import org.pcollections.PVector;
 import org.pcollections.TreePVector;
 
 import java.util.Optional;
 import java.util.function.Function;
 
-public interface Matching<S, T> extends Function<S, Optional<T>>, MatcherBuilder<S, T> {
+public interface Matching<S, T> extends Extractor.FromOptionalFunction<S, T>, MatcherBuilder<S, T> {
 
     static <S, T> Matching<S, T> build(Function<Matching<S, T>, Matching<S, T>> builder) {
         return builder.apply(Matching.empty());

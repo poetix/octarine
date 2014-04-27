@@ -1,5 +1,6 @@
 package com.codepoetics.octarine.lenses;
 
+import com.codepoetics.octarine.functions.Extractor;
 import org.pcollections.PMap;
 import org.pcollections.PVector;
 
@@ -7,7 +8,7 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public interface OptionalLens<T, V> extends Lens<T, Optional<V>> {
+public interface OptionalLens<T, V> extends Lens<T, Optional<V>>, Extractor.FromOptionalFunction<T,V> {
 
     static <T, V> OptionalLens<T, V> wrap(Lens<T, Optional<V>> lens) {
         return new OptionalLens<T, V>() {

@@ -5,7 +5,6 @@ import com.codepoetics.octarine.records.ListKey;
 import com.codepoetics.octarine.records.Record;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.BiConsumer;
 
 public interface Projections<T> {
@@ -15,11 +14,10 @@ public interface Projections<T> {
 
             @Override
             public <V> Projections<T> add(Key<V> key, String keyName, BiConsumer<? super V, T> valueSerialiser) {
-                Optional<V> value = key.from(record);
-                if (value.isPresent()) {
+                key.get(record).ifPresent(v -> {
                     serialiser.writeKeyName(keyName, writer);
-                    valueSerialiser.accept(value.get(), writer);
-                }
+                    valueSerialiser.accept(v, writer);
+                });
                 return this;
             }
 

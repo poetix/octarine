@@ -1,5 +1,6 @@
 package com.codepoetics.octarine.matching;
 
+import com.codepoetics.octarine.paths.Path;
 import com.codepoetics.octarine.records.Key;
 import com.codepoetics.octarine.records.Record;
 import com.codepoetics.octarine.records.example.Address;
@@ -9,6 +10,7 @@ import org.junit.Test;
 import java.awt.*;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class MatchingTest {
@@ -37,14 +39,14 @@ public class MatchingTest {
 
     @Test public void
     dispatches_on_schema() {
-        assertThat(matching.apply(person).get(), containsString("A valid person"));
-        assertThat(matching.apply(Person.address.from(person).get()).get(), containsString("A valid address"));
+        assertThat(matching.extract(person), containsString("A valid person"));
+        assertThat(matching.extract(Person.address.extract(person)), containsString("A valid address"));
     }
 
     @Test public void
     dispatches_on_present_keys() {
         Record movie = Record.of(title.of("Brazil"), director.of("Terry Gilliam"));
-        assertThat(matching.apply(movie).get(), containsString("The movie 'Brazil', directed by Terry Gilliam"));
+        assertThat(matching.extract(movie), containsString("The movie 'Brazil', directed by Terry Gilliam"));
     }
 
     @Test public void
@@ -53,9 +55,18 @@ public class MatchingTest {
         Record movie2 = Record.of(title.of("Brazil"), director.of("Terry Gilliam"), rating.of(5));
         Record movie3 = Record.of(title.of("Howard the Duck"), director.of("Willard Huyck"), rating.of(0));
 
-        assertThat(matching.apply(movie2).get(), containsString("The 5-star movie 'Brazil', directed by Terry Gilliam"));
-        assertThat(matching.apply(movie1).get(), containsString("The movie 'Existenz', directed by David Cronenberg"));
-        assertThat(matching.apply(movie3).get(), containsString("The utter stinker"));
+        assertThat(matching.extract(movie2), containsString("The 5-star movie 'Brazil', directed by Terry Gilliam"));
+        assertThat(matching.extract(movie1), containsString("The movie 'Existenz', directed by David Cronenberg"));
+        assertThat(matching.extract(movie3), containsString("The utter stinker"));
+    }
+
+    @Test public void
+    dispatches_on_paths() {
+        Matching<Record, String> matching = Matching.build(m ->
+           m.matching(Person.address.join(Address.addressLines).join(Path.toIndex(1)),
+               s -> "Lives in " + s));
+
+        assertThat(matching.extract(person), equalTo("Lives in Sutton"));
     }
 
 

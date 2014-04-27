@@ -23,7 +23,7 @@ public class ValidationTest {
         assertThat(validationResult.isValid(), equalTo(true));
 
         Valid<Person> person = validationResult.get();
-        assertThat(Person.name.from(person, ""), equalTo("Alice Cowley"));
+        assertThat(Person.name.extract(person), equalTo("Alice Cowley"));
     }
 
     @Test public void

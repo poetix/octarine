@@ -30,11 +30,11 @@ public class DeserialisationTest {
                 "}"),
                 Person.schema).get();
 
-        assertThat(Person.name.from(person).orElse(""), equalTo("Dominic"));
-        assertThat(Person.age.from(person).orElse(0), equalTo(39));
-        assertThat(Person.favouriteColour.from(person).get(), equalTo(Color.RED));
+        assertThat(Person.name.extract(person), equalTo("Dominic"));
+        assertThat(Person.age.extract(person), equalTo(39));
+        assertThat(Person.favouriteColour.extract(person), equalTo(Color.RED));
         assertThat(Person.address.join(Address.addressLines).join(Path.toIndex(1))
-                         .apply(person).get(),
+                         .extract(person),
                 equalTo("PO3 1TP")
         );
     }
@@ -70,9 +70,9 @@ public class DeserialisationTest {
         JsonDeserialiser ds = i -> i.addList(addresses, Address.deserialiser);
         Record r = ds.readFromString("{\"addresses\":[{\"addressLines\":[\"line 1\",\"line 2\"]},{\"addressLines\":[]}]}");
 
-        assertThat(addresses.join(Path.toIndex(0)).join(Address.addressLines).join(Path.toIndex(0)).apply(r).get(), equalTo("line 1"));
-        assertThat(addresses.join(Path.toIndex(0)).join(Address.addressLines).join(Path.toIndex(1)).apply(r).get(), equalTo("line 2"));
-        assertThat(addresses.join(Path.toIndex(1)).join(Address.addressLines).apply(r).get().size(), equalTo(0));
+        assertThat(addresses.join(Path.toIndex(0)).join(Address.addressLines).join(Path.toIndex(0)).extract(r), equalTo("line 1"));
+        assertThat(addresses.join(Path.toIndex(0)).join(Address.addressLines).join(Path.toIndex(1)).extract(r), equalTo("line 2"));
+        assertThat(addresses.join(Path.toIndex(1)).join(Address.addressLines).extract(r).size(), equalTo(0));
     }
 
     @Test public void

@@ -1,11 +1,13 @@
 package com.codepoetics.octarine.paths;
 
+import com.codepoetics.octarine.functions.Extractor;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-public interface Path<T, V> extends Function<T, Optional<V>> {
+public interface Path<T, V> extends Extractor.FromOptionalFunction<T, V> {
 
     interface Indexed<I, T, V> extends Path<T, V> {
         I index();
