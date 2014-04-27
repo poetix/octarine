@@ -64,6 +64,6 @@
     <property name="sun.cpu.isalist" value=""/>
   </properties>
   <testcase classname="com.codepoetics.octarine.records.ValidationTest" name="schemas_validate_valid_records" time="0"/>
-  <testcase classname="com.codepoetics.octarine.records.ValidationTest" name="schemas_collect_validation_errors" time="0.004"/>
-  <testcase classname="com.codepoetics.octarine.records.ValidationTest" name="exception_is_thrown_if_valid_record_key_populated_with_invalid_values" time="0"/>
+  <testcase classname="com.codepoetics.octarine.records.ValidationTest" name="schemas_collect_validation_errors" time="0.003"/>
+  <testcase classname="com.codepoetics.octarine.records.ValidationTest" name="exception_is_thrown_if_valid_record_key_populated_with_invalid_values" time="0.001"/>
 </testsuite>

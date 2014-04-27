@@ -1,5 +1,6 @@
-package com.codepoetics.octarine.records;
+package com.codepoetics.octarine.serialisation;
 
+import com.codepoetics.octarine.records.*;
 import org.pcollections.PVector;
 
 import java.io.IOException;

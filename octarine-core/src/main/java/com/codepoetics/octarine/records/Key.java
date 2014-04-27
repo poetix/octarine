@@ -1,12 +1,14 @@
 package com.codepoetics.octarine.records;
 
 import com.codepoetics.octarine.lenses.OptionalLens;
+import com.codepoetics.octarine.matching.Extractor;
 import com.codepoetics.octarine.paths.Path;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public interface Key<T> extends OptionalLens<Record, T>, Path.Named<Record, T> {
+public interface Key<T> extends OptionalLens<Record, T>, Path.Named<Record, T>, Extractor<Record, T> {
 
     static <T> Key<T> named(String name, Value...metadata) {
         return named(name, Record.of(metadata));
@@ -23,6 +25,15 @@ public interface Key<T> extends OptionalLens<Record, T>, Path.Named<Record, T> {
             public Record metadata() { return metadata; }
         };
     }
+
+    @Override
+    default public boolean test(Record instance) { return instance.containsKey(this); }
+
+    @Override
+    default public T extract(Record instance) { return from(instance).get(); }
+
+    @Override
+    default public Optional<T> tryExtract(Record instance) { return from(instance); }
 
     @Override
     default public Optional<T> get(Record instance) {
@@ -56,6 +67,14 @@ public interface Key<T> extends OptionalLens<Record, T>, Path.Named<Record, T> {
             @Override public Key<?> key() { return Key.this; }
             @Override public Object value() { return value; }
         };
+    }
+
+    default Predicate<Record> is(T expected) {
+        return is(Predicate.isEqual(expected));
+    }
+
+    default Predicate<Record> is(Predicate<T> expected) {
+        return record -> record.get(Key.this).map(expected::test).orElse(false);
     }
 
 }

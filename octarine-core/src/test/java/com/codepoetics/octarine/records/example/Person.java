@@ -26,7 +26,7 @@ public interface Person extends Schema<Person> {
 
     public static final Person schema = (record, validationErrors) -> {
         mandatoryKeys.accept(record, validationErrors);
-        if (age.from(record).get() < 0) validationErrors.accept("Age must be 0 or greater");
+        age.from(record).ifPresent(a -> { if (a < 0) validationErrors.accept("Age must be 0 or greater"); });
     };
 
     public static final Function<Color, String> colourToString = c -> "0x" + Integer.toHexString(c.getRGB()).toUpperCase().substring(2);

@@ -57,6 +57,10 @@ public interface Record {
     <T> Optional<T> get(Key<T> key);
     PMap<Key<?>, Object> values();
 
+    default boolean containsKey(Key<?> key) {
+        return values().containsKey(key);
+    }
+
     default Record with(Value...values) {
         return with(Record.of(values));
     }

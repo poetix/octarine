@@ -1,4 +1,6 @@
-package com.codepoetics.octarine.records;
+package com.codepoetics.octarine.serialisation;
+
+import com.codepoetics.octarine.records.Record;
 
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;

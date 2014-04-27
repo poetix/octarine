@@ -1,5 +1,7 @@
-package com.codepoetics.octarine.records;
+package com.codepoetics.octarine.serialisation;
 
+import com.codepoetics.octarine.records.Key;
+import com.codepoetics.octarine.records.Record;
 import org.pcollections.HashTreePMap;
 import org.pcollections.PVector;
 
