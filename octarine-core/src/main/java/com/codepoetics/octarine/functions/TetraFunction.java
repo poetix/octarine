@@ -3,7 +3,7 @@ package com.codepoetics.octarine.functions;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public interface QuadFunction<A, B, C, D, R> {
+public interface TetraFunction<A, B, C, D, R> {
     R apply(A a, B b, C c, D d);
     default TriFunction<B, C, D, R> curry(A a) {
         return (b, c, d) -> this.apply(a, b, c, d);
@@ -14,7 +14,7 @@ public interface QuadFunction<A, B, C, D, R> {
     default Function<D, R> curry(A a, B b, C c) {
         return d -> this.apply(a, b, c, d);
     }
-    default <R2> QuadFunction<A, B, C, D, R2> andThen(Function<? super R, ? extends R2> next) {
+    default <R2> TetraFunction<A, B, C, D, R2> andThen(Function<? super R, ? extends R2> next) {
         return (a, b, c, d) -> next.apply(this.apply(a, b, c, d));
     }
 }
