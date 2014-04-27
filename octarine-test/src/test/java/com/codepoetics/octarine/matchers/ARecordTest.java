@@ -43,8 +43,8 @@ public class ARecordTest {
 
         Schema<Person> schema = (r, v) -> {
             mandatoryKeys.accept(r, v);
-            age.from(r).ifPresent(a -> { if (a < 0) v.accept("Age must be 0 or greater"); });
-            address.from(r).ifPresent(a -> Address.schema.accept(a, v));
+            age.apply(r).ifPresent(a -> { if (a < 0) v.accept("Age must be 0 or greater"); });
+            address.apply(r).ifPresent(a -> Address.schema.accept(a, v));
         };
 
         JsonDeserialiser reader = i ->

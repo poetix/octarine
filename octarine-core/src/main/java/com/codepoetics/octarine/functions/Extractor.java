@@ -105,7 +105,7 @@ public interface Extractor<S, T> extends Predicate<S>, Function<S, Optional<T>> 
             Extractor<? super S, ? extends B> extractorB,
             Extractor<? super S, ? extends C> extractorC,
             Extractor<? super S, ? extends D> extractorD,
-            QuadFunction<? super A, ? super B, ? super C, ? super D, ? extends T> receiver) {
+            TetraFunction<? super A, ? super B, ? super C, ? super D, ? extends T> receiver) {
         return new FromPredicate<S, T>() {
 
             @Override

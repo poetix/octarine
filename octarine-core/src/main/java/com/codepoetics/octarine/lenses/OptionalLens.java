@@ -33,22 +33,12 @@ public interface OptionalLens<T, V> extends Lens<T, Optional<V>>, Extractor.From
 
             @Override
             public Optional<V2> get(T instance) {
-                Optional<V> v = self.get(instance);
-                if (v.isPresent()) {
-                    return next.get(v.get());
-                }
-                return Optional.empty();
+                return self.get(instance).flatMap(v -> next.get(v));
             }
 
             @Override
             public T set(T instance, Optional<V2> newValue) {
-                Optional<V> maybeV = self.get(instance);
-                if (!maybeV.isPresent()) {
-                    return newValue.isPresent()
-                            ? self.setNullable(instance, next.set(missingValueSupplier.get(), newValue))
-                            : instance;
-                }
-                return self.setNullable(instance, next.set(maybeV.get(), newValue));
+                return self.setNullable(instance, next.set(self.get(instance).orElseGet(missingValueSupplier), newValue));
             }
 
         };

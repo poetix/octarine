@@ -16,7 +16,7 @@ public class RecordTest {
     private static final Key<Integer> age = Key.named("age");
     private static final RecordKey address = RecordKey.named("address");
     private static final ListKey<String> addressLines = ListKey.named("addressLines");
-
+    private static final Key<String> notAppearingInThisRecord = Key.named("not appearing in this record");
     private static final Record testRecord = Record.of(
             name.of("Arthur Putey"),
             age.of(43),
@@ -31,7 +31,7 @@ public class RecordTest {
                 address.join(addressLines, Record::empty)
                        .join(OptionalLens.<String>intoPVector(1), TreePVector::<String>empty);
 
-        assertThat(secondLineOfAddress.get(testRecord), equalTo(Optional.ofNullable("Sunderland")));
+        assertThat(secondLineOfAddress.extract(testRecord), equalTo("Sunderland"));
         assertThat(secondLineOfAddress.setNullable(testRecord, "Cirencester"),
                 equalTo(Record.of(
                         name.of("Arthur Putey"),
@@ -41,6 +41,16 @@ public class RecordTest {
                         ))
                 ))
         );
+    }
+
+    @Test public void
+    keys_are_extractors() {
+        assertThat(address.test(testRecord), equalTo(true));
+        assertThat(notAppearingInThisRecord.test(testRecord), equalTo(false));
+
+        assertThat(name.extract(testRecord), equalTo("Arthur Putey"));
+        assertThat(name.get(testRecord), equalTo(Optional.of("Arthur Putey")));
+        assertThat(notAppearingInThisRecord.get(testRecord), equalTo(Optional.empty()));
     }
 
 }

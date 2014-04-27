@@ -1,7 +1,7 @@
 package com.codepoetics.octarine.matching;
 
 import com.codepoetics.octarine.functions.Extractor;
-import com.codepoetics.octarine.functions.QuadFunction;
+import com.codepoetics.octarine.functions.TetraFunction;
 import com.codepoetics.octarine.functions.TriFunction;
 
 import java.util.function.BiFunction;
@@ -53,7 +53,7 @@ public interface MatcherBuilder<S, T> {
                                                  Extractor<? super S, ? extends B> extractorB,
                                                  Extractor<? super S, ? extends C> extractorC,
                                                  Extractor<? super S, ? extends D> extractorD,
-                                                 QuadFunction<? super A, ? super B, ? super C, ? super D, ? extends T> receiver) {
+                                                 TetraFunction<? super A, ? super B, ? super C, ? super D, ? extends T> receiver) {
         return matching(Extractor.join(extractorA, extractorB, extractorC, extractorD, receiver));
     }
 
