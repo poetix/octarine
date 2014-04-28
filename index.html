@@ -1,34 +1,44 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <meta charset='utf-8'>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
-
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
     <title>Octarine by poetix</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
   </head>
-
   <body>
-    <header>
-      <div class="inner">
-        <h1>Octarine</h1>
-        <h2>Java 8 functional magic</h2>
-        <a href="https://github.com/poetix/octarine" class="button"><small>View project on</small>GitHub</a>
-      </div>
-    </header>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/poetix/octarine">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/poetix/octarine/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/poetix/octarine/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <h1>
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Octarine</h1>
+          <p>Java 8 functional magic</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/poetix">poetix</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>
 <a name="octarine" class="anchor" href="#octarine"><span class="octicon octicon-link"></span></a>octarine</h1>
 
 <p><a href="https://travis-ci.org/poetix/octarine"><img src="https://travis-ci.org/poetix/octarine.svg?branch=master" alt="Build Status"></a></p>
@@ -79,7 +89,7 @@
 <p>Because a <code>Record</code> can contain values for any <code>Key</code> or none, the safe way to read values is via the <code>Key::get</code> method, which returns an <code>Optional</code> value:</p>
 
 <div class="highlight highlight-java"><pre><span class="n">Optional</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">personName</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">person</span><span class="o">);</span>
-<span class="n">String</span> <span class="n">personAge</span> <span class="o">=</span> <span class="n">age</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">person</span><span class="o">).</span><span class="na">orElse</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+<span class="kt">int</span> <span class="n">personAge</span> <span class="o">=</span> <span class="n">age</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">person</span><span class="o">).</span><span class="na">orElse</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
 </pre></div>
 
 <p>You can use the <code>Key::test</code> method to find out whether a <code>Record</code> contains a particular <code>Key</code>:</p>
@@ -179,11 +189,11 @@
     <span class="n">Schema</span><span class="o">&lt;</span><span class="n">Address</span><span class="o">&gt;</span> <span class="n">schema</span> <span class="o">=</span> <span class="nl">mandatoryKeys:</span><span class="o">:</span><span class="n">accept</span><span class="o">;</span>
 
     <span class="n">JsonDeserialiser</span> <span class="n">reader</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-&gt;</span>
-            <span class="n">i</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">addressLines</span><span class="o">,</span> <span class="n">i</span><span class="o">.</span><span class="na">fromList</span><span class="o">(</span><span class="n">fromString</span><span class="o">))</span>
+            <span class="n">i</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">addressLines</span><span class="o">,</span> <span class="n">fromString</span><span class="o">)</span>
              <span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">postcode</span><span class="o">,</span> <span class="n">fromString</span><span class="o">);</span>
 
     <span class="n">JsonSerialiser</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">p</span> <span class="o">-&gt;</span>
-            <span class="n">p</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">addressLines</span><span class="o">,</span> <span class="n">p</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="n">asString</span><span class="o">))</span>
+            <span class="n">p</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">addressLines</span><span class="o">,</span> <span class="n">asString</span><span class="o">)</span>
              <span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">postcode</span><span class="o">,</span> <span class="n">asString</span><span class="o">);</span>
 <span class="o">}</span>
 </pre></div>
@@ -228,9 +238,9 @@
     <span class="n">assertThat</span><span class="o">(</span><span class="n">record</span><span class="o">,</span> <span class="n">ARecord</span><span class="o">.</span><span class="na">validAgainst</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">schema</span><span class="o">)</span>
             <span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">name</span><span class="o">,</span> <span class="s">"Arthur Putey"</span><span class="o">)</span>
             <span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">age</span><span class="o">,</span> <span class="mi">42</span><span class="o">)</span>
-                    <span class="c1">// Chaining keys</span>
+            <span class="c1">// Chaining keys</span>
             <span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">address</span><span class="o">.</span><span class="na">join</span><span class="o">(</span><span class="n">Address</span><span class="o">.</span><span class="na">addressLines</span><span class="o">).</span><span class="na">join</span><span class="o">(</span><span class="n">Path</span><span class="o">.</span><span class="na">toIndex</span><span class="o">(</span><span class="mi">0</span><span class="o">)),</span> <span class="s">"59 Broad Street"</span><span class="o">)</span>
-                    <span class="c1">// Using a sub-matcher</span>
+            <span class="c1">// Using a sub-matcher</span>
             <span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">address</span><span class="o">,</span> <span class="n">ARecord</span><span class="o">.</span><span class="na">validAgainst</span><span class="o">(</span><span class="n">Address</span><span class="o">.</span><span class="na">schema</span><span class="o">).</span><span class="na">with</span><span class="o">(</span><span class="n">Address</span><span class="o">.</span><span class="na">postcode</span><span class="o">,</span> <span class="s">"RA8 81T"</span><span class="o">)));</span>
 
     <span class="n">Record</span> <span class="n">changed</span> <span class="o">=</span> <span class="n">Person</span><span class="o">.</span><span class="na">age</span><span class="o">.</span><span class="na">update</span><span class="o">(</span>
@@ -245,25 +255,10 @@
                     <span class="s">"}}"</span><span class="o">));</span>
 <span class="o">}</span>
 </pre></div>
-        </section>
+      </section>
 
-        <aside id="sidebar">
-          <a href="https://github.com/poetix/octarine/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/poetix/octarine/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
-          </a>
-
-          <p class="repo-owner"><a href="https://github.com/poetix/octarine"></a> is maintained by <a href="https://github.com/poetix">poetix</a>.</p>
-
-          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
-        </aside>
-      </div>
     </div>
-
-  
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
   </body>
 </html>
