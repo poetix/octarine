@@ -43,7 +43,7 @@ Because a ```Record``` can contain values for any ```Key``` or none, the safe wa
 
 ```java
 Optional<String> personName = name.get(person);
-String personAge = age.get(person).orElse(0);
+int personAge = age.get(person).orElse(0);
 ```
 
 You can use the ```Key::test``` method to find out whether a ```Record``` contains a particular ```Key```:
@@ -147,11 +147,11 @@ public static interface Address {
     Schema<Address> schema = mandatoryKeys::accept;
 
     JsonDeserialiser reader = i ->
-            i.add(addressLines, i.fromList(fromString))
+            i.add(addressLines, fromString)
              .add(postcode, fromString);
 
     JsonSerialiser writer = p ->
-            p.add(addressLines, p.asList(asString))
+            p.add(addressLines, asString)
              .add(postcode, asString);
 }
 ```
@@ -198,9 +198,9 @@ deserialise_validate_update_serialise() {
     assertThat(record, ARecord.validAgainst(Person.schema)
             .with(Person.name, "Arthur Putey")
             .with(Person.age, 42)
-                    // Chaining keys
+            // Chaining keys
             .with(Person.address.join(Address.addressLines).join(Path.toIndex(0)), "59 Broad Street")
-                    // Using a sub-matcher
+            // Using a sub-matcher
             .with(Person.address, ARecord.validAgainst(Address.schema).with(Address.postcode, "RA8 81T")));
 
     Record changed = Person.age.update(
