@@ -1,8 +1,7 @@
 package com.codepoetics.octarine.records;
 
-import com.codepoetics.octarine.lenses.OptionalLens;
+import com.codepoetics.octarine.lenses.Lens;
 import org.junit.Test;
-import org.pcollections.TreePVector;
 
 import java.util.Optional;
 
@@ -27,12 +26,11 @@ public class RecordTest {
 
     @Test public void
     keys_are_lenses() {
-        OptionalLens<Record, String> secondLineOfAddress =
-                address.join(addressLines, Record::empty)
-                       .join(OptionalLens.<String>intoPVector(1), TreePVector::<String>empty);
+        Lens<Record, String> secondLineOfAddress =
+                address.assertPresent().join(addressLines.assertPresent()).join(Lens.intoPVector(1));
 
-        assertThat(secondLineOfAddress.extract(testRecord), equalTo("Sunderland"));
-        assertThat(secondLineOfAddress.setNullable(testRecord, "Cirencester"),
+        assertThat(secondLineOfAddress.get(testRecord), equalTo("Sunderland"));
+        assertThat(secondLineOfAddress.set(testRecord, "Cirencester"),
                 equalTo(Record.of(
                         name.of("Arthur Putey"),
                         age.of(43),

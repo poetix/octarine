@@ -51,10 +51,10 @@ public interface Key<T> extends OptionalLens<Record, T>, Path.Named<Record, T> {
     }
 
     default Extractor<Record, T> is(T expected) {
-        return matches(Predicate.isEqual(expected));
+        return is(Predicate.isEqual(expected));
     }
 
-    default Extractor<Record, T> matches(Predicate<T> expected) {
+    default Extractor<Record, T> is(Predicate<T> expected) {
         return Extractor.join(
                 record -> record.get(Key.this).map(expected::test).orElse(false),
                 this);

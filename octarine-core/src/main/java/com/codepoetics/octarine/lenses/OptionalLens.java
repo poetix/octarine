@@ -44,6 +44,14 @@ public interface OptionalLens<T, V> extends Lens<T, Optional<V>>, Extractor.From
         };
     }
 
+    default Lens<T, V> assertPresent() {
+        return Lens.of(t -> get(t).get(), (t, v) -> set(t, Optional.ofNullable(v)));
+    }
+
+    default Lens<T, V> withDefault(V defaultValue) {
+        return withDefault(() -> defaultValue);
+    }
+
     default Lens<T, V> withDefault(Supplier<V> defaultValue) {
         return Lens.of(t -> get(t).orElseGet(defaultValue), (t, v) -> set(t, Optional.ofNullable(v)));
     }

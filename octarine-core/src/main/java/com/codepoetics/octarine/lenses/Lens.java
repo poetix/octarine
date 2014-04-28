@@ -66,7 +66,7 @@ public interface Lens<T, V> extends Function<T, V> {
     static <T> Lens<PVector<T>, T> intoPVector(int index) {
         return of(
              ts -> ts.get(index),
-             (ts, t) -> ts.plus(index, t)
+             (ts, t) -> ts.with(index, t)
         );
     }
 
