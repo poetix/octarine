@@ -106,7 +106,7 @@ Alternatively, ```Key```s themselves act as *lenses*, getting and setting values
 
 ```java
 Record person = Record.of(name.of("Dominic"));
-Record personWithAge = age.set(person, Optional.of(39);
+Record personWithAge = age.set(person, Optional.of(39));
 Record personWithoutAName = name.set(Optional.empty());
 ```
 
