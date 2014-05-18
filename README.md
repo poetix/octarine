@@ -3,8 +3,6 @@ octarine
 
 [![Build Status](https://travis-ci.org/poetix/octarine.svg?branch=master)](https://travis-ci.org/poetix/octarine)
 
-### Get it
-
 In Maven:
 
 ```xml
