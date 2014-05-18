@@ -40,7 +40,6 @@
         <connection>scm:git:git://github.com/poetix/octarine.git</connection>
         <developerConnection>scm:git:git@github.com:poetix/octarine.git</developerConnection>
         <url>http://github.com/poetix/octarine</url>
-        <tag>octarine-0.1</tag>
     </scm>
 
 </project>
