@@ -77,13 +77,6 @@ public interface Lens<T, V> extends Function<T, V> {
         );
     }
 
-    default <V2> OptionalLens<T, V2> join(OptionalLens<V, V2> next) {
-        return OptionalLens.wrap(of(
-            t -> next.get(this.get(t)),
-            (t, v) -> set(t, next.set(this.get(t), v))
-        ));
-    }
-
     default <V2> Lens<T, V2> under(Bijection<V, V2> bijection) {
         return of(
             t -> bijection.apply(get(t)),

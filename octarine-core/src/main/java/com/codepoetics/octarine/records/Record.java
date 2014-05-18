@@ -4,18 +4,25 @@ import com.codepoetics.octarine.morphisms.FluentCollection;
 import com.codepoetics.octarine.morphisms.FluentMap;
 import org.pcollections.PMap;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public interface Record {
 
     static Record empty() { return of(); }
+    static Record of(List<Value> values) {
+        return of(FluentCollection.from(values).toStream());
+    }
 
     static Record of(Value...values) {
-        return of(
-            FluentMap.<Key<?>, Object>from(FluentCollection.from(values).toStream().map(Value::toPair)).toPMap()
-        );
+        return of(FluentCollection.from(values).toStream());
+    }
+
+    static Record of(Stream<Value> values) {
+        return of(FluentMap.<Key<?>, Object>from(values.map(Value::toPair)).toPMap());
     }
 
     static Record of(PMap<Key<?>, Object> values) {

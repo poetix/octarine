@@ -41,7 +41,7 @@ public class ValidationTest {
         ));
     }
 
-    @Test(expected=IllegalStateException.class) public void
+    @Test(expected=RecordValidationException.class) public void
     exception_is_thrown_if_valid_record_key_populated_with_invalid_values() {
         Value addressValue = Person.address.of(Person.name.of("Address lines expected"));
     }

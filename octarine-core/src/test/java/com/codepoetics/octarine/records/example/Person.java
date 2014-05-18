@@ -15,19 +15,20 @@ import static com.codepoetics.octarine.json.JsonDeserialiser.fromString;
 import static com.codepoetics.octarine.json.JsonSerialiser.asInteger;
 import static com.codepoetics.octarine.json.JsonSerialiser.asString;
 
-public interface Person extends Schema<Person> {
+public interface Person {
 
-    public static final KeySet mandatoryKeys = new KeySet();
-    public static final Key<String> name = mandatoryKeys.add("name");
-    public static final Key<Integer> age = mandatoryKeys.add("age");
+    static final KeySet mandatoryKeys = new KeySet();
+    static final Key<String> name = mandatoryKeys.add("name");
+    static final Key<Integer> age = mandatoryKeys.add("age");
     public static final Key<Color> favouriteColour = mandatoryKeys.add("favourite colour");
     public static final ValidRecordKey<Address> address =
             mandatoryKeys.addValidRecord("address", Address.schema);
 
-    public static final Person schema = (record, validationErrors) -> {
+    static final Schema<Person> schema = (record, validationErrors) -> {
         mandatoryKeys.accept(record, validationErrors);
         age.get(record).ifPresent(a -> { if (a < 0) validationErrors.accept("Age must be 0 or greater"); });
     };
+
 
     public static final Function<Color, String> colourToString = c -> "0x" + Integer.toHexString(c.getRGB()).toUpperCase().substring(2);
 
