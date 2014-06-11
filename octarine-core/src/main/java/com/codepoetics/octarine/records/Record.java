@@ -43,16 +43,16 @@ public interface Record {
 
             @Override
             public String toString() {
-                return toString(this);
+                return Record.toString(this);
             }
 
             @Override
-            public int hashCode() { return hashCode(this); }
+            public int hashCode() { return Record.hashCode(this); }
 
             @Override
 
             public boolean equals(Object other) {
-                return equals(this, other);
+                return Record.equals(this, other);
             }
         };
     }
@@ -82,10 +82,10 @@ public interface Record {
     default Record fixed() { return FixedRecord.of(values()); }
 
     static String toString(Record record) {
-        return "{" + String.join(", ", record.values().entrySet()
+        Stream<String> descriptions = record.values().entrySet()
                 .stream()
-                .map(e -> String.format("%s: %s", e.getKey().name(), e.getValue()))
-                .collect(Collectors.toList())) + "}";
+                .map(e -> String.format("%s: %s", e.getKey().name(), e.getValue()));
+        return "{" + String.join(", ", descriptions.collect(Collectors.toList())) + "}";
     }
 
     static int hashCode(Record record) {
