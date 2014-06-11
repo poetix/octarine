@@ -3,6 +3,23 @@ octarine
 
 [![Build Status](https://travis-ci.org/poetix/octarine.svg?branch=master)](https://travis-ci.org/poetix/octarine)
 
+In Maven:
+
+```xml
+<dependency>
+    <groupId>com.codepoetics</groupId>
+    <artifactId>octarine-core</artifactId>
+    <version>0.2</version>
+</dependency>
+
+<dependency>
+    <groupId>com.codepoetics</groupId>
+    <artifactId>octarine-test</artifactId>
+    <version>0.2</version>
+    <scope>test</scope>
+</dependency>
+```
+
 ### Manifesto
 
 Octarine is a Java 8 library for working with data at the edges of your system: *records* that are loaded from CSV files, deserialised from JSON messages sent over HTTP, or retrieved from databases.
