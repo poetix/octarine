@@ -5,10 +5,7 @@ import org.pcollections.HashTreePMap;
 import org.pcollections.HashTreePSet;
 import org.pcollections.PMap;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
@@ -50,8 +47,9 @@ class KeyIndex {
 
         if (!values.keySet().equals(lookup.keySet())) {
             throw new IllegalArgumentException(
-                    String.format("Values contains keys not in index: %s",
-                    HashTreePSet.from(values.keySet()).minusAll(lookup.keySet())));
+                    String.format("Supplied keys do not match index: unexpected %s, missing %s",
+                    HashTreePSet.from(values.keySet()).minusAll(lookup.keySet()),
+                    HashTreePSet.from(lookup.keySet()).minusAll(values.keySet())));
         }
 
         Object[] result = new Object[values.size()];
@@ -60,6 +58,19 @@ class KeyIndex {
             result[lookup(entry.getKey()).get()] = entry.getValue();
         }
 
+        return result;
+    }
+
+    public boolean containsAll(Set<Key<?>> keys) {
+        return lookup.keySet().containsAll(keys);
+    }
+
+    public Object[] update(Object[] valueArray, PMap<Key<?>, Object> valueMap) {
+        Object[] result = Arrays.copyOf(valueArray, valueArray.length);
+        for (Map.Entry<Key<?>, Object> entry : valueMap.entrySet()) {
+            int index = lookup(entry.getKey()).get();
+            result[index] = entry.getValue();
+        }
         return result;
     }
 }

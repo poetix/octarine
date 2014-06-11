@@ -51,6 +51,12 @@ public class FixedRecord implements Record {
         return index.valuesFrom(values);
     }
 
+    @Override public Record with(PMap<Key<?>, Object> values) {
+        if (index.containsAll(values.keySet())) {
+            return new FixedRecord(index.update(this.values, values), index);
+        }
+        return Record.of(values().plusAll(values));
+    }
 
     @Override
     public String toString() {
