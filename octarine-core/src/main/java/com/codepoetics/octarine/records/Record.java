@@ -2,6 +2,7 @@ package com.codepoetics.octarine.records;
 
 import com.codepoetics.octarine.morphisms.FluentCollection;
 import com.codepoetics.octarine.morphisms.FluentMap;
+import com.codepoetics.octarine.records.fixed.FixedRecord;
 import org.pcollections.PMap;
 
 import java.util.List;
@@ -42,21 +43,16 @@ public interface Record {
 
             @Override
             public String toString() {
-                return "{" + String.join(", ", values.entrySet()
-                              .stream()
-                              .map(e -> String.format("%s: %s", e.getKey().name(), e.getValue()))
-                              .collect(Collectors.toList())) + "}";
+                return toString(this);
             }
 
             @Override
-            public int hashCode() { return values.hashCode(); }
+            public int hashCode() { return hashCode(this); }
 
             @Override
+
             public boolean equals(Object other) {
-                if (other != null && other instanceof Record) {
-                    return ((Record) other).values().equals(values);
-                }
-                return false;
+                return equals(this, other);
             }
         };
     }
@@ -83,5 +79,24 @@ public interface Record {
 
     default MutableRecord mutable() { return MutableRecord.from(this); }
     default Record immutable() { return this; }
+    default Record fixed() { return FixedRecord.of(values()); }
+
+    static String toString(Record record) {
+        return "{" + String.join(", ", record.values().entrySet()
+                .stream()
+                .map(e -> String.format("%s: %s", e.getKey().name(), e.getValue()))
+                .collect(Collectors.toList())) + "}";
+    }
+
+    static int hashCode(Record record) {
+        return record.values().hashCode();
+    }
+
+    static boolean equals(Record self, Object other) {
+        if (other != null && other instanceof Record) {
+            return ((Record) other).values().equals(self.values());
+        }
+        return false;
+    }
 
 }

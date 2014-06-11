@@ -38,8 +38,18 @@ public interface Schema<T> extends BiConsumer<Record, Consumer<String>>, Extract
                     return record.values();
                 }
 
-                @Override public int hashCode() { return record.hashCode(); }
-                @Override public boolean equals(Object other) { return record.equals(other); }
+                @Override
+                public String toString() {
+                    return Record.toString(this);
+                }
+
+                @Override
+                public int hashCode() { return Record.hashCode(this); }
+
+                @Override
+                public boolean equals(Object other) {
+                    return Record.equals(this, other);
+                }
 
                 @Override
                 public Schema<T> schema() {

@@ -67,6 +67,20 @@ public interface MutableRecord extends Record {
 
             @Override
             public MutableRecord mutable() { return this; }
+
+            @Override
+            public String toString() {
+                return Record.toString(this);
+            }
+
+            @Override
+            public int hashCode() { return Record.hashCode(this); }
+
+            @Override
+
+            public boolean equals(Object other) {
+                return Record.equals(this, other);
+            }
         };
     }
 }
