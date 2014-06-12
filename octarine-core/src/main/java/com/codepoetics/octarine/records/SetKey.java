@@ -1,19 +1,18 @@
 package com.codepoetics.octarine.records;
 
 import org.pcollections.HashTreePSet;
-import org.pcollections.PVector;
-import org.pcollections.TreePVector;
+import org.pcollections.PSet;
 
 import java.util.Arrays;
 import java.util.Collection;
 
-public interface ListKey<T> extends Key<PVector<T>> {
-    public static <T> ListKey<T> named(String name, Value...metadata) {
+public interface SetKey<T> extends Key<PSet<T>> {
+    public static <T> SetKey<T> named(String name, Value... metadata) {
         return named(name, Record.of(metadata));
     }
 
-    public static <T> ListKey<T> named(String name, Record metadata) {
-        return new ListKey<T>() {
+    public static <T> SetKey<T> named(String name, Record metadata) {
+        return new SetKey<T>() {
             @Override
             public String name() {
                 return name;
@@ -27,7 +26,7 @@ public interface ListKey<T> extends Key<PVector<T>> {
     }
 
     default Value of(Collection<? extends T> values) { return of(HashTreePSet.from(values)); }
-    default Value of(T...values) {
-        return of(TreePVector.from(Arrays.asList(values)));
+    default Value of(T... values) {
+        return of(HashTreePSet.from(Arrays.asList(values)));
     }
 }

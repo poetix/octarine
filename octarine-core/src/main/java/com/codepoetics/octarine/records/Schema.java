@@ -39,6 +39,11 @@ public interface Schema<T> extends BiConsumer<Record, Consumer<String>>, Extract
                 }
 
                 @Override
+                public Record with(PMap<Key<?>, Object> values) {
+                    return Record.of(values().plusAll(values));
+                }
+
+                @Override
                 public String toString() {
                     return record.toString();
                 }

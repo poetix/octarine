@@ -61,6 +61,11 @@ public interface MutableRecord extends Record {
             }
 
             @Override
+            public Record with(PMap<Key<?>, Object> values) {
+                return current.with(values);
+            }
+
+            @Override
             public Record immutable() {
                 return current;
             }
@@ -70,16 +75,15 @@ public interface MutableRecord extends Record {
 
             @Override
             public String toString() {
-                return Record.toString(this);
+                return "M" + current.toString();
             }
 
             @Override
-            public int hashCode() { return Record.hashCode(this); }
+            public int hashCode() { return current.hashCode(); }
 
             @Override
-
             public boolean equals(Object other) {
-                return Record.equals(this, other);
+                return current.equals(other);
             }
         };
     }
