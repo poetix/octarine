@@ -50,9 +50,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-
-
+  
   <scm>
     <tag>octarine-0.1</tag>
   </scm>
