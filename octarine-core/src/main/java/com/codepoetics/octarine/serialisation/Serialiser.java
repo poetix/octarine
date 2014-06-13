@@ -1,7 +1,6 @@
 package com.codepoetics.octarine.serialisation;
 
 import com.codepoetics.octarine.records.Record;
-import com.codepoetics.octarine.serialisation.Projections;
 
 import java.io.IOException;
 import java.io.StringWriter;

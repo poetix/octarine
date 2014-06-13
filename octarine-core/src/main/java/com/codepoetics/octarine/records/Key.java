@@ -1,7 +1,7 @@
 package com.codepoetics.octarine.records;
 
-import com.codepoetics.octarine.lenses.OptionalLens;
 import com.codepoetics.octarine.functions.Extractor;
+import com.codepoetics.octarine.lenses.OptionalLens;
 import com.codepoetics.octarine.paths.Path;
 
 import java.util.Optional;

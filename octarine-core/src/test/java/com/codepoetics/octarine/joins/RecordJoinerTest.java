@@ -14,6 +14,45 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class RecordJoinerTest {
 
+    @Test public void
+    three_way_join() {
+        List<Record> joined = RecordJoins.join(
+                RecordJoins.join(books)
+                    .on(authorId)
+                    .to(id)
+                    .manyToOne(authors))
+                .on(publisherId)
+                .to(id)
+                .manyToOne(publishers)
+                .map(r -> r.select(publisherName, authorName, bookName))
+                .filter(authorName.is("Alan Goodyear"))
+                .collect(Collectors.toList());
+
+        assertThat(joined, hasItems(
+                        Record.of(bookName.of("Amorous Encounters"),
+                                authorName.of("Alan Goodyear"),
+                                publisherName.of("Bills And Moon")),
+                        Record.of(bookName.of("The Cromulence Of Truths"),
+                                authorName.of("Alan Goodyear"),
+                                publisherName.of("Servo"))
+                )
+        );
+    }
+
+    ListKey<Record> authored = ListKey.named("authored");
+
+    @Test public void
+    one_to_many_join() {
+         Record joined = RecordJoins.join(authors).on(id)
+                 .to(authorId).oneToMany(books, authored)
+                 .filter(authorName.is("Alan Goodyear"))
+                 .findFirst().get();
+
+        assertThat(authored.extract(joined), hasItems(
+                cromulenceOfTruths, amorousEncounters)
+        );
+    }
+
     public static final Key<String> authorName = Key.named("authorName");
     public static final Key<String> id = Key.named("id");
     public static final Key<String> authorId = Key.named("authorId");
@@ -80,44 +119,5 @@ public class RecordJoinerTest {
             butIsThisNot,
             amorousEncounters
     ).toList();
-
-    @Test public void
-    three_way_join() {
-        List<Record> joined = RecordJoins.join(
-                RecordJoins.join(books)
-                    .on(authorId)
-                    .to(id)
-                    .manyToOne(authors))
-                .on(publisherId)
-                .to(id)
-                .manyToOne(publishers)
-                .map(r -> r.select(publisherName, authorName, bookName))
-                .filter(authorName.is("Alan Goodyear"))
-                .collect(Collectors.toList());
-
-        assertThat(joined, hasItems(
-                        Record.of(bookName.of("Amorous Encounters"),
-                                authorName.of("Alan Goodyear"),
-                                publisherName.of("Bills And Moon")),
-                        Record.of(bookName.of("The Cromulence Of Truths"),
-                                authorName.of("Alan Goodyear"),
-                                publisherName.of("Servo"))
-                )
-        );
-    }
-
-    ListKey<Record> authored = ListKey.named("authored");
-
-    @Test public void
-    one_to_many_join() {
-         Record joined = RecordJoins.join(authors).on(id)
-                 .to(authorId).oneToMany(books, authored)
-                 .filter(authorName.is("Alan Goodyear"))
-                 .findFirst().get();
-
-        assertThat(authored.extract(joined), hasItems(
-                cromulenceOfTruths, amorousEncounters)
-        );
-    }
 
 }
