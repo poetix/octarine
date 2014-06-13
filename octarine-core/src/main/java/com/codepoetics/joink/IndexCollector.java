@@ -1,4 +1,4 @@
-package com.codepoetics.octarine.joins;
+package com.codepoetics.joink;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,7 +19,10 @@ final class IndexCollector {
                 },
                 (m1, m2) -> {
                     m2.entrySet().forEach(e ->
-                        m1.merge(e.getKey(), e.getValue(), (s1, s2) -> { s1.addAll(s2); return s1; })
+                                    m1.merge(e.getKey(), e.getValue(), (s1, s2) -> {
+                                        s1.addAll(s2);
+                                        return s1;
+                                    })
                     );
                     return m1;
                 }

@@ -3,7 +3,7 @@ package com.codepoetics.octarine.joins;
 import com.codepoetics.octarine.morphisms.FluentCollection;
 import com.codepoetics.octarine.records.Key;
 import com.codepoetics.octarine.records.Record;
-import com.codepoetics.octarine.records.SetKey;
+import com.codepoetics.octarine.records.ListKey;
 import org.junit.Test;
 
 import java.util.List;
@@ -106,7 +106,7 @@ public class RecordJoinerTest {
         );
     }
 
-    SetKey<Record> authored = SetKey.named("authored");
+    ListKey<Record> authored = ListKey.named("authored");
 
     @Test public void
     one_to_many_join() {

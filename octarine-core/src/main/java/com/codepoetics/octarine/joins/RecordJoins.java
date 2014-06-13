@@ -1,5 +1,6 @@
 package com.codepoetics.octarine.joins;
 
+import com.codepoetics.joink.JoinKey;
 import com.codepoetics.octarine.records.Key;
 import com.codepoetics.octarine.records.Record;
 

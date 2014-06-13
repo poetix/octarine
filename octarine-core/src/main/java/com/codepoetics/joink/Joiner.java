@@ -1,4 +1,4 @@
-package com.codepoetics.octarine.joins;
+package com.codepoetics.joink;
 
 import java.util.Collection;
 import java.util.Set;

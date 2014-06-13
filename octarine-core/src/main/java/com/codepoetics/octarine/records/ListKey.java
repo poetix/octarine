@@ -1,6 +1,5 @@
 package com.codepoetics.octarine.records;
 
-import org.pcollections.HashTreePSet;
 import org.pcollections.PVector;
 import org.pcollections.TreePVector;
 
@@ -26,7 +25,7 @@ public interface ListKey<T> extends Key<PVector<T>> {
         };
     }
 
-    default Value of(Collection<? extends T> values) { return of(HashTreePSet.from(values)); }
+    default Value of(Collection<? extends T> values) { return of(TreePVector.from(values)); }
     default Value of(T...values) {
         return of(TreePVector.from(Arrays.asList(values)));
     }
