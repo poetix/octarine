@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Octarine by poetix</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Octarine</h1>
+          <h2>Java 8 functional magic</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/poetix/octarine/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/poetix/octarine/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/poetix/octarine" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>
+<a name="octarine" class="anchor" href="#octarine"><span class="octicon octicon-link"></span></a>octarine</h1>
+
+<p><a href="https://travis-ci.org/poetix/octarine"><img src="https://travis-ci.org/poetix/octarine.svg?branch=master" alt="Build Status"></a></p>
+
+<h3>
+<a name="manifesto" class="anchor" href="#manifesto"><span class="octicon octicon-link"></span></a>Manifesto</h3>
+
+<p>Octarine is a Java 8 library for working with data at the edges of your system: <em>records</em> that are loaded from CSV files, deserialised from JSON messages sent over HTTP, or retrieved from databases.</p>
+
+<p>Traditionally, records in Java have been represented by <em>Beans</em>: classes which carry a collection of mutable properties, where each property has a <em>getter</em> method to read it, and a <em>setter</em> method to write it. Bean objects have no "behaviour", in the sense in which objects in Object-Oriented Programming are said to bundle data and behaviour together. They are <em>degenerate</em> objects.</p>
+
+<p>Code that works with Beans is often ugly and repetitive, littered with null-checks (because a property that hasn't been set with a setter can always be null), and hampered by the simultaneous verbosity and inflexibility of the Bean protocol. Unit tests for such code are haunted by a sense of their own pointlessness. Anyone who's spent significant time writing "Enterprise" Java in which the Bean pattern predominates will at some point have asked themselves: "why am I wasting my time with this <em>crap</em>?"</p>
+
+<p>There is a better way. Actually there are several better ways; Octarine provides an implementation of one of them.</p>
+
+<p>Octarine favours:</p>
+
+<ul>
+<li>
+<strong>Concision</strong> - end-user code is concise, readable and free of boilerplate.</li>
+<li>
+<strong>Tolerance</strong> - code that works with records should be forgiving in what it accepts, using schemas and pattern-matching to select and process records that satisfy its requirements.</li>
+<li>
+<strong>Immutability</strong> - records are immutable by default.</li>
+<li>
+<strong>Composability</strong> - keys can be composed to form paths into nested records.</li>
+<li>
+<strong>Transparency</strong> - no "magic" required - especially tricks with reflection and dynamic proxies.</li>
+</ul><h3>
+<a name="basic-concepts" class="anchor" href="#basic-concepts"><span class="octicon octicon-link"></span></a>Basic concepts</h3>
+
+<p>An Octarine <code>Record</code> is a collection of typed key-value pairs, where the <code>Key</code>s are special objects that carry information about the types of the values. A <code>Record</code> can contain values for any keys whatsoever, but the types of the values must match the types of the keys.</p>
+
+<div class="highlight highlight-java"><pre><span class="n">Key</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">name</span> <span class="o">=</span> <span class="n">Key</span><span class="o">.</span><span class="na">named</span><span class="o">(</span><span class="s">"name"</span><span class="o">);</span>
+<span class="n">Key</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">age</span> <span class="o">=</span> <span class="n">Key</span><span class="o">.</span><span class="na">named</span><span class="o">(</span><span class="s">"age"</span><span class="o">);</span>
+
+<span class="n">Record</span> <span class="n">person</span> <span class="o">=</span> <span class="n">Record</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="n">name</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">"Dominic"</span><span class="o">),</span> <span class="n">age</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="mi">39</span><span class="o">));</span>
+
+<span class="n">String</span> <span class="n">personName</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="na">extract</span><span class="o">(</span><span class="n">person</span><span class="o">);</span>
+<span class="n">Integer</span> <span class="n">personAge</span> <span class="o">=</span> <span class="n">age</span><span class="o">.</span><span class="na">extract</span><span class="o">(</span><span class="n">person</span><span class="o">);</span>
+</pre></div>
+
+<p>Here we have defined two keys, <code>name</code> and <code>age</code>, created a <code>Record</code> with values defined for both keys, and extracted both values from the record in a type-safe way.</p>
+
+<h4>
+<a name="absent-values" class="anchor" href="#absent-values"><span class="octicon octicon-link"></span></a>Absent values</h4>
+
+<p>Because a <code>Record</code> can contain values for any <code>Key</code> or none, the safe way to read values is via the <code>Key::get</code> method, which returns an <code>Optional</code> value:</p>
+
+<div class="highlight highlight-java"><pre><span class="n">Optional</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">personName</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">person</span><span class="o">);</span>
+<span class="kt">int</span> <span class="n">personAge</span> <span class="o">=</span> <span class="n">age</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">person</span><span class="o">).</span><span class="na">orElse</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+</pre></div>
+
+<p>You can use the <code>Key::test</code> method to find out whether a <code>Record</code> contains a particular <code>Key</code>:</p>
+
+<div class="highlight highlight-java"><pre><span class="k">if</span> <span class="o">(</span><span class="n">name</span><span class="o">.</span><span class="na">test</span><span class="o">(</span><span class="n">person</span><span class="o">))</span> <span class="o">{</span>
+  <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">name</span><span class="o">.</span><span class="na">extract</span><span class="o">(</span><span class="n">person</span><span class="o">));</span>
+<span class="o">}</span>
+</pre></div>
+
+<p>A <code>Key&lt;T&gt;</code> is both a <code>Predicate&lt;Record&gt;</code> which tests for the presence of that key in a <code>Record</code>, and a <code>Function&lt;Record, Optional&lt;T&gt;&gt;</code>, which tries to retrieve the corresponding value from the <code>Record</code> and returns <code>Optional.empty()</code> if it isn't there. <code>Key::extract</code> returns the value directly (or throws an exception, if it is absent).</p>
+
+<p>This trio of methods - <code>test</code>, <code>extract</code>, <code>apply</code> - defines an <code>Extractor</code>, a useful general concept.</p>
+
+<h4>
+<a name="extractors-and-pattern-matching" class="anchor" href="#extractors-and-pattern-matching"><span class="octicon octicon-link"></span></a>Extractors and pattern-matching</h4>
+
+<p>An <code>Extractor&lt;S, T&gt;</code> may be seen as a <em>partial function</em> from <code>S</code> to <code>T</code>: it can only "extract" a value of type <code>T</code> from a value of type <code>S</code> if such a value is present. Any <code>Key&lt;T&gt;</code> is an <code>Extractor&lt;Record, T&gt;</code>.</p>
+
+<p>Suppose we have a <code>Record</code> which we know will contain <em>either</em> a person's name and date of birth, <em>or</em> their social security number. We can use the fact that <code>Key</code>s are <code>Extractor</code>s to test which is the case and respond accordingly:</p>
+
+<div class="highlight highlight-java"><pre><span class="kd">public</span> <span class="n">Optional</span><span class="o">&lt;</span><span class="n">Person</span><span class="o">&gt;</span> <span class="nf">getPerson</span><span class="o">(</span><span class="n">Record</span> <span class="n">details</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">if</span> <span class="o">(</span><span class="n">name</span><span class="o">.</span><span class="na">test</span><span class="o">(</span><span class="n">details</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="n">dob</span><span class="o">.</span><span class="na">test</span><span class="o">(</span><span class="n">details</span><span class="o">))</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">Optional</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="n">getPersonByNameAndAge</span><span class="o">(</span><span class="n">name</span><span class="o">.</span><span class="na">extract</span><span class="o">(</span><span class="n">record</span><span class="o">),</span> <span class="n">dob</span><span class="o">.</span><span class="na">extract</span><span class="o">(</span><span class="n">record</span><span class="o">)));</span>
+  <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">ssn</span><span class="o">.</span><span class="na">test</span><span class="o">(</span><span class="n">record</span><span class="o">))</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">Optional</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="n">getPersonBySocialSecurityNumber</span><span class="o">(</span><span class="n">ssn</span><span class="o">.</span><span class="na">extract</span><span class="o">(</span><span class="n">record</span><span class="o">)));</span>
+  <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="n">Optional</span><span class="o">.</span><span class="na">empty</span><span class="o">();</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+
+<p>This is a common enough thing to want to do that Octarine supports using <em>pattern matching</em> to pick out records having particular keys and extract their values:</p>
+
+<div class="highlight highlight-java"><pre><span class="kd">public</span> <span class="n">Optional</span><span class="o">&lt;</span><span class="n">Person</span><span class="o">&gt;</span> <span class="nf">getPerson</span><span class="o">(</span><span class="n">Record</span> <span class="n">details</span><span class="o">)</span> <span class="o">{</span>
+  <span class="n">Matching</span><span class="o">&lt;</span><span class="n">Record</span><span class="o">,</span> <span class="n">Person</span><span class="o">&gt;</span> <span class="n">matching</span> <span class="o">=</span> <span class="n">Matching</span><span class="o">.</span><span class="na">build</span><span class="o">(</span><span class="n">m</span> <span class="o">-&gt;</span>
+    <span class="n">m</span><span class="o">.</span><span class="na">matching</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">dob</span><span class="o">,</span> <span class="o">(</span><span class="n">n</span><span class="o">,</span> <span class="n">d</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="n">getPersonByNameAndAge</span><span class="o">(</span><span class="n">n</span><span class="o">,</span> <span class="n">d</span><span class="o">))</span>
+     <span class="o">.</span><span class="na">matching</span><span class="o">(</span><span class="n">ssn</span><span class="o">,</span> <span class="n">s</span> <span class="o">-&gt;</span> <span class="n">getPersonBySocialSecurityNumber</span><span class="o">(</span><span class="n">s</span><span class="o">))</span>
+  <span class="o">);</span>
+  <span class="k">return</span> <span class="n">matching</span><span class="o">.</span><span class="na">apply</span><span class="o">(</span><span class="n">details</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+
+<p>Each of the patterns described by a <code>matching</code> call is tried in turn, until one is found where all of the listed extractors match the record. The values targeted
+ by those extractors are then handed off to the supplied function. (Octarine supports matching patterns of up to four extractors, with functions of up to four arguments).</p>
+
+<h4>
+<a name="immutability-and-updating" class="anchor" href="#immutability-and-updating"><span class="octicon octicon-link"></span></a>Immutability and updating</h4>
+
+<p>Octarine's <code>Record</code>s are immutable: there is no way to change the key/value pairs of a record once it has been created. However, it is possible to create a <em>copy</em> of a <code>Record</code> with one or more key/value pairs added or removed:</p>
+
+<div class="highlight highlight-java"><pre><span class="n">Record</span> <span class="n">person</span> <span class="o">=</span> <span class="n">Record</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="n">name</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">"Dominic"</span><span class="o">));</span>
+<span class="n">Record</span> <span class="n">personWithAge</span> <span class="o">=</span> <span class="n">person</span><span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="n">age</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="mi">39</span><span class="o">));</span>
+<span class="n">Record</span> <span class="n">personWithoutAName</span> <span class="o">=</span> <span class="n">personWithAge</span><span class="o">.</span><span class="na">without</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+</pre></div>
+
+<p>Alternatively, <code>Key</code>s themselves act as <em>lenses</em>, getting and setting values:</p>
+
+<div class="highlight highlight-java"><pre><span class="n">Record</span> <span class="n">person</span> <span class="o">=</span> <span class="n">Record</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="n">name</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">"Dominic"</span><span class="o">));</span>
+<span class="n">Record</span> <span class="n">personWithAge</span> <span class="o">=</span> <span class="n">age</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">person</span><span class="o">,</span> <span class="n">Optional</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="mi">39</span><span class="o">);</span>
+<span class="n">Record</span> <span class="n">personWithoutAName</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">Optional</span><span class="o">.</span><span class="na">empty</span><span class="o">());</span>
+</pre></div>
+
+<p>Lenses have the interesting property that they <em>compose</em>, which we'll explore later.</p>
+
+<h4>
+<a name="mutability-oh-go-on-then" class="anchor" href="#mutability-oh-go-on-then"><span class="octicon octicon-link"></span></a>Mutability: oh, go on then</h4>
+
+<p>If you really want a mutable record, you can have one.</p>
+
+<div class="highlight highlight-java"><pre><span class="n">MutableRecord</span> <span class="n">mutable</span> <span class="o">=</span> <span class="n">Record</span><span class="o">.</span><span class="na">of</span><span class="o">(</span>
+  <span class="n">Person</span><span class="o">.</span><span class="na">name</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">"Dominic"</span><span class="o">),</span>
+  <span class="n">Person</span><span class="o">.</span><span class="na">age</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="mi">39</span><span class="o">),</span>
+  <span class="n">Person</span><span class="o">.</span><span class="na">favouriteColour</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="n">Color</span><span class="o">.</span><span class="na">RED</span><span class="o">),</span>
+  <span class="n">Person</span><span class="o">.</span><span class="na">address</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="n">Address</span><span class="o">.</span><span class="na">addressLines</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">"13 Rue Morgue"</span><span class="o">,</span> <span class="s">"PO3 1TP"</span><span class="o">))</span>
+<span class="o">).</span><span class="na">mutable</span><span class="o">();</span>
+
+<span class="n">mutable</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">age</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="mi">40</span><span class="o">),</span> <span class="n">Person</span><span class="o">.</span><span class="na">favouriteColour</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="n">Color</span><span class="o">.</span><span class="na">GRAY</span><span class="o">));</span>
+<span class="n">mutable</span><span class="o">.</span><span class="na">unset</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">address</span><span class="o">);</span>
+
+<span class="n">Record</span> <span class="n">immutable</span> <span class="o">=</span> <span class="n">mutable</span><span class="o">.</span><span class="na">immutable</span><span class="o">();</span>
+</pre></div>
+
+<p>Note however that a <code>MutableRecord</code> is a mutable copy of an immutable <code>Record</code>, and cannot be used to mutate the <code>Record</code> it has cloned.</p>
+
+<p><code>MutableRecords</code> remember what they've changed: <code>MutableRecord::added</code> returns a record containing all added or modified key/value pairs, and <code>MutableRecord::removed</code> returns a set of all removed keys.</p>
+
+<h3>
+<a name="quick-start" class="anchor" href="#quick-start"><span class="octicon octicon-link"></span></a>Quick start</h3>
+
+<p>We define keys, schemas, serialisers and deserialisers for two record types, <code>Person</code> and <code>Address</code>.</p>
+
+<div class="highlight highlight-java"><pre><span class="kd">public</span> <span class="kd">static</span> <span class="kd">interface</span> <span class="nc">Address</span> <span class="o">{</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="n">KeySet</span> <span class="n">mandatoryKeys</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KeySet</span><span class="o">();</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="n">ListKey</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">addressLines</span> <span class="o">=</span> <span class="n">mandatoryKeys</span><span class="o">.</span><span class="na">addList</span><span class="o">(</span><span class="s">"addressLines"</span><span class="o">);</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="n">Key</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">postcode</span> <span class="o">=</span> <span class="n">mandatoryKeys</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"postcode"</span><span class="o">);</span>
+
+    <span class="n">Schema</span><span class="o">&lt;</span><span class="n">Address</span><span class="o">&gt;</span> <span class="n">schema</span> <span class="o">=</span> <span class="nl">mandatoryKeys:</span><span class="o">:</span><span class="n">accept</span><span class="o">;</span>
+
+    <span class="n">JsonDeserialiser</span> <span class="n">reader</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-&gt;</span>
+            <span class="n">i</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">addressLines</span><span class="o">,</span> <span class="n">fromString</span><span class="o">)</span>
+             <span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">postcode</span><span class="o">,</span> <span class="n">fromString</span><span class="o">);</span>
+
+    <span class="n">JsonSerialiser</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">p</span> <span class="o">-&gt;</span>
+            <span class="n">p</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">addressLines</span><span class="o">,</span> <span class="n">asString</span><span class="o">)</span>
+             <span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">postcode</span><span class="o">,</span> <span class="n">asString</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+
+<div class="highlight highlight-java"><pre><span class="kd">public</span> <span class="kd">static</span> <span class="kd">interface</span> <span class="nc">Person</span> <span class="o">{</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="n">KeySet</span> <span class="n">mandatoryKeys</span> <span class="o">=</span> <span class="k">new</span> <span class="n">KeySet</span><span class="o">();</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="n">Key</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">name</span> <span class="o">=</span> <span class="n">mandatoryKeys</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"name"</span><span class="o">);</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="n">Key</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">age</span> <span class="o">=</span> <span class="n">mandatoryKeys</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="s">"age"</span><span class="o">);</span>
+    <span class="kd">static</span> <span class="kd">final</span> <span class="n">RecordKey</span> <span class="n">address</span> <span class="o">=</span> <span class="n">mandatoryKeys</span><span class="o">.</span><span class="na">addRecord</span><span class="o">(</span><span class="s">"address"</span><span class="o">);</span>
+
+    <span class="n">Schema</span><span class="o">&lt;</span><span class="n">Person</span><span class="o">&gt;</span> <span class="n">schema</span> <span class="o">=</span> <span class="o">(</span><span class="n">r</span><span class="o">,</span> <span class="n">v</span><span class="o">)</span> <span class="o">-&gt;</span> <span class="o">{</span>
+        <span class="n">mandatoryKeys</span><span class="o">.</span><span class="na">accept</span><span class="o">(</span><span class="n">r</span><span class="o">,</span> <span class="n">v</span><span class="o">);</span>
+        <span class="n">age</span><span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">r</span><span class="o">).</span><span class="na">ifPresent</span><span class="o">(</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="o">{</span> <span class="k">if</span> <span class="o">(</span><span class="n">a</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">)</span> <span class="n">v</span><span class="o">.</span><span class="na">accept</span><span class="o">(</span><span class="s">"Age must be 0 or greater"</span><span class="o">);</span> <span class="o">});</span>
+        <span class="n">address</span><span class="o">.</span><span class="na">from</span><span class="o">(</span><span class="n">r</span><span class="o">).</span><span class="na">ifPresent</span><span class="o">(</span><span class="n">a</span> <span class="o">-&gt;</span> <span class="n">Address</span><span class="o">.</span><span class="na">schema</span><span class="o">.</span><span class="na">accept</span><span class="o">(</span><span class="n">a</span><span class="o">,</span> <span class="n">v</span><span class="o">));</span>
+    <span class="o">};</span>
+
+    <span class="n">JsonDeserialiser</span> <span class="n">reader</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-&gt;</span>
+            <span class="n">i</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">fromString</span><span class="o">)</span>
+             <span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">age</span><span class="o">,</span> <span class="n">fromInteger</span><span class="o">)</span>
+             <span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">address</span><span class="o">,</span> <span class="n">Address</span><span class="o">.</span><span class="na">reader</span><span class="o">);</span>
+
+    <span class="n">JsonSerialiser</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">p</span> <span class="o">-&gt;</span>
+        <span class="n">p</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">asString</span><span class="o">)</span>
+         <span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">age</span><span class="o">,</span> <span class="n">asInteger</span><span class="o">)</span>
+         <span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">address</span><span class="o">,</span> <span class="n">Address</span><span class="o">.</span><span class="na">writer</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+
+<p>We can now read a <code>Person</code>'s details from Json, validate the record against the schema and make test assertions against it, created an updated copy with one value changed, and write the updated copy back out to Json.</p>
+
+<div class="highlight highlight-java"><pre><span class="nd">@Test</span> <span class="kd">public</span> <span class="kt">void</span>
+<span class="n">deserialise_validate_update_serialise</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">Record</span> <span class="n">record</span> <span class="o">=</span> <span class="n">Person</span><span class="o">.</span><span class="na">reader</span><span class="o">.</span><span class="na">readFromString</span><span class="o">(</span>
+            <span class="s">"{\"name\": \"Arthur Putey\",\n"</span> <span class="o">+</span><span class="s">""</span> <span class="o">+</span>
+            <span class="s">" \"age\": 42,\n"</span> <span class="o">+</span>
+            <span class="s">" \"address\": {\n"</span> <span class="o">+</span>
+            <span class="s">"   \"addressLines\": [\"59 Broad Street\", \"Cirencester\"],\n"</span> <span class="o">+</span>
+            <span class="s">"   \"postcode\": \"RA8 81T\"\n"</span> <span class="o">+</span>
+            <span class="s">"  }\n"</span> <span class="o">+</span>
+            <span class="s">"}"</span><span class="o">);</span>
+
+    <span class="n">assertThat</span><span class="o">(</span><span class="n">record</span><span class="o">,</span> <span class="n">ARecord</span><span class="o">.</span><span class="na">validAgainst</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">schema</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">name</span><span class="o">,</span> <span class="s">"Arthur Putey"</span><span class="o">)</span>
+            <span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">age</span><span class="o">,</span> <span class="mi">42</span><span class="o">)</span>
+            <span class="c1">// Chaining keys</span>
+            <span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">address</span><span class="o">.</span><span class="na">join</span><span class="o">(</span><span class="n">Address</span><span class="o">.</span><span class="na">addressLines</span><span class="o">).</span><span class="na">join</span><span class="o">(</span><span class="n">Path</span><span class="o">.</span><span class="na">toIndex</span><span class="o">(</span><span class="mi">0</span><span class="o">)),</span> <span class="s">"59 Broad Street"</span><span class="o">)</span>
+            <span class="c1">// Using a sub-matcher</span>
+            <span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">address</span><span class="o">,</span> <span class="n">ARecord</span><span class="o">.</span><span class="na">validAgainst</span><span class="o">(</span><span class="n">Address</span><span class="o">.</span><span class="na">schema</span><span class="o">).</span><span class="na">with</span><span class="o">(</span><span class="n">Address</span><span class="o">.</span><span class="na">postcode</span><span class="o">,</span> <span class="s">"RA8 81T"</span><span class="o">)));</span>
+
+    <span class="n">Record</span> <span class="n">changed</span> <span class="o">=</span> <span class="n">Person</span><span class="o">.</span><span class="na">age</span><span class="o">.</span><span class="na">update</span><span class="o">(</span>
+        <span class="n">record</span><span class="o">,</span> <span class="n">age</span> <span class="o">-&gt;</span> <span class="n">age</span><span class="o">.</span><span class="na">map</span><span class="o">(</span><span class="n">v</span> <span class="o">-&gt;</span> <span class="n">v</span> <span class="o">+</span> <span class="mi">1</span><span class="o">));</span>
+
+    <span class="n">assertThat</span><span class="o">(</span><span class="n">Person</span><span class="o">.</span><span class="na">writer</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">changed</span><span class="o">),</span> <span class="n">equalTo</span><span class="o">(</span>
+            <span class="s">"{\"name\":\"Arthur Putey\","</span> <span class="o">+</span><span class="s">""</span> <span class="o">+</span>
+                    <span class="s">"\"age\":43,"</span> <span class="o">+</span>
+                    <span class="s">"\"address\":{"</span> <span class="o">+</span>
+                    <span class="s">"\"addressLines\":[\"59 Broad Street\",\"Cirencester\"],"</span> <span class="o">+</span>
+                    <span class="s">"\"postcode\":\"RA8 81T\""</span> <span class="o">+</span>
+                    <span class="s">"}}"</span><span class="o">));</span>
+<span class="o">}</span>
+</pre></div>
+        </section>
+
+        <footer>
+          Octarine is maintained by <a href="https://github.com/poetix">poetix</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
