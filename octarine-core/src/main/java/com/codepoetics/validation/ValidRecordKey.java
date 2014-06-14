@@ -1,4 +1,8 @@
-package com.codepoetics.octarine.records;
+package com.codepoetics.validation;
+
+import com.codepoetics.octarine.records.Key;
+import com.codepoetics.octarine.records.Record;
+import com.codepoetics.octarine.records.Value;
 
 public interface ValidRecordKey<T> extends Key<Valid<T>> {
 

@@ -4,8 +4,8 @@ import com.codepoetics.octarine.json.JsonDeserialiser;
 import com.codepoetics.octarine.json.JsonSerialiser;
 import com.codepoetics.octarine.records.Key;
 import com.codepoetics.octarine.records.KeySet;
-import com.codepoetics.octarine.records.Schema;
-import com.codepoetics.octarine.records.ValidRecordKey;
+import com.codepoetics.validation.Schema;
+import com.codepoetics.validation.ValidRecordKey;
 
 import java.awt.*;
 import java.util.function.Function;

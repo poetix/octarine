@@ -5,6 +5,7 @@ import org.pcollections.PMap;
 import org.pcollections.PVector;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -29,8 +30,11 @@ public interface Lens<T, V> extends Function<T, V> {
     default V apply(T instance) { return get(instance); }
     T set(T instance, V newValue);
 
-    default BoundLens<T, V> bind(T instance) {
-        return BoundLens.binding(get(instance), v -> this.set(instance, v));
+    default OptionalLens<T, V> asOptional() {
+        return OptionalLens.wrap(Lens.<T, Optional<V>>of(
+                t -> Optional.ofNullable(get(t)),
+                (t, v) -> set(t, v.orElse(null))
+        ));
     }
 
     default T update(T instance, Function<V, V> updater) {

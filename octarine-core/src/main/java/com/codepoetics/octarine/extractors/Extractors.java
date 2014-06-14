@@ -1,57 +1,23 @@
-package com.codepoetics.octarine.functions;
+package com.codepoetics.octarine.extractors;
 
-import java.util.Optional;
+import com.codepoetics.octarine.functions.TetraFunction;
+import com.codepoetics.octarine.functions.TriFunction;
+
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public interface Extractor<S, T> extends Predicate<S>, Function<S, Optional<T>> {
+public class Extractors {
+    private Extractors() { }
 
-    T extract(S input);
-
-    interface FromPredicate<S, T> extends Extractor<S, T> {
-        @Override
-        default Optional<T> apply(S input) {
-            if (!test(input)) { return Optional.empty(); }
-            return Optional.of(extract(input));
-        }
+    public static <S> Extractor<S, S> it() {
+        return Extractor.from(s -> true, Function.identity());
     }
 
-    interface FromOptionalFunction<S, T> extends Extractor<S, T> {
-        @Override
-        default boolean test(S input) {
-            return apply(input).isPresent();
-        }
-
-        @Override
-        default T extract(S input) {
-            return apply(input).get();
-        }
-    }
-
-    static <S> Extractor<S, S> it() {
-        return from(s -> true, Function.identity());
-    }
-
-    static <S, T> Extractor<S, T> from(Predicate<? super S> predicate, Function<? super S, ? extends T> f) {
-        return new FromPredicate<S, T>() {
-
-            @Override
-            public boolean test(S input) {
-                return predicate.test(input);
-            }
-
-            @Override
-            public T extract(S input) {
-                return f.apply(input);
-            }
-        };
-    }
-
-    static <S, T, T2> Extractor<S, T2> extend(
+    public static <S, T, T2> Extractor<S, T2> extend(
             Extractor<? super S, ? extends T> extractor,
             Function<? super T, ? extends T2> f) {
-        return new FromPredicate<S, T2>() {
+        return new Extractor.FromPredicate<S, T2>() {
             @Override
             public boolean test(S input) {
                 return extractor.test(input);
@@ -64,11 +30,11 @@ public interface Extractor<S, T> extends Predicate<S>, Function<S, Optional<T>> 
         };
     }
 
-    static <S, A, B, J> Extractor<S, J> join(
+    public static <S, A, B, J> Extractor<S, J> join(
             Extractor<? super S, ? extends A> first,
             Extractor<? super S, ? extends B> second,
             BiFunction<? super A, ? super B, ? extends J> joiner) {
-        return new FromPredicate<S, J>() {
+        return new Extractor.FromPredicate<S, J>() {
             @Override
             public boolean test(S input) {
                 return first.test(input) && second.test(input);
@@ -81,12 +47,12 @@ public interface Extractor<S, T> extends Predicate<S>, Function<S, Optional<T>> 
         };
     }
 
-    static <S, A, B, C, T> Extractor<S, T> join(
+    public static <S, A, B, C, T> Extractor<S, T> join(
             Extractor<? super S, ? extends A> extractorA,
             Extractor<? super S, ? extends B> extractorB,
             Extractor<? super S, ? extends C> extractorC,
             TriFunction<? super A, ? super B, ? super C, ? extends T> receiver) {
-        return new FromPredicate<S, T>() {
+        return new Extractor.FromPredicate<S, T>() {
 
             @Override
             public boolean test(S input) {
@@ -100,13 +66,13 @@ public interface Extractor<S, T> extends Predicate<S>, Function<S, Optional<T>> 
         };
     }
 
-    static <S, A, B, C, D, T> Extractor<S, T> join(
+    public static <S, A, B, C, D, T> Extractor<S, T> join(
             Extractor<? super S, ? extends A> extractorA,
             Extractor<? super S, ? extends B> extractorB,
             Extractor<? super S, ? extends C> extractorC,
             Extractor<? super S, ? extends D> extractorD,
             TetraFunction<? super A, ? super B, ? super C, ? super D, ? extends T> receiver) {
-        return new FromPredicate<S, T>() {
+        return new Extractor.FromPredicate<S, T>() {
 
             @Override
             public boolean test(S input) {
@@ -120,10 +86,10 @@ public interface Extractor<S, T> extends Predicate<S>, Function<S, Optional<T>> 
         };
     }
 
-    static <S, T> Extractor<S, T> join(
+    public static <S, T> Extractor<S, T> join(
             Predicate<? super S> predicate,
             Extractor<? super S, ? extends T> extractor) {
-        return new FromPredicate<S, T>() {
+        return new Extractor.FromPredicate<S, T>() {
             @Override
             public boolean test(S input) {
                 return predicate.test(input) && extractor.test(input);
@@ -135,5 +101,4 @@ public interface Extractor<S, T> extends Predicate<S>, Function<S, Optional<T>> 
             }
         };
     }
-
 }

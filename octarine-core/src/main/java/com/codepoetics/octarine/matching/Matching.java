@@ -1,6 +1,6 @@
 package com.codepoetics.octarine.matching;
 
-import com.codepoetics.octarine.functions.Extractor;
+import com.codepoetics.octarine.extractors.Extractor;
 import org.pcollections.PVector;
 import org.pcollections.TreePVector;
 

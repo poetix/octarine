@@ -1,11 +1,9 @@
 package com.codepoetics.octarine.records;
 
-import com.codepoetics.octarine.functions.Extractor;
 import com.codepoetics.octarine.lenses.OptionalLens;
 import com.codepoetics.octarine.paths.Path;
 
 import java.util.Optional;
-import java.util.function.Predicate;
 
 public interface Key<T> extends OptionalLens<Record, T>, Path.Named<Record, T> {
 
@@ -48,16 +46,6 @@ public interface Key<T> extends OptionalLens<Record, T>, Path.Named<Record, T> {
             @Override public Key<?> key() { return Key.this; }
             @Override public Object value() { return value; }
         };
-    }
-
-    default Extractor<Record, T> is(T expected) {
-        return is(Predicate.isEqual(expected));
-    }
-
-    default Extractor<Record, T> is(Predicate<T> expected) {
-        return Extractor.join(
-                record -> record.get(Key.this).map(expected::test).orElse(false),
-                this);
     }
 
 }

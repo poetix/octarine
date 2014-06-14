@@ -1,5 +1,8 @@
 package com.codepoetics.octarine.records;
 
+import com.codepoetics.validation.Schema;
+import com.codepoetics.validation.ValidRecordKey;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.BiConsumer;

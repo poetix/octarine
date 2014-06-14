@@ -1,6 +1,6 @@
 package com.codepoetics.octarine.lenses;
 
-import com.codepoetics.octarine.functions.Extractor;
+import com.codepoetics.octarine.extractors.Extractor;
 import org.pcollections.PMap;
 import org.pcollections.PVector;
 
@@ -40,7 +40,6 @@ public interface OptionalLens<T, V> extends Lens<T, Optional<V>>, Extractor.From
             public T set(T instance, Optional<V2> newValue) {
                 return self.setNullable(instance, next.set(self.get(instance).orElseGet(missingValueSupplier), newValue));
             }
-
         };
     }
 

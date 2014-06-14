@@ -1,6 +1,9 @@
-package com.codepoetics.octarine.records;
+package com.codepoetics.validation;
 
-import com.codepoetics.octarine.functions.Extractor;
+import com.codepoetics.octarine.extractors.Extractor;
+import com.codepoetics.octarine.records.Key;
+import com.codepoetics.octarine.records.Record;
+import com.codepoetics.octarine.records.Value;
 import org.pcollections.PMap;
 
 import java.util.LinkedList;

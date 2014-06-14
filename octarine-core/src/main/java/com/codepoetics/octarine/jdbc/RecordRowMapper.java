@@ -1,6 +1,8 @@
 package com.codepoetics.octarine.jdbc;
 
 import com.codepoetics.octarine.records.*;
+import com.codepoetics.validation.Schema;
+import com.codepoetics.validation.Valid;
 
 import java.sql.ResultSet;
 import java.util.LinkedList;

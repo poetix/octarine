@@ -1,6 +1,6 @@
 package com.codepoetics.octarine.paths;
 
-import com.codepoetics.octarine.functions.Extractor;
+import com.codepoetics.octarine.extractors.Extractor;
 
 import java.util.List;
 import java.util.Map;
@@ -11,14 +11,14 @@ public interface Path<T, V> extends Extractor.FromOptionalFunction<T, V> {
 
     interface Indexed<I, T, V> extends Path<T, V> {
         I index();
-        default public void buildPath(StringBuilder sb) {
+        default public void describe(StringBuilder sb) {
             sb.append("[").append(index()).append("]");
         }
     }
 
     interface Named<T, V> extends Path<T, V> {
         String name();
-        default public void buildPath(StringBuilder sb) {
+        default public void describe(StringBuilder sb) {
             if (sb.length() > 0) { sb.append("."); }
             sb.append(name());
         }
@@ -60,20 +60,20 @@ public interface Path<T, V> extends Extractor.FromOptionalFunction<T, V> {
         };
     }
 
-    void buildPath(StringBuilder sb);
+    void describe(StringBuilder sb);
 
-    default String describePath() {
+    default String describe() {
         StringBuilder sb = new StringBuilder();
-        buildPath(sb);
+        describe(sb);
         return sb.toString();
     }
 
     default <V2> Path<T, V2> join(Path<? super V, V2> next) {
         return new Path<T, V2>() {
             @Override
-            public void buildPath(StringBuilder sb) {
-                Path.this.buildPath(sb);
-                next.buildPath(sb);
+            public void describe(StringBuilder sb) {
+                Path.this.describe(sb);
+                next.describe(sb);
             }
 
             @Override

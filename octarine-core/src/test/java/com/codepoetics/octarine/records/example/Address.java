@@ -5,7 +5,7 @@ import com.codepoetics.octarine.json.JsonSerialiser;
 import com.codepoetics.octarine.records.KeySet;
 import com.codepoetics.octarine.records.ListKey;
 import com.codepoetics.octarine.records.Record;
-import com.codepoetics.octarine.records.Schema;
+import com.codepoetics.validation.Schema;
 
 import java.util.function.Consumer;
 

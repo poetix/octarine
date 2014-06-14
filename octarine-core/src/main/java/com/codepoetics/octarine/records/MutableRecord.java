@@ -75,7 +75,7 @@ public interface MutableRecord extends Record {
 
             @Override
             public String toString() {
-                return "M" + current.toString();
+                return current.toString();
             }
 
             @Override

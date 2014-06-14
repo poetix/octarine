@@ -1,6 +1,9 @@
 package com.codepoetics.octarine.serialisation;
 
 import com.codepoetics.octarine.records.*;
+import com.codepoetics.validation.Schema;
+import com.codepoetics.validation.Valid;
+import com.codepoetics.validation.Validation;
 import org.pcollections.PVector;
 
 import java.io.IOException;
@@ -22,7 +25,7 @@ public interface Deserialiser<T> extends Function<T, Record> {
     default <T> Validation<T> readFromString(String input, Schema<T> schema) {
         try {
             return schema.validate(readFromString(input));
-        } catch (RecordValidationException e) {
+        } catch (Valid.RecordValidationException e) {
             return e.toValidation();
         }
     }
@@ -32,7 +35,7 @@ public interface Deserialiser<T> extends Function<T, Record> {
     default <T> Validation<T> readFromReader(Reader reader, Schema<T> schema) throws IOException {
         try {
             return schema.validate(readFromReader(reader));
-        } catch (RecordValidationException e) {
+        } catch (Valid.RecordValidationException e) {
             return e.toValidation();
         }
     }
@@ -51,7 +54,7 @@ public interface Deserialiser<T> extends Function<T, Record> {
             Record record = apply(t);
             Validation<R> result = schema.validate(record);
             if (result.isValid()) return result.get();
-            throw new RecordValidationException(result.validationErrors());
+            throw new Valid.RecordValidationException(result.validationErrors());
         };
     }
 }

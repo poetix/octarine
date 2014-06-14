@@ -4,6 +4,8 @@ import com.codepoetics.octarine.json.JsonDeserialiser;
 import com.codepoetics.octarine.paths.Path;
 import com.codepoetics.octarine.records.example.Address;
 import com.codepoetics.octarine.records.example.Person;
+import com.codepoetics.validation.Valid;
+import com.codepoetics.validation.Validation;
 import org.junit.Test;
 import org.pcollections.PVector;
 

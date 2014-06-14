@@ -2,6 +2,8 @@ package com.codepoetics.octarine.records;
 
 import com.codepoetics.octarine.records.example.Address;
 import com.codepoetics.octarine.records.example.Person;
+import com.codepoetics.validation.Valid;
+import com.codepoetics.validation.Validation;
 import org.junit.Test;
 
 import java.awt.*;
@@ -41,7 +43,7 @@ public class ValidationTest {
         ));
     }
 
-    @Test(expected=RecordValidationException.class) public void
+    @Test(expected=Valid.RecordValidationException.class) public void
     exception_is_thrown_if_valid_record_key_populated_with_invalid_values() {
         Value addressValue = Person.address.of(Person.name.of("Address lines expected"));
     }

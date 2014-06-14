@@ -1,4 +1,4 @@
-package com.codepoetics.octarine.records;
+package com.codepoetics.validation;
 
 import java.util.Collections;
 import java.util.List;
@@ -38,7 +38,7 @@ public interface Validation<T> extends Supplier<Valid<T>> {
 
             @Override
             public Valid<T> get() {
-                throw new RecordValidationException(validationErrors());
+                throw new Valid.RecordValidationException(validationErrors());
             }
         };
     }

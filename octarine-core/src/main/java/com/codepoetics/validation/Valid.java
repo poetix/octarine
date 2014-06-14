@@ -1,7 +1,9 @@
-package com.codepoetics.octarine.records;
+package com.codepoetics.validation;
 
+import com.codepoetics.octarine.records.*;
 import org.pcollections.PMap;
 
+import java.util.List;
 import java.util.Set;
 
 public interface Valid<T> extends Record {
@@ -26,5 +28,17 @@ public interface Valid<T> extends Record {
 
     default Validation<T> validateWithout(Set<Key<?>> keys) {
         return schema().validate(without(keys));
+    }
+
+    class RecordValidationException extends RuntimeException {
+
+        private final List<String> validationErrors;
+        public RecordValidationException(List<String> validationErrors) {
+            this.validationErrors = validationErrors;
+        }
+
+        public <R> Validation<R> toValidation() {
+            return Validation.invalid(validationErrors);
+        }
     }
 }
