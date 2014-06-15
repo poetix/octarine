@@ -164,11 +164,11 @@ public static interface Address {
     Schema<Address> schema = mandatoryKeys::accept;
 
     JsonDeserialiser reader = i ->
-            i.add(addressLines, fromString)
+            i.addList(addressLines, fromString)
              .add(postcode, fromString);
 
     JsonSerialiser writer = p ->
-            p.add(addressLines, asString)
+            p.addList(addressLines, asString)
              .add(postcode, asString);
 }
 ```
@@ -182,8 +182,8 @@ public static interface Person {
 
     Schema<Person> schema = (r, v) -> {
         mandatoryKeys.accept(r, v);
-        age.from(r).ifPresent(a -> { if (a < 0) v.accept("Age must be 0 or greater"); });
-        address.from(r).ifPresent(a -> Address.schema.accept(a, v));
+        if (age.extract(r) < 0) { v.accept("Age must be 0 or greater"); }
+        Address.schema.accept(address.extract(r), v);
     };
 
     JsonDeserialiser reader = i ->
