@@ -182,9 +182,8 @@ public static interface Person {
 
     Schema<Person> schema = (r, v) -> {
         mandatoryKeys.accept(r, v);
-        if (age.extract(r) < 0) { v.accept("Age must be 0 or greater"); }
-        Address.schema.accept(address.extract(r), v);
-    };
+        age.get(r).ifPresent(a -> { if (a < 0) v.accept("Age must be 0 or greater"); });
+        address.get(r).ifPresent(a -> Address.schema.accept(a, v));
 
     JsonDeserialiser reader = i ->
             i.add(name, fromString)
