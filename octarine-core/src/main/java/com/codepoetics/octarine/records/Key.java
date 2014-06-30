@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface Key<T> extends OptionalLens<Record, T>, Path.Named<Record, T> {
 
-    static <T> Key<T> named(String name, Value...metadata) {
+    static <T> Key<T> named(String name, Value... metadata) {
         return named(name, Record.of(metadata));
     }
 
@@ -19,12 +19,16 @@ public interface Key<T> extends OptionalLens<Record, T>, Path.Named<Record, T> {
             }
 
             @Override
-            public Record metadata() { return metadata; }
+            public Record metadata() {
+                return metadata;
+            }
         };
     }
 
     @Override
-    default public boolean test(Record instance) { return instance.containsKey(this); }
+    default public boolean test(Record instance) {
+        return instance.containsKey(this);
+    }
 
     @Override
     default public Optional<T> get(Record instance) {
@@ -34,17 +38,25 @@ public interface Key<T> extends OptionalLens<Record, T>, Path.Named<Record, T> {
     @Override
     default public Record set(Record instance, Optional<T> newValue) {
         return newValue.isPresent()
-            ? instance.with(this.of(newValue.get()))
-            : instance.without(this);
+                ? instance.with(this.of(newValue.get()))
+                : instance.without(this);
     }
 
     String name();
+
     Record metadata();
 
     default Value of(T value) {
         return new Value() {
-            @Override public Key<?> key() { return Key.this; }
-            @Override public Object value() { return value; }
+            @Override
+            public Key<?> key() {
+                return Key.this;
+            }
+
+            @Override
+            public Object value() {
+                return value;
+            }
         };
     }
 

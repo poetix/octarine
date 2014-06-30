@@ -12,14 +12,24 @@ public interface FluentMap<K, V> {
 
     static <K, V> FluentMap<K, V> from(Map<K, V> map) {
         return new FluentMap<K, V>() {
-            @Override public Map<K, V> toMap() { return map; }
+            @Override
+            public Map<K, V> toMap() {
+                return map;
+            }
         };
     }
 
     static <K, V> FluentMap<K, V> from(PMap<K, V> map) {
         return new FluentMap<K, V>() {
-            @Override public Map<K, V> toMap() { return map; }
-            @Override public PMap<K, V> toPMap() { return map; }
+            @Override
+            public Map<K, V> toMap() {
+                return map;
+            }
+
+            @Override
+            public PMap<K, V> toPMap() {
+                return map;
+            }
         };
     }
 
@@ -35,6 +45,9 @@ public interface FluentMap<K, V> {
         Map<K, V> asMap = toMap();
         return asMap instanceof PMap ? (PMap<K, V>) asMap : HashTreePMap.from(toMap());
     }
-    default Stream<Pair<K, V>> toPairs() { return toMap().entrySet().stream().map(Pair::from); }
+
+    default Stream<Pair<K, V>> toPairs() {
+        return toMap().entrySet().stream().map(Pair::from);
+    }
 
 }

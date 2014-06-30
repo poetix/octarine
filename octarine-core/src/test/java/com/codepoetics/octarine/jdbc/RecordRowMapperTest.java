@@ -21,9 +21,10 @@ public class RecordRowMapperTest {
 
     private static final RecordRowMapper mapper = m ->
             m.add(id, fromSqlLong)
-             .add(name, fromSqlString);
+                    .add(name, fromSqlString);
 
-    @Test public void
+    @Test
+    public void
     maps_resultset_to_record() throws SQLException {
         ResultSet resultSet = mock(ResultSet.class);
 

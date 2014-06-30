@@ -9,25 +9,12 @@ import java.util.function.Function;
 
 public interface Path<T, V> extends Extractor.FromOptionalFunction<T, V> {
 
-    interface Indexed<I, T, V> extends Path<T, V> {
-        I index();
-        default public void describe(StringBuilder sb) {
-            sb.append("[").append(index()).append("]");
-        }
-    }
-
-    interface Named<T, V> extends Path<T, V> {
-        String name();
-        default public void describe(StringBuilder sb) {
-            if (sb.length() > 0) { sb.append("."); }
-            sb.append(name());
-        }
-    }
-
     static <T, V> Path<T, V> to(Function<T, Optional<V>> f, String name) {
         return new Named<T, V>() {
             @Override
-            public String name() { return name; }
+            public String name() {
+                return name;
+            }
 
             @Override
             public Optional<V> apply(T t) {
@@ -39,7 +26,9 @@ public interface Path<T, V> extends Extractor.FromOptionalFunction<T, V> {
     static <V> Path<List<V>, V> toIndex(int index) {
         return new Indexed<Integer, List<V>, V>() {
             @Override
-            public Integer index() { return index; }
+            public Integer index() {
+                return index;
+            }
 
             @Override
             public Optional<V> apply(List<V> vs) {
@@ -51,7 +40,9 @@ public interface Path<T, V> extends Extractor.FromOptionalFunction<T, V> {
     static <K, V> Indexed<String, Map<K, V>, V> toKey(K key) {
         return new Indexed<String, Map<K, V>, V>() {
             @Override
-            public String index() { return "'" + key.toString() + "'"; }
+            public String index() {
+                return "'" + key.toString() + "'";
+            }
 
             @Override
             public Optional<V> apply(Map<K, V> kvMap) {
@@ -85,5 +76,24 @@ public interface Path<T, V> extends Extractor.FromOptionalFunction<T, V> {
                 return Optional.empty();
             }
         };
+    }
+
+    interface Indexed<I, T, V> extends Path<T, V> {
+        I index();
+
+        default public void describe(StringBuilder sb) {
+            sb.append("[").append(index()).append("]");
+        }
+    }
+
+    interface Named<T, V> extends Path<T, V> {
+        String name();
+
+        default public void describe(StringBuilder sb) {
+            if (sb.length() > 0) {
+                sb.append(".");
+            }
+            sb.append(name());
+        }
     }
 }

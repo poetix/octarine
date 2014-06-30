@@ -15,7 +15,7 @@ import java.util.stream.StreamSupport;
 
 public interface FluentCollection<T> {
 
-    public static <T> FluentCollection<T> fromVarArgs(T...values) {
+    public static <T> FluentCollection<T> fromVarArgs(T... values) {
         return from(values);
     }
 
@@ -25,56 +25,115 @@ public interface FluentCollection<T> {
 
     public static <T> FluentCollection<T> from(Collection<T> collection) {
         return new FluentCollection<T>() {
-            @Override public Collection<T> toCollection() { return collection; }
+            @Override
+            public Collection<T> toCollection() {
+                return collection;
+            }
         };
     }
 
     public static <T> FluentCollection<T> from(List<T> list) {
         return new FluentCollection<T>() {
-            @Override public Collection<T> toCollection() { return list; }
-            @Override public List<T> toList() { return list; }
+            @Override
+            public Collection<T> toCollection() {
+                return list;
+            }
+
+            @Override
+            public List<T> toList() {
+                return list;
+            }
         };
     }
 
     public static <T> FluentCollection<T> from(Set<T> set) {
         return new FluentCollection<T>() {
-            @Override public Collection<T> toCollection() { return set; }
-            @Override public Set<T> toSet() { return set; }
+            @Override
+            public Collection<T> toCollection() {
+                return set;
+            }
+
+            @Override
+            public Set<T> toSet() {
+                return set;
+            }
         };
     }
 
     public static <T> FluentCollection<T> from(T[] array) {
         return new FluentCollection<T>() {
-            @Override public T[] toArray() { return array; }
-            @Override public Stream<T> toStream() { return Arrays.stream(array); }
-            @Override public Collection<T> toCollection() { return Arrays.asList(array); }
-            @Override public List<T> toList() { return Arrays.asList(array); }
+            @Override
+            public T[] toArray() {
+                return array;
+            }
+
+            @Override
+            public Stream<T> toStream() {
+                return Arrays.stream(array);
+            }
+
+            @Override
+            public Collection<T> toCollection() {
+                return Arrays.asList(array);
+            }
+
+            @Override
+            public List<T> toList() {
+                return Arrays.asList(array);
+            }
         };
     }
 
     public static <T> FluentCollection<T> from(PVector<T> pvector) {
         return new FluentCollection<T>() {
-            @Override public Collection<T> toCollection() { return pvector; }
-            @Override public PVector<T> toPVector() { return pvector; }
+            @Override
+            public Collection<T> toCollection() {
+                return pvector;
+            }
+
+            @Override
+            public PVector<T> toPVector() {
+                return pvector;
+            }
         };
     }
 
     public static <T> FluentCollection<T> from(PSet<T> pset) {
         return new FluentCollection<T>() {
-            @Override public Collection<T> toCollection() { return pset; }
-            @Override public PSet<T> toPSet() { return pset; }
+            @Override
+            public Collection<T> toCollection() {
+                return pset;
+            }
+
+            @Override
+            public PSet<T> toPSet() {
+                return pset;
+            }
         };
     }
 
     public static <T> FluentCollection<T> from(Stream<T> stream) {
         return new FluentCollection<T>() {
-            @Override public T[] toArray() { return (T[]) stream.toArray(); }
-            @Override public Collection<T> toCollection() { return toList(); }
-            @Override public List<T> toList() { return stream.collect(Collectors.toList()); }
+            @Override
+            public T[] toArray() {
+                return (T[]) stream.toArray();
+            }
+
+            @Override
+            public Collection<T> toCollection() {
+                return toList();
+            }
+
+            @Override
+            public List<T> toList() {
+                return stream.collect(Collectors.toList());
+            }
         };
     }
 
-    default Stream<T> toStream() { return toCollection().stream(); }
+    default Stream<T> toStream() {
+        return toCollection().stream();
+    }
 
     default T[] toArray() {
         return (T[]) toCollection().toArray();

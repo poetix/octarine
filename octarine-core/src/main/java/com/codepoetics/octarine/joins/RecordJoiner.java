@@ -1,11 +1,8 @@
 package com.codepoetics.octarine.joins;
 
-import com.codepoetics.joink.Fetcher;
-import com.codepoetics.joink.Index;
-import com.codepoetics.joink.JoinKey;
-import com.codepoetics.joink.Tuple2;
 import com.codepoetics.octarine.records.ListKey;
 import com.codepoetics.octarine.records.Record;
+import com.codepoetics.octarine.tuples.T2;
 
 import java.util.Collection;
 import java.util.function.Function;
@@ -85,11 +82,11 @@ public class RecordJoiner<K extends Comparable<K>> {
         return fetchAndMerge(fetcher, leftIndex::strictOneToOne).map(recordIntoRecord);
     }
 
-    private <RS> Stream<Tuple2<Record, RS>> merge(Stream<? extends Record> rights, Function<Index<K, Record>, Stream<Tuple2<Record, RS>>> merger) {
+    private <RS> Stream<T2<Record, RS>> merge(Stream<? extends Record> rights, Function<Index<K, Record>, Stream<T2<Record, RS>>> merger) {
         return merger.apply(primaryKey.index(rights));
     }
 
-    private <RS> Stream<Tuple2<Record, RS>> fetchAndMerge(Fetcher<K, Record> fetcher, Function<Index<K, Record>, Stream<Tuple2<Record, RS>>> merger) {
+    private <RS> Stream<T2<Record, RS>> fetchAndMerge(Fetcher<K, Record> fetcher, Function<Index<K, Record>, Stream<T2<Record, RS>>> merger) {
         Collection<? extends Record> rights = fetcher.fetch(leftIndex.keys());
         return merge(rights.stream(), merger);
     }

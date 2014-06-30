@@ -2,8 +2,9 @@ package com.codepoetics.octarine.matching;
 
 import com.codepoetics.octarine.extractors.Extractor;
 import com.codepoetics.octarine.extractors.Extractors;
-import com.codepoetics.octarine.functions.TetraFunction;
-import com.codepoetics.octarine.functions.TriFunction;
+import com.codepoetics.octarine.functions.F3;
+import com.codepoetics.octarine.functions.F4;
+import com.codepoetics.octarine.functions.F5;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -46,7 +47,7 @@ public interface MatcherBuilder<S, T> {
     default <A, B, C> Matching<S, T> matching(Extractor<? super S, ? extends A> extractorA,
                                               Extractor<? super S, ? extends B> extractorB,
                                               Extractor<? super S, ? extends C> extractorC,
-                                              TriFunction<? super A, ? super B, ? super C, ? extends T> receiver) {
+                                              F3<? super A, ? super B, ? super C, ? extends T> receiver) {
         return matching(Extractors.join(extractorA, extractorB, extractorC, receiver));
     }
 
@@ -54,8 +55,17 @@ public interface MatcherBuilder<S, T> {
                                                  Extractor<? super S, ? extends B> extractorB,
                                                  Extractor<? super S, ? extends C> extractorC,
                                                  Extractor<? super S, ? extends D> extractorD,
-                                                 TetraFunction<? super A, ? super B, ? super C, ? super D, ? extends T> receiver) {
+                                                 F4<? super A, ? super B, ? super C, ? super D, ? extends T> receiver) {
         return matching(Extractors.join(extractorA, extractorB, extractorC, extractorD, receiver));
+    }
+
+    default <A, B, C, D, E> Matching<S, T> matching(Extractor<? super S, ? extends A> extractorA,
+                                                    Extractor<? super S, ? extends B> extractorB,
+                                                    Extractor<? super S, ? extends C> extractorC,
+                                                    Extractor<? super S, ? extends D> extractorD,
+                                                    Extractor<? super S, ? extends E> extractorE,
+                                                    F5<? super A, ? super B, ? super C, ? super D, ? super E, ? extends T> receiver) {
+        return matching(Extractors.join(extractorA, extractorB, extractorC, extractorD, extractorE, receiver));
     }
 
 }

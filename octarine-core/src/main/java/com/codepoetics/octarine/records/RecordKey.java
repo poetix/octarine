@@ -2,7 +2,7 @@ package com.codepoetics.octarine.records;
 
 public interface RecordKey extends Key<Record> {
 
-    public static RecordKey named(String name, Value...metadata) {
+    public static RecordKey named(String name, Value... metadata) {
         return named(name, Record.of(metadata));
     }
 
@@ -20,7 +20,7 @@ public interface RecordKey extends Key<Record> {
         };
     }
 
-    default Value of(Value...values) {
+    default Value of(Value... values) {
         return of(Record.of(values));
     }
 }

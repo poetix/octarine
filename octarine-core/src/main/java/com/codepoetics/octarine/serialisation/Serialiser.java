@@ -23,10 +23,13 @@ public interface Serialiser<T> extends BiConsumer<Record, T> {
     void toWriter(Record record, Writer writer) throws IOException;
 
     void startRecord(T writer);
+
     void endRecord(T writer);
+
     void writeKeyName(String keyName, T writer);
 
     void startList(T writer);
+
     void endList(T writer);
 
     default void accept(Record record, T writer) {

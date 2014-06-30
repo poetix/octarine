@@ -12,7 +12,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class SerialisationTest {
 
-    @Test public void
+    @Test
+    public void
     writes_person_as_json() throws IOException {
         String json = Person.serialiser.toString(Record.of(
                 Person.name.of("Dominic"),

@@ -13,7 +13,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class MutableRecordTest {
 
-    @Test public void
+    @Test
+    public void
     mutable_records_capture_additions_and_removals() {
         MutableRecord mutable = Record.of(Person.name.of("Dominic"),
                 Person.age.of(39),

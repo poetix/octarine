@@ -26,7 +26,9 @@ class HashRecord implements Record {
     }
 
     @Override
-    public Record with(PMap<Key<?>, Object> values) { return Record.of(values().plusAll(values)); }
+    public Record with(PMap<Key<?>, Object> values) {
+        return Record.of(values().plusAll(values));
+    }
 
     @Override
     public String toString() {

@@ -1,14 +1,16 @@
 package com.codepoetics.octarine.extractors;
 
-import com.codepoetics.octarine.functions.TetraFunction;
-import com.codepoetics.octarine.functions.TriFunction;
+import com.codepoetics.octarine.functions.F3;
+import com.codepoetics.octarine.functions.F4;
+import com.codepoetics.octarine.functions.F5;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class Extractors {
-    private Extractors() { }
+    private Extractors() {
+    }
 
     public static <S> Extractor<S, S> it() {
         return Extractor.from(s -> true, Function.identity());
@@ -51,7 +53,7 @@ public class Extractors {
             Extractor<? super S, ? extends A> extractorA,
             Extractor<? super S, ? extends B> extractorB,
             Extractor<? super S, ? extends C> extractorC,
-            TriFunction<? super A, ? super B, ? super C, ? extends T> receiver) {
+            F3<? super A, ? super B, ? super C, ? extends T> receiver) {
         return new Extractor.FromPredicate<S, T>() {
 
             @Override
@@ -71,7 +73,7 @@ public class Extractors {
             Extractor<? super S, ? extends B> extractorB,
             Extractor<? super S, ? extends C> extractorC,
             Extractor<? super S, ? extends D> extractorD,
-            TetraFunction<? super A, ? super B, ? super C, ? super D, ? extends T> receiver) {
+            F4<? super A, ? super B, ? super C, ? super D, ? extends T> receiver) {
         return new Extractor.FromPredicate<S, T>() {
 
             @Override
@@ -82,6 +84,28 @@ public class Extractors {
             @Override
             public T extract(S input) {
                 return receiver.apply(extractorA.extract(input), extractorB.extract(input), extractorC.extract(input), extractorD.extract(input));
+            }
+        };
+    }
+
+
+    public static <S, A, B, C, D, E, T> Extractor<S, T> join(
+            Extractor<? super S, ? extends A> extractorA,
+            Extractor<? super S, ? extends B> extractorB,
+            Extractor<? super S, ? extends C> extractorC,
+            Extractor<? super S, ? extends D> extractorD,
+            Extractor<? super S, ? extends E> extractorE,
+            F5<? super A, ? super B, ? super C, ? super D, ? super E, ? extends T> receiver) {
+        return new Extractor.FromPredicate<S, T>() {
+
+            @Override
+            public boolean test(S input) {
+                return extractorA.test(input) && extractorB.test(input) && extractorC.test(input) && extractorD.test(input) && extractorE.test(input);
+            }
+
+            @Override
+            public T extract(S input) {
+                return receiver.apply(extractorA.extract(input), extractorB.extract(input), extractorC.extract(input), extractorD.extract(input), extractorE.extract(input));
             }
         };
     }

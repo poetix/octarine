@@ -20,13 +20,17 @@ public interface Matching<S, T> extends Extractor.FromOptionalFunction<S, T>, Ma
 
     static <S, T> Matching<S, T> withCriteria(PVector<Extractor<? super S, ? extends T>> criteria) {
         return new Matching<S, T>() {
-            @Override public Matching<S, T> matching(Extractor<? super S, ? extends T> extractor) {
+            @Override
+            public Matching<S, T> matching(Extractor<? super S, ? extends T> extractor) {
                 return withCriteria(criteria.plus(extractor));
             }
 
-            @Override public Optional<T> apply(S input) {
+            @Override
+            public Optional<T> apply(S input) {
                 for (Extractor<? super S, ? extends T> extractor : criteria) {
-                    if (extractor.test(input)) { return Optional.of(extractor.extract(input)); }
+                    if (extractor.test(input)) {
+                        return Optional.of(extractor.extract(input));
+                    }
                 }
                 return Optional.empty();
             }

@@ -1,6 +1,5 @@
 package com.codepoetics.octarine.lenses;
 
-import com.codepoetics.octarine.morphisms.Bijection;
 import org.pcollections.PMap;
 import org.pcollections.PVector;
 
@@ -26,8 +25,37 @@ public interface Lens<T, V> extends Function<T, V> {
         };
     }
 
+    static <T> Lens<T[], T> intoArray(int index) {
+        return of(
+                ts -> ts[index],
+                (ts, t) -> {
+                    T[] copy = Arrays.copyOf(ts, ts.length);
+                    copy[index] = t;
+                    return copy;
+                }
+        );
+    }
+
+    static <K, V> Lens<PMap<K, V>, V> intoPMap(K key) {
+        return of(
+                m -> m.get(key),
+                (m, v) -> m.plus(key, v)
+        );
+    }
+
+    static <T> Lens<PVector<T>, T> intoPVector(int index) {
+        return of(
+                ts -> ts.get(index),
+                (ts, t) -> ts.with(index, t)
+        );
+    }
+
     V get(T instance);
-    default V apply(T instance) { return get(instance); }
+
+    default V apply(T instance) {
+        return get(instance);
+    }
+
     T set(T instance, V newValue);
 
     default OptionalLens<T, V> asOptional() {
@@ -49,49 +77,11 @@ public interface Lens<T, V> extends Function<T, V> {
         return t -> update(t, updater);
     }
 
-    static <T> Lens<T[], T> intoArray(int index) {
-        return of(
-           ts -> ts[index],
-            (ts, t) -> {
-                T[] copy = Arrays.copyOf(ts, ts.length);
-                copy[index] = t;
-                return copy;
-            }
-        );
-    }
-
-    static <K, V> Lens<PMap<K, V>, V> intoPMap(K key) {
-        return of(
-            m -> m.get(key),
-            (m, v) -> m.plus(key, v)
-        );
-    }
-
-    static <T> Lens<PVector<T>, T> intoPVector(int index) {
-        return of(
-             ts -> ts.get(index),
-             (ts, t) -> ts.with(index, t)
-        );
-    }
-
     default <V2> Lens<T, V2> join(Lens<V, V2> next) {
         return of(
-            t -> next.get(get(t)),
-            (t, v) -> set(t, next.set(get(t), v))
+                t -> next.get(get(t)),
+                (t, v) -> set(t, next.set(get(t), v))
         );
     }
 
-    default <V2> Lens<T, V2> under(Bijection<V, V2> bijection) {
-        return of(
-            t -> bijection.apply(get(t)),
-            (t, v) -> set(t, bijection.reverse().apply(v))
-        );
-    }
-
-    default <T0> Lens<T0, V> over(Bijection<T0, T> bijection) {
-        return of(
-                t -> get(bijection.apply(t)),
-                (t, v) -> bijection.reverse().apply(set(bijection.apply(t), v))
-        );
-    }
 }

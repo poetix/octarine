@@ -1,17 +1,18 @@
 package com.codepoetics.octarine.records.example;
 
-import com.codepoetics.octarine.json.JsonDeserialiser;
+import com.codepoetics.octarine.json.JsonDeserialisers;
+import com.codepoetics.octarine.json.JsonRecordDeserialiser;
 import com.codepoetics.octarine.json.JsonSerialiser;
 import com.codepoetics.octarine.records.Key;
-import com.codepoetics.octarine.records.KeySet;
-import com.codepoetics.validation.Schema;
-import com.codepoetics.validation.ValidRecordKey;
+import com.codepoetics.octarine.validation.KeySet;
+import com.codepoetics.octarine.validation.Schema;
+import com.codepoetics.octarine.validation.ValidRecordKey;
 
 import java.awt.*;
 import java.util.function.Function;
 
-import static com.codepoetics.octarine.json.JsonDeserialiser.fromInteger;
-import static com.codepoetics.octarine.json.JsonDeserialiser.fromString;
+import static com.codepoetics.octarine.json.JsonDeserialisers.fromInteger;
+import static com.codepoetics.octarine.json.JsonDeserialisers.fromString;
 import static com.codepoetics.octarine.json.JsonSerialiser.asInteger;
 import static com.codepoetics.octarine.json.JsonSerialiser.asString;
 
@@ -21,26 +22,28 @@ public interface Person {
     static final Key<String> name = mandatoryKeys.add("name");
     static final Key<Integer> age = mandatoryKeys.add("age");
     public static final Key<Color> favouriteColour = mandatoryKeys.add("favourite colour");
+
     public static final ValidRecordKey<Address> address =
             mandatoryKeys.addValidRecord("address", Address.schema);
 
     static final Schema<Person> schema = (record, validationErrors) -> {
         mandatoryKeys.accept(record, validationErrors);
-        age.get(record).ifPresent(a -> { if (a < 0) validationErrors.accept("Age must be 0 or greater"); });
+        age.get(record).ifPresent(a -> {
+            if (a < 0) validationErrors.accept("Age must be 0 or greater");
+        });
     };
-
 
     public static final Function<Color, String> colourToString = c -> "0x" + Integer.toHexString(c.getRGB()).toUpperCase().substring(2);
 
     public static final JsonSerialiser serialiser = p ->
             p.add(Person.name, asString)
-             .add(age, asInteger)
-             .add(favouriteColour, (c, g) -> asString.accept(colourToString.apply(c), g))
-             .add(address, Address.serialiser);
+                    .add(age, asInteger)
+                    .add(favouriteColour, (c, g) -> asString.accept(colourToString.apply(c), g))
+                    .add(address, Address.serialiser);
 
-    public static final JsonDeserialiser deserialiser = i ->
+    public static final JsonRecordDeserialiser deserialiser = i ->
             i.add(name, fromString)
-             .add(age, fromInteger)
-             .add(favouriteColour, fromString.andThen(Color::decode))
-             .add(address, Address.deserialiser.validAgainst(Address.schema));
+                    .add(age, fromInteger)
+                    .add(favouriteColour, fromString.andThen(Color::decode))
+                    .add(address, JsonDeserialisers.fromValid(Address.deserialiser.validAgainst(Address.schema)));
 }

@@ -10,22 +10,13 @@ import java.util.Set;
 
 public interface MutableRecord extends Record {
 
-    default void set(Value...values) { set(Record.of(values)); }
-    default void set(PMap<Key<?>, Object> values) { set(Record.of(values)); }
-    void set(Record values);
-
-    default void unset(Key<?>...keys) { unset(FluentCollection.<Key<?>>from(keys).toSet()); }
-    void unset(Set<Key<?>> keys);
-
-    Record added();
-    Set<Key<?>> removed();
-
     public static MutableRecord from(Record record) {
         return new MutableRecord() {
 
             private Record current = record.with();
             private Record added = Record.empty();
             private PSet<Key<?>> removed = HashTreePSet.empty();
+
             @Override
             public void set(Record values) {
                 added = added.with(values);
@@ -71,7 +62,9 @@ public interface MutableRecord extends Record {
             }
 
             @Override
-            public MutableRecord mutable() { return this; }
+            public MutableRecord mutable() {
+                return this;
+            }
 
             @Override
             public String toString() {
@@ -79,7 +72,9 @@ public interface MutableRecord extends Record {
             }
 
             @Override
-            public int hashCode() { return current.hashCode(); }
+            public int hashCode() {
+                return current.hashCode();
+            }
 
             @Override
             public boolean equals(Object other) {
@@ -87,4 +82,24 @@ public interface MutableRecord extends Record {
             }
         };
     }
+
+    default void set(Value... values) {
+        set(Record.of(values));
+    }
+
+    default void set(PMap<Key<?>, Object> values) {
+        set(Record.of(values));
+    }
+
+    void set(Record values);
+
+    default void unset(Key<?>... keys) {
+        unset(FluentCollection.<Key<?>>from(keys).toSet());
+    }
+
+    void unset(Set<Key<?>> keys);
+
+    Record added();
+
+    Set<Key<?>> removed();
 }

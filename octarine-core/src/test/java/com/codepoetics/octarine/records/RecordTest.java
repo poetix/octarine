@@ -1,7 +1,6 @@
 package com.codepoetics.octarine.records;
 
 import com.codepoetics.octarine.lenses.Lens;
-import com.codepoetics.octarine.records.example.Person;
 import org.junit.Test;
 
 import java.util.Optional;
@@ -21,11 +20,12 @@ public class RecordTest {
             name.of("Arthur Putey"),
             age.of(43),
             address.of(
-                addressLines.of("23 Acacia Avenue", "Sunderland", "VB6 5UX")
+                    addressLines.of("23 Acacia Avenue", "Sunderland", "VB6 5UX")
             )
     );
 
-    @Test public void
+    @Test
+    public void
     keys_are_lenses() {
         Lens<Record, String> secondLineOfAddress =
                 address.assertPresent().join(addressLines.assertPresent()).join(Lens.intoPVector(1));
@@ -42,7 +42,8 @@ public class RecordTest {
         );
     }
 
-    @Test public void
+    @Test
+    public void
     keys_are_extractors() {
         assertThat(address.test(testRecord), equalTo(true));
         assertThat(notAppearingInThisRecord.test(testRecord), equalTo(false));

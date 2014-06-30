@@ -26,6 +26,7 @@ public interface Extractor<S, T> extends Predicate<S>, Function<S, Optional<T>> 
     default Extractor<S, T> is(T expected) {
         return is(Predicate.isEqual(expected));
     }
+
     default Extractor<S, T> is(Predicate<T> expected) {
         return Extractors.join(
                 target -> apply(target).map(expected::test).orElse(false),
@@ -35,7 +36,9 @@ public interface Extractor<S, T> extends Predicate<S>, Function<S, Optional<T>> 
     interface FromPredicate<S, T> extends Extractor<S, T> {
         @Override
         default Optional<T> apply(S input) {
-            if (!test(input)) { return Optional.empty(); }
+            if (!test(input)) {
+                return Optional.empty();
+            }
             return Optional.of(extract(input));
         }
     }

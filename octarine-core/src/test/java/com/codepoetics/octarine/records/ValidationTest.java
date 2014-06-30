@@ -2,8 +2,8 @@ package com.codepoetics.octarine.records;
 
 import com.codepoetics.octarine.records.example.Address;
 import com.codepoetics.octarine.records.example.Person;
-import com.codepoetics.validation.Valid;
-import com.codepoetics.validation.Validation;
+import com.codepoetics.octarine.validation.Valid;
+import com.codepoetics.octarine.validation.Validation;
 import org.junit.Test;
 
 import java.awt.*;
@@ -14,7 +14,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ValidationTest {
 
-    @Test public void
+    @Test
+    public void
     schemas_validate_valid_records() {
         Validation<Person> validationResult = Person.schema.validate(
                 Person.name.of("Alice Cowley"),
@@ -28,7 +29,8 @@ public class ValidationTest {
         assertThat(Person.name.extract(person), equalTo("Alice Cowley"));
     }
 
-    @Test public void
+    @Test
+    public void
     schemas_collect_validation_errors() {
         Validation<Person> validationResult = Person.schema.validate(
                 Person.name.of("Eric"),
@@ -38,12 +40,13 @@ public class ValidationTest {
 
         assertThat(validationResult.isValid(), equalTo(false));
         assertThat(validationResult.validationErrors(), hasItems(
-            "Missing key \"favourite colour\"",
-            "Age must be 0 or greater"
+                "Missing key \"favourite colour\"",
+                "Age must be 0 or greater"
         ));
     }
 
-    @Test(expected=Valid.RecordValidationException.class) public void
+    @Test(expected = Valid.RecordValidationException.class)
+    public void
     exception_is_thrown_if_valid_record_key_populated_with_invalid_values() {
         Value addressValue = Person.address.of(Person.name.of("Address lines expected"));
     }

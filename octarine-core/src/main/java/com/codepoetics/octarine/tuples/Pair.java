@@ -9,23 +9,43 @@ public interface Pair<K, V> extends Map.Entry<K, V>, Pairable<K, V> {
     public static <K, V> Pair<K, V> of(K first, V second) {
         return new Pair<K, V>() {
 
-            @Override public K first() { return first; }
-            @Override public V second() { return second; }
+            @Override
+            public K first() {
+                return first;
+            }
 
-            @Override public Pair<V, K> swap() {
+            @Override
+            public V second() {
+                return second;
+            }
+
+            @Override
+            public Pair<V, K> swap() {
                 Pair<K, V> original = this;
                 return new Pair<V, K>() {
 
-                    @Override public V first() { return second; }
-                    @Override public K second() { return first; }
+                    @Override
+                    public V first() {
+                        return second;
+                    }
 
-                    @Override public Pair<K, V> swap() { return original; }
+                    @Override
+                    public K second() {
+                        return first;
+                    }
+
+                    @Override
+                    public Pair<K, V> swap() {
+                        return original;
+                    }
                 };
             }
         };
     }
 
-    public static <K, V> Pair<K, V> from(Map.Entry<K, V> entry) { return of(entry.getKey(), entry.getValue()); }
+    public static <K, V> Pair<K, V> from(Map.Entry<K, V> entry) {
+        return of(entry.getKey(), entry.getValue());
+    }
 
     public static <K, V, K2> Function<Pair<K, V>, Pair<K2, V>> mapFirst(Function<K, K2> f) {
         return p -> Pair.of(f.apply(p.first()), p.second());
@@ -40,6 +60,7 @@ public interface Pair<K, V> extends Map.Entry<K, V>, Pairable<K, V> {
     }
 
     K first();
+
     V second();
 
     @Override
@@ -61,13 +82,25 @@ public interface Pair<K, V> extends Map.Entry<K, V>, Pairable<K, V> {
         return Pair.of(second(), first());
     }
 
-    default V coReturn() { return second(); }
-    default Pair<K, Pair<K, V>> coJoin() { return Pair.of(first(), this); }
-    default <V2> Pair<K, V2> fmap(Function<V, V2> f) { return Pair.of(first(), f.apply(second())); }
+    default V coReturn() {
+        return second();
+    }
+
+    default Pair<K, Pair<K, V>> coJoin() {
+        return Pair.of(first(), this);
+    }
+
+    default <V2> Pair<K, V2> fmap(Function<V, V2> f) {
+        return Pair.of(first(), f.apply(second()));
+    }
+
     default <V2> Pair<K, V2> coBind(Function<Pair<K, V>, V2> f) {
         return Pair.of(first(), f.apply(this));
     }
 
-    @Override default Pair<K, V> toPair() { return this; }
+    @Override
+    default Pair<K, V> toPair() {
+        return this;
+    }
 }
 

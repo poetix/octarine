@@ -5,6 +5,8 @@ import java.util.logging.Logger;
 
 public interface LoggedFunction<S, T> extends Function<S, T> {
     static final Logger logger = Logger.getLogger(LoggedFunction.class.getName());
+    static Function<String, Integer> getLengthLogged2 = (LoggedFunction<String, Integer>) String::length;
+
     @Override
     default public T apply(S input) {
         T result = applyLogged(input);
@@ -13,6 +15,4 @@ public interface LoggedFunction<S, T> extends Function<S, T> {
     }
 
     T applyLogged(S input);
-
-    static Function<String, Integer> getLengthLogged2 = (LoggedFunction<String, Integer>) String::length;
 }

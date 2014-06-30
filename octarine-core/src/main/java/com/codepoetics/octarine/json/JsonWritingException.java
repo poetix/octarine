@@ -9,5 +9,7 @@ public class JsonWritingException extends RuntimeException {
         super(cause);
     }
 
-    public IOException getIOExceptionCause() { return (IOException) getCause(); }
+    public IOException getIOExceptionCause() {
+        return (IOException) getCause();
+    }
 }

@@ -1,18 +1,18 @@
 package com.codepoetics.octarine.jdbc;
 
-import com.codepoetics.octarine.records.*;
-import com.codepoetics.validation.Schema;
-import com.codepoetics.validation.Valid;
+import com.codepoetics.octarine.records.Key;
+import com.codepoetics.octarine.records.Record;
+import com.codepoetics.octarine.records.Value;
+import com.codepoetics.octarine.validation.Schema;
+import com.codepoetics.octarine.validation.Valid;
 
 import java.sql.ResultSet;
 import java.util.LinkedList;
 import java.util.List;
 
 public interface RecordRowMapper extends RowMapper<Record> {
-    interface ColumnMappings {
-        <T> ColumnMappings add(Key<? super T> key, ColumnMapper<? extends T> columnMapper);
-    }
     ColumnMappings inject(ColumnMappings empty);
+
     @Override
     default Record map(ResultSet resultSet) {
         List<Value> columnValues = new LinkedList<>();
@@ -37,5 +37,9 @@ public interface RecordRowMapper extends RowMapper<Record> {
                 return schema.extract(RecordRowMapper.this.map(resultSet));
             }
         };
+    }
+
+    interface ColumnMappings {
+        <T> ColumnMappings add(Key<? super T> key, ColumnMapper<? extends T> columnMapper);
     }
 }

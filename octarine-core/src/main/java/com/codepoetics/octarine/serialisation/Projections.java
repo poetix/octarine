@@ -33,7 +33,6 @@ public interface Projections<T> {
         };
     }
 
-
     <V> Projections<T> add(Key<V> key, String keyName, BiConsumer<? super V, T> valueSerialiser);
 
     default <V> Projections<T> add(Key<V> key, BiConsumer<? super V, T> valueSerialiser) {
