@@ -8,13 +8,13 @@ import java.util.function.Function;
 import java.util.stream.Collector;
 
 final class IndexCollector {
-    public IndexCollector() {
+    private IndexCollector() {
     }
 
     static <K extends Comparable<K>, S> Collector<S, SortedMap<K, Set<S>>, SortedMap<K, Set<S>>> on(Function<? super S, ? extends K> key) {
         return Collector.<S, SortedMap<K, Set<S>>>of(
                 TreeMap::new,
-                (map, element) -> map.computeIfAbsent(key.apply(element), k -> new HashSet<S>()).add(element),
+                (map, element) -> map.computeIfAbsent(key.apply(element), k -> new HashSet<>()).add(element),
                 (m1, m2) -> {
                     m2.entrySet().forEach(e ->
                                     m1.merge(e.getKey(), e.getValue(), (s1, s2) -> {

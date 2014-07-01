@@ -9,8 +9,8 @@ public class LoggingFunctionTest {
     @Test
     public void
     double_logging() {
-        Function<String, Integer> singleLogging = (LoggedFunction<String, Integer>) String::length;
-        Function<String, Integer> doubleLogging = (LoggedFunction<String, Integer>) singleLogging::apply;
+        Function<String, Integer> singleLogging = String::length;
+        Function<String, Integer> doubleLogging = singleLogging::apply;
 
         doubleLogging.apply("foo");
     }

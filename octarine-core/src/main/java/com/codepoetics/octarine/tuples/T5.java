@@ -56,7 +56,7 @@ public final class T5<A, B, C, D, E> {
     }
 
     public static <A, B, C, D, E> T5<A, B, C, D, E> of(A a, B b, C c, D d, E e) {
-        return new T5<A, B, C, D, E>(a, b, c, d, e);
+        return new T5<>(a, b, c, d, e);
     }
 
     public A _1() {

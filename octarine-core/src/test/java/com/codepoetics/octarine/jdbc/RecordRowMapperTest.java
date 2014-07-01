@@ -7,8 +7,8 @@ import org.junit.Test;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static com.codepoetics.octarine.jdbc.ColumnMapper.fromSqlLong;
-import static com.codepoetics.octarine.jdbc.ColumnMapper.fromSqlString;
+import static com.codepoetics.octarine.jdbc.ColumnMappers.fromSqlLong;
+import static com.codepoetics.octarine.jdbc.ColumnMappers.fromSqlString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;

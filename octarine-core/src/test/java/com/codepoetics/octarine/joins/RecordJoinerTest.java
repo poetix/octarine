@@ -1,11 +1,11 @@
 package com.codepoetics.octarine.joins;
 
-import com.codepoetics.octarine.morphisms.FluentCollection;
 import com.codepoetics.octarine.records.Key;
 import com.codepoetics.octarine.records.ListKey;
 import com.codepoetics.octarine.records.Record;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +28,7 @@ public class RecordJoinerTest {
             publisherName.of("Servo"),
             id.of("SV")
     );
-    public static final List<Record> publishers = FluentCollection.fromVarArgs(billsAndMoon, servo).toList();
+    public static final List<Record> publishers = Arrays.asList(billsAndMoon, servo);
     public static final Record alanGoodyear = Record.of(
             authorName.of("Alan Goodyear"),
             id.of("AG")
@@ -41,7 +41,7 @@ public class RecordJoinerTest {
             authorName.of("Leavis Lacanian"),
             id.of("LL")
     );
-    public static final List<Record> authors = FluentCollection.fromVarArgs(alanGoodyear, barbaraMoat, leavisLacanian).toList();
+    public static final List<Record> authors = Arrays.asList(alanGoodyear, barbaraMoat, leavisLacanian);
     public static final Record cromulenceOfTruths = Record.of(
             authorId.of("AG"),
             publisherId.of("SV"),
@@ -62,13 +62,13 @@ public class RecordJoinerTest {
             publisherId.of("BM"),
             bookName.of("Amorous Encounters")
     );
-    public static final List<Record> books = FluentCollection.fromVarArgs(
+    public static final List<Record> books = Arrays.asList(
             cromulenceOfTruths,
             oligarchsSecret,
             butIsThisNot,
             amorousEncounters
-    ).toList();
-    ListKey<Record> authored = ListKey.named("authored");
+    );
+    final ListKey<Record> authored = ListKey.named("authored");
 
     @Test
     public void

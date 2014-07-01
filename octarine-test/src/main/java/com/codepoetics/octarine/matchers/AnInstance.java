@@ -12,7 +12,7 @@ import java.util.function.Function;
 public class AnInstance<T> extends TypeSafeDiagnosingMatcher<T> {
 
     public static <T> AnInstance<T> of(Class<? extends T> klass) {
-        return new AnInstance<T>(klass);
+        return new AnInstance<>(klass);
     }
 
     public static final class PropertyMatcher<T, V> extends TypeSafeDiagnosingMatcher<T> {
@@ -57,7 +57,7 @@ public class AnInstance<T> extends TypeSafeDiagnosingMatcher<T> {
     }
 
     public <V> AnInstance<T> with(Function<? super T, ? extends V> f, String name, Matcher<? extends V> matcher) {
-        return new AnInstance<T>(klass, matchers.plus(new PropertyMatcher<T, V>(f, name, matcher)));
+        return new AnInstance<>(klass, matchers.plus(new PropertyMatcher<>(f, name, matcher)));
     }
 
     public <V> AnInstance<T> with(Path<? super T, ? extends V> path, Matcher<? extends V> matcher) {

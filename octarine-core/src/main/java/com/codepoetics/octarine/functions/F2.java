@@ -7,7 +7,7 @@ import java.util.function.Function;
 
 public interface F2<A, B, R> extends BiFunction<A, B, R> {
     default F1<B, R> curry(A a) {
-        return (b) -> apply(a, b);
+        return b -> apply(a, b);
     }
 
     default F0<R> curry(A a, B b) {

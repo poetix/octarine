@@ -6,7 +6,7 @@ public class Joins<L> {
 
     private final Stream<L> lefts;
 
-    public Joins(Stream<L> lefts) {
+    private Joins(Stream<L> lefts) {
         this.lefts = lefts;
     }
 

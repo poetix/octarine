@@ -17,63 +17,78 @@ public class Joiner<L, R, K extends Comparable<K>> {
         this.primaryKey = primaryKey;
     }
 
+    @SuppressWarnings("unchecked")
     public Stream<T2<L, R>> manyToOne(Collection<? extends R> rights) {
         return merge(rights, leftIndex::manyToOne);
     }
 
+    @SuppressWarnings("unchecked")
     public Stream<T2<L, R>> manyToOne(Stream<R> rights) {
         return merge(rights, leftIndex::manyToOne);
     }
 
+    @SuppressWarnings("unchecked")
     public Stream<T2<L, R>> manyToOne(Fetcher<K, R> fetcher) {
         return fetchAndMerge(fetcher, leftIndex::manyToOne);
     }
 
 
+    @SuppressWarnings("unchecked")
     public Stream<T2<L, R>> strictManyToOne(Collection<? extends R> rights) {
         return merge(rights, leftIndex::strictManyToOne);
     }
 
+    @SuppressWarnings("unchecked")
     public Stream<T2<L, R>> strictManyToOne(Stream<R> rights) {
         return merge(rights, leftIndex::strictManyToOne);
     }
 
+    @SuppressWarnings("unchecked")
     public Stream<T2<L, R>> strictManyToOne(Fetcher<K, R> fetcher) {
         return fetchAndMerge(fetcher, leftIndex::strictManyToOne);
     }
 
+    @SuppressWarnings("unchecked")
     public Stream<T2<L, Set<R>>> oneToMany(Collection<? extends R> rights) {
         return merge(rights, leftIndex::oneToMany);
     }
 
+    @SuppressWarnings("unchecked")
     public Stream<T2<L, Set<R>>> oneToMany(Stream<R> rights) {
         return merge(rights, leftIndex::oneToMany);
     }
 
+    @SuppressWarnings("unchecked")
     public Stream<T2<L, Set<R>>> oneToMany(Fetcher<K, R> fetcher) {
         return fetchAndMerge(fetcher, leftIndex::oneToMany);
     }
 
+    @SuppressWarnings("unchecked")
     public Stream<T2<L, Set<R>>> strictOneToMany(Collection<? extends R> rights) {
         return merge(rights, leftIndex::strictOneToMany);
     }
 
+    @SuppressWarnings("unchecked")
     public Stream<T2<L, Set<R>>> strictOneToMany(Stream<R> rights) {
         return merge(rights, leftIndex::strictOneToMany);
     }
 
+    @SuppressWarnings("unchecked")
     public Stream<T2<L, Set<R>>> strictOneToMany(Fetcher<K, R> fetcher) {
         return fetchAndMerge(fetcher, leftIndex::strictOneToMany);
     }
 
+    @SuppressWarnings("unchecked")
     public Stream<T2<L, R>> strictOneToOne(Collection<? extends R> rights) {
         return merge(rights, leftIndex::strictOneToOne);
     }
 
+    @SuppressWarnings("unchecked")
     public Stream<T2<L, R>> strictOneToOne(Stream<R> rights) {
         return merge(rights, leftIndex::strictOneToOne);
     }
 
+    @SuppressWarnings("unchecked")
     public Stream<T2<L, R>> strictOneToOne(Fetcher<K, R> fetcher) {
         return fetchAndMerge(fetcher, leftIndex::strictOneToOne);
     }

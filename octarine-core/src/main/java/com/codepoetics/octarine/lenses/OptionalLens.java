@@ -63,7 +63,7 @@ public interface OptionalLens<T, V> extends Lens<T, Optional<V>>, Extractor.From
 
             @Override
             public Optional<V2> get(T instance) {
-                return self.get(instance).flatMap(v -> next.get(v));
+                return self.get(instance).flatMap(next::get);
             }
 
             @Override

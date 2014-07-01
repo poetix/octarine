@@ -25,10 +25,12 @@ public class RecordJoiner<K extends Comparable<K>> {
         return manyToOne(rights.stream());
     }
 
+    @SuppressWarnings("unchecked")
     public Stream<Record> manyToOne(Stream<? extends Record> rights) {
         return merge(rights, leftIndex::manyToOne).map(recordIntoRecord);
     }
 
+    @SuppressWarnings("unchecked")
     public Stream<Record> manyToOne(Fetcher<K, Record> fetcher) {
         return fetchAndMerge(fetcher, leftIndex::manyToOne).map(recordIntoRecord);
     }
@@ -38,10 +40,12 @@ public class RecordJoiner<K extends Comparable<K>> {
         return strictManyToOne(rights.stream());
     }
 
+    @SuppressWarnings("unchecked")
     public Stream<Record> strictManyToOne(Stream<? extends Record> rights) {
         return merge(rights, leftIndex::strictManyToOne).map(recordIntoRecord);
     }
 
+    @SuppressWarnings("unchecked")
     public Stream<Record> strictManyToOne(Fetcher<K, Record> fetcher) {
         return fetchAndMerge(fetcher, leftIndex::strictManyToOne).map(recordIntoRecord);
     }
@@ -50,10 +54,12 @@ public class RecordJoiner<K extends Comparable<K>> {
         return oneToMany(rights.stream(), manyKey);
     }
 
+    @SuppressWarnings("unchecked")
     public Stream<Record> oneToMany(Stream<? extends Record> rights, ListKey<Record> manyKey) {
         return merge(rights, leftIndex::oneToMany).map(recordsIntoRecord(manyKey));
     }
 
+    @SuppressWarnings("unchecked")
     public Stream<Record> oneToMany(Fetcher<K, Record> fetcher, ListKey<Record> manyKey) {
         return fetchAndMerge(fetcher, leftIndex::oneToMany).map(recordsIntoRecord(manyKey));
     }
@@ -62,10 +68,12 @@ public class RecordJoiner<K extends Comparable<K>> {
         return strictOneToMany(rights.stream(), manyKey);
     }
 
+    @SuppressWarnings("unchecked")
     public Stream<Record> strictOneToMany(Stream<? extends Record> rights, ListKey<Record> manyKey) {
         return merge(rights, leftIndex::strictOneToMany).map(recordsIntoRecord(manyKey));
     }
 
+    @SuppressWarnings("unchecked")
     public Stream<Record> strictOneToMany(Fetcher<K, Record> fetcher, ListKey<Record> manyKey) {
         return fetchAndMerge(fetcher, leftIndex::strictOneToMany).map(recordsIntoRecord(manyKey));
     }
@@ -74,10 +82,12 @@ public class RecordJoiner<K extends Comparable<K>> {
         return strictOneToOne(rights.stream());
     }
 
+    @SuppressWarnings("unchecked")
     public Stream<Record> strictOneToOne(Stream<? extends Record> rights) {
         return merge(rights, leftIndex::strictOneToOne).map(recordIntoRecord);
     }
 
+    @SuppressWarnings("unchecked")
     public Stream<Record> strictOneToOne(Fetcher<K, Record> fetcher) {
         return fetchAndMerge(fetcher, leftIndex::strictOneToOne).map(recordIntoRecord);
     }

@@ -30,7 +30,7 @@ public final class T2<A, B> {
     }
 
     public static <A, B> T2<A, B> of(A a, B b) {
-        return new T2<A, B>(a, b);
+        return new T2<>(a, b);
     }
 
     public A _1() {

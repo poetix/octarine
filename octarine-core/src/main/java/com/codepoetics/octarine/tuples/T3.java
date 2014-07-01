@@ -38,7 +38,7 @@ public final class T3<A, B, C> {
     }
 
     public static <A, B, C> T3<A, B, C> of(A a, B b, C c) {
-        return new T3<A, B, C>(a, b, c);
+        return new T3<>(a, b, c);
     }
 
     public A _1() {

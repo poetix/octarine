@@ -21,7 +21,7 @@ public final class T1<A> {
     }
 
     public static <A> T1<A> of(A a) {
-        return new T1<A>(a);
+        return new T1<>(a);
     }
 
     public <R> R sendTo(Function<A, R> f) {

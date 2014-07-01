@@ -47,7 +47,7 @@ public final class T4<A, B, C, D> {
     }
 
     public static <A, B, C, D> T4<A, B, C, D> of(A a, B b, C c, D d) {
-        return new T4<A, B, C, D>(a, b, c, d);
+        return new T4<>(a, b, c, d);
     }
 
     public A _1() {

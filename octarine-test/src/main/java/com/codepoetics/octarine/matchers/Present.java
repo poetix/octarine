@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public class Present<T> extends TypeSafeDiagnosingMatcher<Optional<T>> {
     public static <T> Present<T> and(Matcher<T> matcher) {
-        return new Present<T>(matcher);
+        return new Present<>(matcher);
     }
 
     private final Matcher<T> matcher;

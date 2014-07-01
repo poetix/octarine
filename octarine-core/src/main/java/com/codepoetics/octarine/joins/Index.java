@@ -1,18 +1,19 @@
 package com.codepoetics.octarine.joins;
 
 import com.codepoetics.octarine.tuples.T2;
-import com.codepoetics.octarine.utils.PeekableIterator;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.SortedMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 public class Index<K extends Comparable<K>, L> {
     private final SortedMap<K, Set<L>> indexed;
 
-    public Index(SortedMap<K, Set<L>> indexed) {
+    private Index(SortedMap<K, Set<L>> indexed) {
         this.indexed = indexed;
     }
 
@@ -51,8 +52,12 @@ public class Index<K extends Comparable<K>, L> {
 
     private <R> BiFunction<Set<L>, Set<R>, Stream<T2<L, Set<R>>>> strictOneToManyMerger() {
         return (lefts, rights) -> {
-            if (lefts.size() == 0) throw new IllegalArgumentException("Unmatched right values found");
-            if (lefts.size() > 1) throw new IllegalArgumentException("Duplicate left values found");
+            if (lefts.isEmpty()) {
+                throw new IllegalArgumentException("Unmatched right values found");
+            }
+            if (lefts.size() > 1) {
+                throw new IllegalArgumentException("Duplicate left values found");
+            }
             return Stream.of(T2.of(lefts.iterator().next(), rights));
         };
     }
@@ -73,8 +78,12 @@ public class Index<K extends Comparable<K>, L> {
 
     private <R> BiFunction<Set<L>, Set<R>, Stream<T2<L, R>>> strictManyToOneMerger() {
         return (lefts, rights) -> {
-            if (rights.size() == 0) throw new IllegalArgumentException("Unmatched left values found");
-            if (rights.size() > 1) throw new IllegalArgumentException(("Duplicate right values found"));
+            if (rights.isEmpty()) {
+                throw new IllegalArgumentException("Unmatched left values found");
+            }
+            if (rights.size() > 1) {
+                throw new IllegalArgumentException("Duplicate right values found");
+            }
             R right = rights.iterator().next();
             return lefts.stream().map(left -> T2.of(left, right));
         };
@@ -86,11 +95,19 @@ public class Index<K extends Comparable<K>, L> {
 
     private <R> BiFunction<Set<L>, Set<R>, Stream<T2<L, R>>> strictOneToOneMerger() {
         return (lefts, rights) -> {
-            if (lefts.size() == 0) throw new IllegalArgumentException("Unmatched right values found");
-            if (lefts.size() > 1) throw new IllegalArgumentException(("Duplicate left values found"));
+            if (lefts.isEmpty()) {
+                throw new IllegalArgumentException("Unmatched right values found");
+            }
+            if (lefts.size() > 1) {
+                throw new IllegalArgumentException("Duplicate left values found");
+            }
 
-            if (rights.size() == 0) throw new IllegalArgumentException("Unmatched left values found");
-            if (rights.size() > 1) throw new IllegalArgumentException(("Duplicate right values found"));
+            if (rights.isEmpty()) {
+                throw new IllegalArgumentException("Unmatched left values found");
+            }
+            if (rights.size() > 1) {
+                throw new IllegalArgumentException("Duplicate right values found");
+            }
 
             return Stream.of(T2.of(lefts.iterator().next(), rights.iterator().next()));
         };
@@ -171,43 +188,7 @@ public class Index<K extends Comparable<K>, L> {
     }
 
     private <R> Stream<T2<Set<L>, Set<R>>> matchedSublists(Index<K, R> other) {
-        PeekableIterator<Map.Entry<K, Set<L>>> leftIter = PeekableIterator.peeking(entries().iterator());
-        PeekableIterator<Map.Entry<K, Set<R>>> rightIter = PeekableIterator.peeking(other.entries().iterator());
-
-        Iterator<T2<Set<L>, Set<R>>> matchedIter = new Iterator<T2<Set<L>, Set<R>>>() {
-            @Override
-            public boolean hasNext() {
-                return leftIter.hasNext() || rightIter.hasNext();
-            }
-
-            @Override
-            public T2<Set<L>, Set<R>> next() {
-                if (!leftIter.hasNext() && !rightIter.hasNext()) {
-                    return null;
-                }
-                if (!leftIter.hasNext()) {
-                    return T2.of(Collections.emptySet(), rightIter.next().getValue());
-                }
-                if (!rightIter.hasNext()) {
-                    return T2.of(leftIter.next().getValue(), Collections.emptySet());
-                }
-
-                int cmp = (leftIter.peek().getKey().compareTo(rightIter.peek().getKey()));
-                if (cmp < 0) {
-                    return T2.of(leftIter.next().getValue(), Collections.emptySet());
-                }
-                if (cmp == 0) {
-                    return T2.of(leftIter.next().getValue(), rightIter.next().getValue());
-                }
-                return T2.of(Collections.emptySet(), rightIter.next().getValue());
-            }
-        };
-
-        return StreamSupport.stream(
-                Spliterators.spliteratorUnknownSize(
-                        matchedIter,
-                        Spliterator.IMMUTABLE & Spliterator.NONNULL & Spliterator.ORDERED),
-                false);
+        return MatchedSublistIterator.over(this, other).toStream();
     }
 
     @Override

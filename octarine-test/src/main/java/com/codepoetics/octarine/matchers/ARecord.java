@@ -1,7 +1,6 @@
 package com.codepoetics.octarine.matchers;
 
 import com.codepoetics.octarine.paths.Path;
-import com.codepoetics.octarine.records.Key;
 import com.codepoetics.octarine.records.Record;
 import com.codepoetics.octarine.records.Schema;
 import com.codepoetics.octarine.records.Validation;

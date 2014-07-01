@@ -1,7 +1,5 @@
 package com.codepoetics.octarine.records;
 
-import com.codepoetics.octarine.morphisms.FluentCollection;
-import com.codepoetics.octarine.morphisms.FluentMap;
 import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
 
@@ -17,15 +15,15 @@ public interface Record {
     }
 
     static Record of(List<Value> values) {
-        return of(FluentCollection.from(values).toStream());
+        return of(values.stream());
     }
 
-    static Record of(Value... values) {
-        return of(FluentCollection.from(values).toStream());
+    static Record of(Value...values) {
+        return of(Stream.of(values));
     }
 
     static Record of(Stream<Value> values) {
-        return of(FluentMap.<Key<?>, Object>from(values.map(Value::toPair)).toPMap());
+        return of(HashTreePMap.from(values.collect(Collectors.toMap(Value::key, Value::value))));
     }
 
     static Record of(PMap<Key<?>, Object> values) {
@@ -54,7 +52,7 @@ public interface Record {
     }
 
     default Record without(Key<?>... keys) {
-        return without(FluentCollection.<Key<?>>from(keys).toSet());
+        return without(Stream.of(keys).collect(Collectors.toSet()));
     }
 
     default Record without(Set<Key<?>> keys) {

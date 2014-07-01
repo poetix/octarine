@@ -29,6 +29,7 @@ public interface ListKey<T> extends Key<PVector<T>> {
         return of(TreePVector.from(values));
     }
 
+    @SuppressWarnings("unchecked")
     default Value of(T... values) {
         return of(TreePVector.from(Arrays.asList(values)));
     }

@@ -7,34 +7,8 @@ import com.fasterxml.jackson.core.JsonGenerator;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.function.BiConsumer;
 
 public interface JsonSerialiser extends Serialiser<JsonGenerator> {
-
-    static BiConsumer<String, JsonGenerator> asString =
-            (s, j) -> {
-                try {
-                    j.writeString(s);
-                } catch (IOException e) {
-                    throw new JsonWritingException(e);
-                }
-            };
-    static BiConsumer<Boolean, JsonGenerator> asBoolean =
-            (b, j) -> {
-                try {
-                    j.writeBoolean(b);
-                } catch (IOException e) {
-                    throw new JsonWritingException(e);
-                }
-            };
-    static BiConsumer<Integer, JsonGenerator> asInteger =
-            (i, j) -> {
-                try {
-                    j.writeNumber(i);
-                } catch (IOException e) {
-                    throw new JsonWritingException(e);
-                }
-            };
 
     @Override
     default void toWriter(Record record, Writer writer) throws IOException {

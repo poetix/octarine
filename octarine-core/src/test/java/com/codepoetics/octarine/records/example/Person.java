@@ -13,8 +13,8 @@ import java.util.function.Function;
 
 import static com.codepoetics.octarine.json.JsonDeserialisers.fromInteger;
 import static com.codepoetics.octarine.json.JsonDeserialisers.fromString;
-import static com.codepoetics.octarine.json.JsonSerialiser.asInteger;
-import static com.codepoetics.octarine.json.JsonSerialiser.asString;
+import static com.codepoetics.octarine.json.JsonSerialisers.asInteger;
+import static com.codepoetics.octarine.json.JsonSerialisers.asString;
 
 public interface Person {
 

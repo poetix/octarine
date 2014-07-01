@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 
 import static com.codepoetics.octarine.json.JsonDeserialisers.fromList;
 import static com.codepoetics.octarine.json.JsonDeserialisers.fromString;
-import static com.codepoetics.octarine.json.JsonSerialiser.asString;
+import static com.codepoetics.octarine.json.JsonSerialisers.asString;
 
 public interface Address {
 

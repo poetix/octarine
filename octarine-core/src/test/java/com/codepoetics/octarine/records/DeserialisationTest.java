@@ -81,6 +81,7 @@ public class DeserialisationTest {
         assertThat(Address.deserialiser.fromString("{\"addressLines\":[]}").get(Address.addressLines).get().size(), equalTo(0));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void
     handles_arrays_of_empty_arrays() {

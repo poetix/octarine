@@ -15,6 +15,7 @@ public interface ParserMapperFactory<T> {
         Map<String, Key<?>> keyMap = new HashMap<>();
         Map<String, Function<T, ?>> deserialiserMap = new HashMap<>();
         configure(new ParserMappingsConfigurator<T>() {
+            @SuppressWarnings("unchecked")
             @Override
             public <V> ParserMappingsConfigurator<T> add(Key<? extends V> key, String fieldName, Function<T, ? extends V> deserialiser) {
                 keyMap.put(fieldName, key);
@@ -29,6 +30,7 @@ public interface ParserMapperFactory<T> {
                 return keyMap.containsKey(fieldName);
             }
 
+            @SuppressWarnings("unchecked")
             @Override
             public Value getValue(String fieldName, T parser) {
                 Key key = keyMap.get(fieldName);

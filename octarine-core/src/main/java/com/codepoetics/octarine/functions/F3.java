@@ -12,7 +12,7 @@ public interface F3<A, B, C, R> {
     }
 
     default F1<C, R> curry(A a, B b) {
-        return (c) -> apply(a, b, c);
+        return c -> apply(a, b, c);
     }
 
     default F0<R> curry(A a, B b, C c) {

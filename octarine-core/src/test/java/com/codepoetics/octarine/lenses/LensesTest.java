@@ -8,6 +8,8 @@ import org.pcollections.PMap;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -15,7 +17,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class LensesTest {
 
     private static final Lens<PMap<String, String>, String> aIsFor = Lens.intoPMap("a");
-    private static final Bijection<String, Character[]> stringToChars = Bijection.<String, Character[]>of(
+    private static final Bijection<String, Character[]> stringToChars = Bijection.of(
             (String s) -> {
                 Character[] characters = new Character[s.length()];
                 char[] chars = s.toCharArray();
@@ -61,5 +63,35 @@ public class LensesTest {
 
         assertThat(thirdCharOfA.apply(pmap), equalTo('p'));
         assertThat(thirdCharOfA.set(pmap, 's').get("a"), equalTo("apsle"));
+    }
+
+    @Test public void
+    can_behave_as_an_optional_lens_converting_null_to_empty() {
+        String[] strings = new String[] { "a string", null, "another string" };
+        OptionalLens<String[], String> firstItem = Lens.<String>intoArray(0).asOptional();
+        OptionalLens<String[], String> secondItem = Lens.<String>intoArray(1).asOptional();
+
+        assertThat(firstItem.get(strings), equalTo(Optional.of("a string")));
+        assertThat(secondItem.get(strings), equalTo(Optional.empty()));
+    }
+
+    @Test public void
+    can_create_an_injector() {
+        String[] strings = new String[] { "a string", null, "another string" };
+        Lens<String[], String> secondItem = Lens.<String>intoArray(1);
+
+        Function<String[], String[]> injector = secondItem.inject("the missing string");
+
+        assertThat(injector.apply(strings), equalTo(new String[] { "a string", "the missing string", "another string" }));
+    }
+
+    @Test public void
+    can_create_an_inflector() {
+        String[] strings = new String[] { "cow", "duck" };
+        Lens<String[], String> secondItem = Lens.<String>intoArray(1);
+
+        Function<String[], String[]> secondItemPluraliser = secondItem.inflect(s -> s + "s");
+
+        assertThat(secondItemPluraliser.apply(strings), equalTo(new String[] { "cow", "ducks" }));
     }
 }

@@ -19,7 +19,7 @@ public final class T0 {
 
     @Override
     public boolean equals(Object o) {
-        return (o != null && o instanceof T0);
+        return o instanceof T0;
     }
 
     @Override
