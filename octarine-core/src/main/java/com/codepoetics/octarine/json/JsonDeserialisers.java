@@ -52,7 +52,7 @@ public final class JsonDeserialisers {
         };
     }
 
-    public static SafeDeserialiser<Record> mappedWith(ParserMapper<JsonParser> mapper) {
+    public static SafeDeserialiser<Record> readingKeys(ParserMapper<JsonParser> mapper) {
         return parser -> {
             List<Value> values = new ArrayList<>();
 

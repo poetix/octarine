@@ -18,31 +18,31 @@ public final class T4<A, B, C, D> {
         this.d = d;
     }
 
-    public static <A, B, C, D> Lens<T4<A, B, C, D>, A> __1() {
+    public static <A, B, C, D> Lens<T4<A, B, C, D>, A> first() {
         return Lens.of(
-                T4::_1,
-                T4::_1
+                T4::getFirst,
+                T4::withFirst
         );
     }
 
-    public static <A, B, C, D> Lens<T4<A, B, C, D>, B> __2() {
+    public static <A, B, C, D> Lens<T4<A, B, C, D>, B> second() {
         return Lens.of(
-                T4::_2,
-                T4::_2
+                T4::getSecond,
+                T4::withSecond
         );
     }
 
-    public static <A, B, C, D> Lens<T4<A, B, C, D>, C> __3() {
+    public static <A, B, C, D> Lens<T4<A, B, C, D>, C> third() {
         return Lens.of(
-                T4::_3,
-                T4::_3
+                T4::getThird,
+                T4::withThird
         );
     }
 
-    public static <A, B, C, D> Lens<T4<A, B, C, D>, D> __4() {
+    public static <A, B, C, D> Lens<T4<A, B, C, D>, D> fourth() {
         return Lens.of(
-                T4::_4,
-                T4::_4
+                T4::getFourth,
+                T4::withFourth
         );
     }
 
@@ -50,35 +50,35 @@ public final class T4<A, B, C, D> {
         return new T4<>(a, b, c, d);
     }
 
-    public A _1() {
+    public A getFirst() {
         return a;
     }
 
-    public <A2> T4<A2, B, C, D> _1(A2 a2) {
+    public <A2> T4<A2, B, C, D> withFirst(A2 a2) {
         return T4.of(a2, b, c, d);
     }
 
-    public B _2() {
+    public B getSecond() {
         return b;
     }
 
-    public <B2> T4<A, B2, C, D> _2(B2 b2) {
+    public <B2> T4<A, B2, C, D> withSecond(B2 b2) {
         return T4.of(a, b2, c, d);
     }
 
-    public C _3() {
+    public C getThird() {
         return c;
     }
 
-    public <C2> T4<A, B, C2, D> _3(C2 c2) {
+    public <C2> T4<A, B, C2, D> withThird(C2 c2) {
         return T4.of(a, b, c2, d);
     }
 
-    public D _4() {
+    public D getFourth() {
         return d;
     }
 
-    public <D2> T4<A, B, C, D2> _4(D2 d2) {
+    public <D2> T4<A, B, C, D2> withFourth(D2 d2) {
         return T4.of(a, b, c, d2);
     }
 

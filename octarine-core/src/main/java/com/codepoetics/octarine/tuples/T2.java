@@ -15,17 +15,17 @@ public final class T2<A, B> {
         this.b = b;
     }
 
-    public static <A, B> Lens<T2<A, B>, A> __1() {
+    public static <A, B> Lens<T2<A, B>, A> first() {
         return Lens.of(
-                T2::_1,
-                T2::_1
+                T2::getFirst,
+                T2::withFirst
         );
     }
 
-    public static <A, B> Lens<T2<A, B>, B> __2() {
+    public static <A, B> Lens<T2<A, B>, B> second() {
         return Lens.of(
-                T2::_2,
-                T2::_2
+                T2::getSecond,
+                T2::withSecond
         );
     }
 
@@ -33,19 +33,19 @@ public final class T2<A, B> {
         return new T2<>(a, b);
     }
 
-    public A _1() {
+    public A getFirst() {
         return a;
     }
 
-    public <A2> T2<A2, B> _1(A2 a2) {
+    public <A2> T2<A2, B> withFirst(A2 a2) {
         return T2.of(a2, b);
     }
 
-    public B _2() {
+    public B getSecond() {
         return b;
     }
 
-    public <B2> T2<A, B2> _2(B2 b2) {
+    public <B2> T2<A, B2> withSecond(B2 b2) {
         return T2.of(a, b2);
     }
 

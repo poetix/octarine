@@ -1,6 +1,5 @@
 package com.codepoetics.octarine.json;
 
-import com.codepoetics.octarine.records.Record;
 import com.codepoetics.octarine.serialisation.Serialiser;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -8,62 +7,16 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import java.io.IOException;
 import java.io.Writer;
 
-public interface JsonSerialiser extends Serialiser<JsonGenerator> {
+public interface JsonSerialiser<T> extends Serialiser<JsonGenerator, T> {
 
     @Override
-    default void toWriter(Record record, Writer writer) throws IOException {
+    default void toWriter(Writer writer, T value) throws IOException {
         try (JsonGenerator jsonWriter = new JsonFactory().createGenerator(writer)) {
-            accept(record, jsonWriter);
+            accept(jsonWriter, value);
             jsonWriter.flush();
         } catch (JsonWritingException e) {
             throw e.getIOExceptionCause();
         }
     }
-
-    @Override
-    default void startRecord(JsonGenerator writer) {
-        try {
-            writer.writeStartObject();
-        } catch (IOException e) {
-            throw new JsonWritingException(e);
-        }
-    }
-
-    @Override
-    default void endRecord(JsonGenerator writer) {
-        try {
-            writer.writeEndObject();
-        } catch (IOException e) {
-            throw new JsonWritingException(e);
-        }
-    }
-
-    @Override
-    default void startList(JsonGenerator writer) {
-        try {
-            writer.writeStartArray();
-        } catch (IOException e) {
-            throw new JsonWritingException(e);
-        }
-    }
-
-    @Override
-    default void endList(JsonGenerator writer) {
-        try {
-            writer.writeEndArray();
-        } catch (IOException e) {
-            throw new JsonWritingException(e);
-        }
-    }
-
-    @Override
-    default void writeKeyName(String keyName, JsonGenerator writer) {
-        try {
-            writer.writeFieldName(keyName);
-        } catch (IOException e) {
-            throw new JsonWritingException(e);
-        }
-    }
-
 
 }

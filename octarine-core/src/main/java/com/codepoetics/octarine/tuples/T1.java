@@ -4,8 +4,9 @@ import com.codepoetics.octarine.lenses.Lens;
 
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
-public final class T1<A> {
+public final class T1<A> implements Supplier<A> {
 
     private final A a;
 
@@ -13,10 +14,10 @@ public final class T1<A> {
         this.a = a;
     }
 
-    public static <A> Lens<T1<A>, A> __1() {
+    public static <A> Lens<T1<A>, A> first() {
         return Lens.of(
-                T1::_1,
-                T1::_1
+                T1::getFirst,
+                T1::withFirst
         );
     }
 
@@ -28,11 +29,16 @@ public final class T1<A> {
         return f.apply(a);
     }
 
-    public A _1() {
+    @Override
+    public A get() {
         return a;
     }
 
-    public <A2> T1<A2> _1(A2 a2) {
+    public A getFirst() {
+        return a;
+    }
+
+    public <A2> T1<A2> withFirst(A2 a2) {
         return T1.of(a2);
     }
 

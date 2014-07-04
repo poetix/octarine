@@ -16,24 +16,24 @@ public final class T3<A, B, C> {
         this.c = c;
     }
 
-    public static <A, B, C> Lens<T3<A, B, C>, A> __1() {
+    public static <A, B, C> Lens<T3<A, B, C>, A> first() {
         return Lens.of(
-                T3::_1,
-                T3::_1
+                T3::getFirst,
+                T3::withFirst
         );
     }
 
-    public static <A, B, C> Lens<T3<A, B, C>, B> __2() {
+    public static <A, B, C> Lens<T3<A, B, C>, B> second() {
         return Lens.of(
-                T3::_2,
-                T3::_2
+                T3::getSecond,
+                T3::withSecond
         );
     }
 
-    public static <A, B, C> Lens<T3<A, B, C>, C> __3() {
+    public static <A, B, C> Lens<T3<A, B, C>, C> third() {
         return Lens.of(
-                T3::_3,
-                T3::_3
+                T3::getThird,
+                T3::withThird
         );
     }
 
@@ -41,27 +41,27 @@ public final class T3<A, B, C> {
         return new T3<>(a, b, c);
     }
 
-    public A _1() {
+    public A getFirst() {
         return a;
     }
 
-    public <A2> T3<A2, B, C> _1(A2 a2) {
+    public <A2> T3<A2, B, C> withFirst(A2 a2) {
         return T3.of(a2, b, c);
     }
 
-    public B _2() {
+    public B getSecond() {
         return b;
     }
 
-    public <B2> T3<A, B2, C> _2(B2 b2) {
+    public <B2> T3<A, B2, C> withSecond(B2 b2) {
         return T3.of(a, b2, c);
     }
 
-    public C _3() {
+    public C getThird() {
         return c;
     }
 
-    public <C2> T3<A, B, C2> _3(C2 c2) {
+    public <C2> T3<A, B, C2> withThird(C2 c2) {
         return T3.of(a, b, c2);
     }
 

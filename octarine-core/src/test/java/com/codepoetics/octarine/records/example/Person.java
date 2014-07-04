@@ -2,7 +2,7 @@ package com.codepoetics.octarine.records.example;
 
 import com.codepoetics.octarine.json.JsonDeserialisers;
 import com.codepoetics.octarine.json.JsonRecordDeserialiser;
-import com.codepoetics.octarine.json.JsonSerialiser;
+import com.codepoetics.octarine.json.JsonRecordSerialiser;
 import com.codepoetics.octarine.records.Key;
 import com.codepoetics.octarine.validation.KeySet;
 import com.codepoetics.octarine.validation.Schema;
@@ -35,10 +35,10 @@ public interface Person {
 
     public static final Function<Color, String> colourToString = c -> "0x" + Integer.toHexString(c.getRGB()).toUpperCase().substring(2);
 
-    public static final JsonSerialiser serialiser = p ->
+    public static final JsonRecordSerialiser serialiser = p ->
             p.add(Person.name, asString)
                     .add(age, asInteger)
-                    .add(favouriteColour, (c, g) -> asString.accept(colourToString.apply(c), g))
+                    .add(favouriteColour, (g, c) -> asString.accept(g, colourToString.apply(c)))
                     .add(address, Address.serialiser);
 
     public static final JsonRecordDeserialiser deserialiser = i ->

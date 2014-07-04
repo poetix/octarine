@@ -20,38 +20,38 @@ public final class T5<A, B, C, D, E> {
         this.e = e;
     }
 
-    public static <A, B, C, D, E> Lens<T5<A, B, C, D, E>, A> __1() {
+    public static <A, B, C, D, E> Lens<T5<A, B, C, D, E>, A> first() {
         return Lens.of(
-                T5::_1,
-                T5::_1
+                T5::getFirst,
+                T5::withFirst
         );
     }
 
-    public static <A, B, C, D, E> Lens<T5<A, B, C, D, E>, B> __2() {
+    public static <A, B, C, D, E> Lens<T5<A, B, C, D, E>, B> second() {
         return Lens.of(
-                T5::_2,
-                T5::_2
+                T5::getSecond,
+                T5::withSecond
         );
     }
 
-    public static <A, B, C, D, E> Lens<T5<A, B, C, D, E>, C> __3() {
+    public static <A, B, C, D, E> Lens<T5<A, B, C, D, E>, C> third() {
         return Lens.of(
-                T5::_3,
-                T5::_3
+                T5::getThird,
+                T5::withThird
         );
     }
 
-    public static <A, B, C, D, E> Lens<T5<A, B, C, D, E>, D> __4() {
+    public static <A, B, C, D, E> Lens<T5<A, B, C, D, E>, D> fourth() {
         return Lens.of(
-                T5::_4,
-                T5::_4
+                T5::getFourth,
+                T5::withFourth
         );
     }
 
-    public static <A, B, C, D, E> Lens<T5<A, B, C, D, E>, E> __5() {
+    public static <A, B, C, D, E> Lens<T5<A, B, C, D, E>, E> fifth() {
         return Lens.of(
-                T5::_5,
-                T5::_5
+                T5::getFifth,
+                T5::withFifth
         );
     }
 
@@ -59,43 +59,43 @@ public final class T5<A, B, C, D, E> {
         return new T5<>(a, b, c, d, e);
     }
 
-    public A _1() {
+    public A getFirst() {
         return a;
     }
 
-    public <A2> T5<A2, B, C, D, E> _1(A2 a2) {
+    public <A2> T5<A2, B, C, D, E> withFirst(A2 a2) {
         return T5.of(a2, b, c, d, e);
     }
 
-    public B _2() {
+    public B getSecond() {
         return b;
     }
 
-    public <B2> T5<A, B2, C, D, E> _2(B2 b2) {
+    public <B2> T5<A, B2, C, D, E> withSecond(B2 b2) {
         return T5.of(a, b2, c, d, e);
     }
 
-    public C _3() {
+    public C getThird() {
         return c;
     }
 
-    public <C2> T5<A, B, C2, D, E> _3(C2 c2) {
+    public <C2> T5<A, B, C2, D, E> withThird(C2 c2) {
         return T5.of(a, b, c2, d, e);
     }
 
-    public D _4() {
+    public D getFourth() {
         return d;
     }
 
-    public <D2> T5<A, B, C, D2, E> _4(D2 d2) {
+    public <D2> T5<A, B, C, D2, E> withFourth(D2 d2) {
         return T5.of(a, b, c, d2, e);
     }
 
-    public E _5() {
+    public E getFifth() {
         return e;
     }
 
-    public <E2> T5<A, B, C, D, E2> _5(E2 e2) {
+    public <E2> T5<A, B, C, D, E2> withFifth(E2 e2) {
         return T5.of(a, b, c, d, e2);
     }
 

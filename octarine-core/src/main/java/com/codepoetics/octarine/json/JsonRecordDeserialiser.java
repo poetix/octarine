@@ -11,6 +11,6 @@ public interface JsonRecordDeserialiser extends JsonDeserialiser<Record>,
 
     @Override
     default public Record apply(JsonParser parser) {
-        return JsonDeserialisers.mappedWith(createMapper()).apply(parser);
+        return JsonDeserialisers.readingKeys(createMapper()).apply(parser);
     }
 }
