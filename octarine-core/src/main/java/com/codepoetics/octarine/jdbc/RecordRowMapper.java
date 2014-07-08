@@ -9,21 +9,36 @@ import com.codepoetics.octarine.validation.Valid;
 import java.sql.ResultSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 public interface RecordRowMapper extends RowMapper<Record> {
-    ColumnMappings inject(ColumnMappings empty);
+
+    ColumnMappings configure(ColumnMappings empty);
+
+    default String columnNames() {
+        StringBuilder sb = new StringBuilder();
+        configure(new ColumnMappings() {
+            @Override
+            public <T> ColumnMappings add(Key<? super T> key, String columnName, ColumnMapper<? extends T> columnMapper) {
+                if (sb.length() != 0) { sb.append(", "); }
+                sb.append(columnName);
+                return this;
+            }
+        });
+        return sb.toString();
+    }
 
     @Override
     default Record map(ResultSet resultSet) {
         List<Value> columnValues = new LinkedList<>();
-        inject(new ColumnMappings() {
+        configure(new ColumnMappings() {
             private int index = 1;
 
             @Override
-            public <T> ColumnMappings add(Key<? super T> key, ColumnMapper<? extends T> columnMapper) {
-                T columnValue = columnMapper.apply(resultSet, index);
+            public <T> ColumnMappings add(Key<? super T> key, String columnName, ColumnMapper<? extends T> columnMapper) {
+                Optional<T> maybeColumnValue = Optional.ofNullable(columnMapper.apply(resultSet, index));
                 index += 1;
-                columnValues.add(key.of(columnValue));
+                maybeColumnValue.ifPresent(columnValue -> columnValues.add(key.of(columnValue)));
                 return this;
             }
         });
@@ -40,6 +55,9 @@ public interface RecordRowMapper extends RowMapper<Record> {
     }
 
     interface ColumnMappings {
-        <T> ColumnMappings add(Key<? super T> key, ColumnMapper<? extends T> columnMapper);
+        <T> ColumnMappings add(Key<? super T> key, String columnName, ColumnMapper<? extends T> columnMapper);
+        default <T> ColumnMappings add(Key<? super T> key, ColumnMapper<? extends T> columnMapper) {
+            return add(key, key.name(), columnMapper);
+        }
     }
 }

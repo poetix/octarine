@@ -2,7 +2,6 @@ package com.codepoetics.octarine.jdbc;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.function.BiFunction;
 
 public interface ColumnMapper<T> extends BiFunction<ResultSet, Integer, T> {

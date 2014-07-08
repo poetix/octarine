@@ -17,7 +17,7 @@ public class Index<K extends Comparable<K>, L> {
         this.indexed = indexed;
     }
 
-    static <K extends Comparable<K>, L> Index<K, L> on(Stream<? extends L> stream, Function<? super L, ? extends K> key) {
+    public static <K extends Comparable<K>, L> Index<K, L> on(Stream<? extends L> stream, Function<? super L, ? extends K> key) {
         return new Index<K, L>(stream.collect(IndexCollector.on(key)));
     }
 

@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
 import static com.codepoetics.octarine.jdbc.ColumnMappers.fromSqlLong;
 import static com.codepoetics.octarine.jdbc.ColumnMappers.fromSqlString;
@@ -21,7 +22,7 @@ public class RecordRowMapperTest {
 
     private static final RecordRowMapper mapper = m ->
             m.add(id, fromSqlLong)
-                    .add(name, fromSqlString);
+             .add(name, fromSqlString);
 
     @Test
     public void
@@ -34,5 +35,17 @@ public class RecordRowMapperTest {
         Record record = mapper.map(resultSet);
         assertThat(id.extract(record), equalTo(23L));
         assertThat(name.extract(record), equalTo("Arthur"));
+    }
+
+    @Test public void
+    omits_nulls() throws SQLException {
+        ResultSet resultSet = mock(ResultSet.class);
+
+        when(resultSet.getLong(1)).thenReturn(23L);
+        when(resultSet.getString(2)).thenReturn(null);
+
+        Record record = mapper.map(resultSet);
+        assertThat(id.extract(record), equalTo(23L));
+        assertThat(name.get(record), equalTo(Optional.empty()));
     }
 }
