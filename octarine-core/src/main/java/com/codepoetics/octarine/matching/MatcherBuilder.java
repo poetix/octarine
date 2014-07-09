@@ -20,7 +20,7 @@ public interface MatcherBuilder<S, T> {
 
     default <A> Matching<S, T> matching(Extractor<? super S, ? extends A> extractor,
                                         Function<? super A, ? extends T> receiver) {
-        return matching(Extractors.extend(extractor, receiver));
+        return matching(extractor.mappedWith(receiver));
     }
 
     default MatcherBuilder<S, T> when(Predicate<? super S> predicate) {

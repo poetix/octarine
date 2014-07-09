@@ -74,6 +74,7 @@ public class TableMapping {
                         .map(v -> "?")
                         .collect(Collectors.toList())));
     }
+
     public TableMapping with(Key<?> key) {
         return with(key, key.name());
     }

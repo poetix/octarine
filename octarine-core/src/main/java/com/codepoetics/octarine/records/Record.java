@@ -14,7 +14,7 @@ public interface Record {
         return of();
     }
 
-    static Record of(List<Value> values) {
+    static Record of(Collection<Value> values) {
         return of(values.stream());
     }
 
@@ -27,9 +27,6 @@ public interface Record {
     }
 
     static Record of(PMap<Key<?>, Object> values) {
-        if (values == null) {
-            throw new IllegalArgumentException("values must not be null");
-        }
         return new HashRecord(values);
     }
 
