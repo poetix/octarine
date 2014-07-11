@@ -1,4 +1,4 @@
-package com.codepoetics.octarine.matchers;
+package com.codepoetics.octarine.testutils;
 
 import com.codepoetics.octarine.paths.Path;
 import org.hamcrest.Description;

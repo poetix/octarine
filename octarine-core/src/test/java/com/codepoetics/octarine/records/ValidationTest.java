@@ -2,6 +2,7 @@ package com.codepoetics.octarine.records;
 
 import com.codepoetics.octarine.records.example.Address;
 import com.codepoetics.octarine.records.example.Person;
+import com.codepoetics.octarine.testutils.ARecord;
 import com.codepoetics.octarine.validation.Valid;
 import com.codepoetics.octarine.validation.Validation;
 import org.junit.Test;
@@ -26,7 +27,7 @@ public class ValidationTest {
         assertThat(validationResult.isValid(), equalTo(true));
 
         Valid<Person> person = validationResult.get();
-        assertThat(Person.name.extract(person), equalTo("Alice Cowley"));
+        assertThat(person, ARecord.instance().with(Person.name, "Alice Cowley"));
     }
 
     @Test

@@ -12,19 +12,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
+import static com.codepoetics.octarine.Octarine.$;
+import static com.codepoetics.octarine.Octarine.$$;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TransformersTest {
 
-    private static final Key<String> sourceForename = Key.named("forename");
-    private static final Key<String> sourceSurname = Key.named("surname");
-    private static final Key<Integer> sourceAge = Key.named("age");
-    private static final Key<String> sourceFavouriteColour = Key.named("favouriteColour");
+    private static final Key<String> sourceForename = $("forename");
+    private static final Key<String> sourceSurname = $("surname");
+    private static final Key<Integer> sourceAge = $("age");
+    private static final Key<String> sourceFavouriteColour = $("favouriteColour");
 
-    private static final Key<String> targetName = Key.named("name");
-    private static final Key<Integer> targetAge = Key.named("age");
-    private static final Key<String> targetFavouriteColour = Key.named("favouriteColour");
+    private static final Key<String> targetName = $("name");
+    private static final Key<Integer> targetAge = $("age");
+    private static final Key<String> targetFavouriteColour = $("favouriteColour");
 
     Transformer<Record, Record> genericTransformer = c -> c
             .map(r -> sourceForename.get(r).orElse("") + " " + sourceSurname.get(r).orElse(""), targetName)
@@ -52,7 +54,7 @@ public class TransformersTest {
     }
 
     private void transformMany(Function<Record, Record> t) {
-        Record source = Record.of(
+        Record source = $$(
                 sourceForename.of("Arthur"),
                 sourceSurname.of("Putey"),
                 sourceAge.of(23),

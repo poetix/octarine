@@ -4,24 +4,30 @@ import com.codepoetics.octarine.json.JsonRecordDeserialiser;
 import com.codepoetics.octarine.paths.Path;
 import com.codepoetics.octarine.records.example.Address;
 import com.codepoetics.octarine.records.example.Person;
+import com.codepoetics.octarine.testutils.ARecord;
+import com.codepoetics.octarine.testutils.AnInstance;
+import com.codepoetics.octarine.testutils.Present;
 import com.codepoetics.octarine.validation.Valid;
 import com.codepoetics.octarine.validation.Validation;
 import org.junit.Test;
 import org.pcollections.PMap;
 import org.pcollections.PVector;
-import org.pcollections.TreePVector;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.Map;
+import java.util.List;
 
+import static com.codepoetics.octarine.Octarine.$;
 import static com.codepoetics.octarine.json.JsonDeserialisers.*;
+import static com.codepoetics.octarine.paths.Path.toIndex;
+import static com.codepoetics.octarine.testutils.IsEmptyMatcher.isEmpty;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class DeserialisationTest {
 
-    private static final Key<String> prefix = Key.named("prefix");
-    private static final Key<String> number = Key.named("number");
+    private static final Key<String> prefix = $("prefix");
+    private static final Key<String> number = $("number");
     private static final JsonRecordDeserialiser readNumber = c ->
             c.add(prefix, fromString)
                     .add(number, fromString);
@@ -46,13 +52,11 @@ public class DeserialisationTest {
                         "}")
         ).get();
 
-        assertThat(Person.name.extract(person), equalTo("Dominic"));
-        assertThat(Person.age.extract(person), equalTo(39));
-        assertThat(Person.favouriteColour.extract(person), equalTo(Color.RED));
-        assertThat(Person.address.join(Address.addressLines).join(Path.toIndex(1))
-                        .extract(person),
-                equalTo("PO3 1TP")
-        );
+        assertThat(person, ARecord.instance()
+            .with(Person.name, "Dominic")
+            .with(Person.age, 39)
+            .with(Person.favouriteColour, Color.RED)
+            .with(Person.address.join(Address.addressLines).join(toIndex(1)), "PO3 1TP"));
     }
 
     @Test
@@ -78,7 +82,7 @@ public class DeserialisationTest {
     @Test
     public void
     handles_empty_arrays() {
-        assertThat(Address.deserialiser.fromString("{\"addressLines\":[]}").get(Address.addressLines).get().size(), equalTo(0));
+        assertThat(Address.deserialiser.fromString("{\"addressLines\":[]}"), ARecord.instance().with(Address.addressLines, isEmpty()));
     }
 
     @SuppressWarnings("unchecked")
@@ -88,7 +92,7 @@ public class DeserialisationTest {
         Key<PVector<PVector<String>>> key = Key.named("emptiness");
         JsonRecordDeserialiser deserialiser = i -> i.add(key, fromList(fromList(fromString)));
 
-        assertThat(key.extract(deserialiser.fromString("{\"emptiness\": [[],[],[]]}")), hasItems(TreePVector.<String>empty(), TreePVector.empty(), TreePVector.empty()));
+        assertThat(deserialiser.fromString("{\"emptiness\": [[],[],[]]}"), ARecord.instance().with(key, hasItems(isEmpty(), isEmpty(), isEmpty())));
     }
 
     @Test
@@ -98,9 +102,10 @@ public class DeserialisationTest {
         JsonRecordDeserialiser ds = i -> i.add(addresses, fromList(Address.deserialiser));
         Record r = ds.fromString("{\"addresses\":[{\"addressLines\":[\"line 1\",\"line 2\"]},{\"addressLines\":[]}]}");
 
-        assertThat(addresses.join(Path.toIndex(0)).join(Address.addressLines).join(Path.toIndex(0)).extract(r), equalTo("line 1"));
-        assertThat(addresses.join(Path.toIndex(0)).join(Address.addressLines).join(Path.toIndex(1)).extract(r), equalTo("line 2"));
-        assertThat(addresses.join(Path.toIndex(1)).join(Address.addressLines).extract(r).size(), equalTo(0));
+        assertThat(r, ARecord.instance()
+                .with(addresses.join(toIndex(0)).join(Address.addressLines).join(toIndex(0)), "line 1")
+                .with(addresses.join(toIndex(0)).join(Address.addressLines).join(toIndex(1)), "line 2")
+                .with(addresses.join(toIndex(1)).join(Address.addressLines), isEmpty()));
     }
 
     @Test
@@ -111,7 +116,7 @@ public class DeserialisationTest {
 
         Record r = ds.fromString("{\"rows\":[[1,2,3],[4,5,6],[7,8,9]]}");
 
-        assertThat(rows.join(Path.toIndex(1)).join(Path.toIndex(1)).apply(r).get(), equalTo(5));
+        assertThat(rows.join(toIndex(1)).join(toIndex(1)).apply(r).get(), equalTo(5));
     }
 
     @Test
@@ -119,8 +124,9 @@ public class DeserialisationTest {
     can_deserialise_a_list_of_records() {
         String json = "[{\"prefix\": \"0208\", \"number\": \"123456\"}, {\"prefix\": \"07775\", \"number\": \"654321\"}]";
 
-        java.util.List<Record> numbers = fromList(readNumber).fromString(json);
-        assertThat(numbers.get(0).get(prefix).get(), equalTo("0208"));
+        List<Record> numbers = fromList(readNumber).fromString(json);
+        assertThat(numbers, AnInstance.<List<Record>>ofGeneric(List.class)
+                .with(Path.<Record>toIndex(0).join(prefix), Present.and(equalTo("0208"))));
     }
 
     @Test
@@ -129,7 +135,8 @@ public class DeserialisationTest {
         String json = "{\"home\": {\"prefix\": \"0208\", \"number\": \"123456\"}, \"work\": {\"prefix\": \"07775\", \"number\": \"654321\"}}";
 
         Map<String, Record> numbers = fromMap(readNumber).fromString(json);
-        assertThat(Path.<String, Record>toKey("home").join(prefix).extract(numbers), equalTo("0208"));
+        assertThat(numbers, AnInstance.<Map<String, Record>>ofGeneric(Map.class)
+                .with(Path.<String, Record>toKey("home").join(prefix), Present.and(equalTo("0208"))));
     }
 
     @Test
@@ -140,9 +147,8 @@ public class DeserialisationTest {
                 "\"work\": {\"prefix\": \"07775\", \"number\": \"654321\"}}}";
 
         Map<String, PMap<String, Record>> numbers = fromMap(fromMap(readNumber)).fromString(json);
-        assertThat(Path.<String, PMap<String, Record>>toKey("dominic")
-                .join(Path.<String, Record>toKey("home"))
-                .join(prefix).extract(numbers), equalTo("0208"));
+        assertThat(numbers, AnInstance.<Map<String, PMap<String, Record>>>ofGeneric(Map.class)
+                .with(Path.<String, PMap<String, Record>>toKey("dominic").join(Path.<String, Record>toKey("home")).join(prefix), Present.and(equalTo("0208"))));
     }
 
     @Test
@@ -151,6 +157,7 @@ public class DeserialisationTest {
         String json = "{\"numbers\": {\"home\": {\"prefix\": \"0208\", \"number\": \"123456\"}, \"work\": {\"prefix\": \"07775\", \"number\": \"654321\"}}}";
 
         Record theNumbers = readNumbers.fromString(json);
-        assertThat(numbers.extract(theNumbers).get("home").get(prefix).get(), equalTo("0208"));
+        assertThat(theNumbers, ARecord.instance()
+                .with(numbers.join(Path.toKey("home")).join(prefix), "0208"));
     }
 }

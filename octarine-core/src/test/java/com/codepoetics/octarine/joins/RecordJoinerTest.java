@@ -9,55 +9,58 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.codepoetics.octarine.Octarine.$;
+import static com.codepoetics.octarine.Octarine.$$;
+import static com.codepoetics.octarine.Octarine.$L;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class RecordJoinerTest {
 
-    public static final Key<String> authorName = Key.named("authorName");
-    public static final Key<String> id = Key.named("id");
-    public static final Key<String> authorId = Key.named("authorId");
-    public static final Key<String> bookName = Key.named("bookName");
-    public static final Key<String> publisherName = Key.named("publisherName");
-    public static final Key<String> publisherId = Key.named("publisherId");
-    public static final Record billsAndMoon = Record.of(
+    public static final Key<String> authorName = $("authorName");
+    public static final Key<String> id = $("id");
+    public static final Key<String> authorId = $("authorId");
+    public static final Key<String> bookName = $("bookName");
+    public static final Key<String> publisherName = $("publisherName");
+    public static final Key<String> publisherId = $("publisherId");
+    public static final Record billsAndMoon = $$(
             publisherName.of("Bills And Moon"),
             id.of("BM")
     );
-    public static final Record servo = Record.of(
+    public static final Record servo = $$(
             publisherName.of("Servo"),
             id.of("SV")
     );
     public static final List<Record> publishers = Arrays.asList(billsAndMoon, servo);
-    public static final Record alanGoodyear = Record.of(
+    public static final Record alanGoodyear = $$(
             authorName.of("Alan Goodyear"),
             id.of("AG")
     );
-    public static final Record barbaraMoat = Record.of(
+    public static final Record barbaraMoat = $$(
             authorName.of("Barbara Moat"),
             id.of("BM")
     );
-    public static final Record leavisLacanian = Record.of(
+    public static final Record leavisLacanian = $$(
             authorName.of("Leavis Lacanian"),
             id.of("LL")
     );
     public static final List<Record> authors = Arrays.asList(alanGoodyear, barbaraMoat, leavisLacanian);
-    public static final Record cromulenceOfTruths = Record.of(
+    public static final Record cromulenceOfTruths = $$(
             authorId.of("AG"),
             publisherId.of("SV"),
             bookName.of("The Cromulence Of Truths")
     );
-    public static final Record oligarchsSecret = Record.of(
+    public static final Record oligarchsSecret = $$(
             authorId.of("BM"),
             publisherId.of("BM"),
             bookName.of("Oligarch's Secret")
     );
-    public static final Record butIsThisNot = Record.of(
+    public static final Record butIsThisNot = $$(
             authorId.of("LL"),
             publisherId.of("SV"),
             bookName.of("But Is This Not: Dialectics for the Distracted")
     );
-    public static final Record amorousEncounters = Record.of(
+    public static final Record amorousEncounters = $$(
             authorId.of("AG"),
             publisherId.of("BM"),
             bookName.of("Amorous Encounters")
@@ -68,7 +71,7 @@ public class RecordJoinerTest {
             butIsThisNot,
             amorousEncounters
     );
-    final ListKey<Record> authored = ListKey.named("authored");
+    final ListKey<Record> authored = $L("authored");
 
     @Test
     public void
@@ -86,10 +89,10 @@ public class RecordJoinerTest {
                 .collect(Collectors.toList());
 
         assertThat(joined, hasItems(
-                        Record.of(bookName.of("Amorous Encounters"),
+                        $$(bookName.of("Amorous Encounters"),
                                 authorName.of("Alan Goodyear"),
                                 publisherName.of("Bills And Moon")),
-                        Record.of(bookName.of("The Cromulence Of Truths"),
+                        $$(bookName.of("The Cromulence Of Truths"),
                                 authorName.of("Alan Goodyear"),
                                 publisherName.of("Servo"))
                 )

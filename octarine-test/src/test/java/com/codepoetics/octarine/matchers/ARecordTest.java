@@ -1,17 +1,21 @@
 package com.codepoetics.octarine.matchers;
 
-import com.codepoetics.octarine.json.JsonDeserialiser;
-import com.codepoetics.octarine.json.JsonSerialiser;
+import com.codepoetics.octarine.json.JsonRecordDeserialiser;
+import com.codepoetics.octarine.json.JsonRecordSerialiser;
 import com.codepoetics.octarine.paths.Path;
-import com.codepoetics.octarine.records.*;
+import com.codepoetics.octarine.records.Key;
+import com.codepoetics.octarine.records.ListKey;
+import com.codepoetics.octarine.records.Record;
+import com.codepoetics.octarine.records.RecordKey;
+import com.codepoetics.octarine.validation.KeySet;
+import com.codepoetics.octarine.validation.Schema;
+import com.codepoetics.octarine.validation.Valid;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 import org.junit.Test;
 
-import static com.codepoetics.octarine.json.JsonDeserialiser.fromInteger;
-import static com.codepoetics.octarine.json.JsonDeserialiser.fromString;
-import static com.codepoetics.octarine.json.JsonSerialiser.asInteger;
-import static com.codepoetics.octarine.json.JsonSerialiser.asString;
+import static com.codepoetics.octarine.json.JsonDeserialisers.*;
+import static com.codepoetics.octarine.json.JsonSerialisers.*;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -26,12 +30,12 @@ public class ARecordTest {
 
         Schema<Address> schema = mandatoryKeys::accept;
 
-        JsonDeserialiser reader = i ->
-                i.addList(addressLines, fromString)
+        JsonRecordDeserialiser reader = i ->
+                i.add(addressLines, fromList(fromString))
                  .add(postcode, fromString);
 
-        JsonSerialiser writer = p ->
-                p.add(addressLines, p.asList(asString))
+        JsonRecordSerialiser writer = p ->
+                p.add(addressLines, asArray(asString))
                  .add(postcode, asString);
     }
 
@@ -47,12 +51,12 @@ public class ARecordTest {
             address.apply(r).ifPresent(a -> Address.schema.accept(a, v));
         };
 
-        JsonDeserialiser reader = i ->
+        JsonRecordDeserialiser reader = i ->
                 i.add(name, fromString)
                  .add(age, fromInteger)
                  .add(address, Address.reader);
 
-        JsonSerialiser writer = p ->
+        JsonRecordSerialiser writer = p ->
             p.add(name, asString)
              .add(age, asInteger)
              .add(address, Address.writer);
@@ -121,14 +125,14 @@ public class ARecordTest {
 
     @Test public void
     deserialise_validate_update_serialise() {
-        Record record = Person.reader.readFromString(
-                "{\"name\": \"Arthur Putey\",\n" +"" +
-                " \"age\": 42,\n" +
-                " \"address\": {\n" +
-                "   \"addressLines\": [\"59 Broad Street\", \"Cirencester\"],\n" +
-                "   \"postcode\": \"RA8 81T\"\n" +
-                "  }\n" +
-                "}");
+        Record record = Person.reader.fromString(
+                "{\"name\": \"Arthur Putey\",\n" + "" +
+                        " \"age\": 42,\n" +
+                        " \"address\": {\n" +
+                        "   \"addressLines\": [\"59 Broad Street\", \"Cirencester\"],\n" +
+                        "   \"postcode\": \"RA8 81T\"\n" +
+                        "  }\n" +
+                        "}");
 
         assertThat(record, ARecord.validAgainst(Person.schema)
                 .with(Person.name, "Arthur Putey")

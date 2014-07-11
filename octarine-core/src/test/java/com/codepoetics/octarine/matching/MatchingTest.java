@@ -9,17 +9,19 @@ import org.junit.Test;
 
 import java.awt.*;
 
+import static com.codepoetics.octarine.Octarine.$;
+import static com.codepoetics.octarine.Octarine.$$;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class MatchingTest {
 
-    private static final Key<String> title = Key.named("title");
-    private static final Key<String> director = Key.named("director");
-    private static final Key<Integer> rating = Key.named("rating");
+    private static final Key<String> title = $("title");
+    private static final Key<String> director = $("director");
+    private static final Key<Integer> rating = $("rating");
 
-    private static final Record person = Record.of(
+    private static final Record person = $$(
             Person.name.of("Richard Rotry"),
             Person.age.of(42),
             Person.favouriteColour.of(Color.CYAN),
@@ -47,7 +49,7 @@ public class MatchingTest {
     @Test
     public void
     dispatches_on_present_keys() {
-        Record movie = Record.of(title.of("Brazil"), director.of("Terry Gilliam"));
+        Record movie = $$(title.of("Brazil"), director.of("Terry Gilliam"));
         assertThat(matching.extract(movie), containsString("The movie 'Brazil', directed by Terry Gilliam"));
     }
 

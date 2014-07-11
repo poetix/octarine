@@ -7,16 +7,17 @@ import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static com.codepoetics.octarine.Octarine.*;
 
 public class RecordTest {
 
-    private static final Key<String> displayName = Key.named("displayName");
-    private static final Key<String> name = Key.named("name", displayName.of("person_address"));
-    private static final Key<Integer> age = Key.named("age");
-    private static final RecordKey address = RecordKey.named("address");
-    private static final ListKey<String> addressLines = ListKey.named("addressLines");
-    private static final Key<String> notAppearingInThisRecord = Key.named("not appearing in this record");
-    private static final Record testRecord = Record.of(
+    private static final Key<String> displayName = $("displayName");
+    private static final Key<String> name = $("name", displayName.of("person_address"));
+    private static final Key<Integer> age = $("age");
+    private static final RecordKey address = $R("address");
+    private static final ListKey<String> addressLines = $L("addressLines");
+    private static final Key<String> notAppearingInThisRecord = $("not appearing in this record");
+    private static final Record testRecord = $$(
             name.of("Arthur Putey"),
             age.of(43),
             address.of(
@@ -32,7 +33,7 @@ public class RecordTest {
 
         assertThat(secondLineOfAddress.get(testRecord), equalTo("Sunderland"));
         assertThat(secondLineOfAddress.set(testRecord, "Cirencester"),
-                equalTo(Record.of(
+                equalTo($$(
                         name.of("Arthur Putey"),
                         age.of(43),
                         address.of(Record.of(

@@ -16,6 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.codepoetics.octarine.Octarine.$$;
 import static com.codepoetics.octarine.json.JsonSerialisers.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -26,7 +27,7 @@ public class SerialisationTest {
     @Test
     public void
     writes_person_as_json() {
-        String json = Person.serialiser.toString(Record.of(
+        String json = Person.serialiser.toString($$(
                 Person.name.of("Dominic"),
                 Person.age.of(39),
                 Person.favouriteColour.of(Color.RED),
@@ -38,12 +39,12 @@ public class SerialisationTest {
     @Test public void
     writes_list_of_people_as_json() {
         String json = asArray(Person.serialiser).toString(asList(
-                Record.of(
+                $$(
                         Person.name.of("Dominic"),
                         Person.age.of(39),
                         Person.favouriteColour.of(Color.RED),
                         Person.address.of(Address.addressLines.of("13 Rue Morgue", "PO3 1TP"))),
-                Record.of(
+                $$(
                         Person.name.of("Oliver"),
                         Person.age.of(14),
                         Person.favouriteColour.of(Color.BLACK),
@@ -71,7 +72,7 @@ public class SerialisationTest {
 
     @Test public void
     reflective_serialisation_works_too() throws JsonProcessingException {
-        Record me = Record.of(
+        Record me = $$(
                 Person.name.of("Dominic"),
                 Person.age.of(39),
                 Person.favouriteColour.of(Color.RED),
