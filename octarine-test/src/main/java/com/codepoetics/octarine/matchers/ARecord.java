@@ -1,9 +1,9 @@
 package com.codepoetics.octarine.matchers;
 
 import com.codepoetics.octarine.functional.paths.Path;
-import com.codepoetics.octarine.records.Record;
-import com.codepoetics.octarine.validation.Schema;
-import com.codepoetics.octarine.validation.Validation;
+import com.codepoetics.octarine.api.Record;
+import com.codepoetics.octarine.validation.api.Schema;
+import com.codepoetics.octarine.validation.api.Validation;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;

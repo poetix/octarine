@@ -2,7 +2,7 @@ package com.codepoetics.octarine.json;
 
 import com.codepoetics.octarine.deserialisation.ParserMapperFactory;
 import com.codepoetics.octarine.deserialisation.RecordValidatingDeserialiser;
-import com.codepoetics.octarine.records.Record;
+import com.codepoetics.octarine.api.Record;
 import com.fasterxml.jackson.core.JsonParser;
 
 public interface JsonRecordDeserialiser extends

@@ -1,16 +1,16 @@
 package com.codepoetics.octarine.json;
 
 import com.codepoetics.octarine.functional.paths.Path;
-import com.codepoetics.octarine.keys.Key;
-import com.codepoetics.octarine.keys.ListKey;
-import com.codepoetics.octarine.records.Record;
+import com.codepoetics.octarine.api.Key;
+import com.codepoetics.octarine.api.ListKey;
+import com.codepoetics.octarine.api.Record;
 import com.codepoetics.octarine.json.example.Address;
 import com.codepoetics.octarine.json.example.Person;
 import com.codepoetics.octarine.testutils.ARecord;
 import com.codepoetics.octarine.testutils.AnInstance;
 import com.codepoetics.octarine.testutils.Present;
-import com.codepoetics.octarine.validation.Valid;
-import com.codepoetics.octarine.validation.Validation;
+import com.codepoetics.octarine.validation.api.Valid;
+import com.codepoetics.octarine.validation.api.Validation;
 import org.junit.Test;
 import org.pcollections.PMap;
 import org.pcollections.PVector;
@@ -19,7 +19,7 @@ import java.awt.*;
 import java.util.List;
 import java.util.Map;
 
-import static com.codepoetics.octarine.Octarine.$;
+import static com.codepoetics.octarine.Octarine.*;
 import static com.codepoetics.octarine.functional.paths.Path.toIndex;
 import static com.codepoetics.octarine.json.JsonDeserialisers.*;
 import static com.codepoetics.octarine.testutils.IsEmptyMatcher.isEmpty;
@@ -33,7 +33,7 @@ public class DeserialisationTest {
     private static final JsonRecordDeserialiser readNumber = c ->
             c.add(prefix, fromString)
                     .add(number, fromString);
-    private static final Key<PMap<String, Record>> numbers = Key.named("numbers");
+    private static final Key<PMap<String, Record>> numbers = $M("numbers");
     private static final JsonRecordDeserialiser readNumbers = c ->
             c.add(numbers, fromMap(readNumber));
 
@@ -91,7 +91,7 @@ public class DeserialisationTest {
     @Test
     public void
     handles_arrays_of_empty_arrays() {
-        Key<PVector<PVector<String>>> key = Key.named("emptiness");
+        Key<PVector<PVector<String>>> key = $L("emptiness");
         JsonRecordDeserialiser deserialiser = i -> i.add(key, fromList(fromList(fromString)));
 
         assertThat(deserialiser.fromString("{\"emptiness\": [[],[],[]]}"), ARecord.instance().with(key, hasItems(isEmpty(), isEmpty(), isEmpty())));
@@ -100,7 +100,7 @@ public class DeserialisationTest {
     @Test
     public void
     handles_arrays_of_objects() {
-        ListKey<Record> addresses = ListKey.named("addresses");
+        ListKey<Record> addresses = $L("addresses");
         JsonRecordDeserialiser ds = i -> i.add(addresses, fromList(Address.deserialiser));
         Record r = ds.fromString("{\"addresses\":[{\"addressLines\":[\"line 1\",\"line 2\"]},{\"addressLines\":[]}]}");
 
@@ -113,7 +113,7 @@ public class DeserialisationTest {
     @Test
     public void
     handles_arrays_of_arrays() {
-        ListKey<PVector<Integer>> rows = ListKey.named("rows");
+        ListKey<PVector<Integer>> rows = $L("rows");
         JsonRecordDeserialiser ds = i -> i.add(rows, fromList(fromList(fromInteger)));
 
         Record r = ds.fromString("{\"rows\":[[1,2,3],[4,5,6],[7,8,9]]}");

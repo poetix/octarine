@@ -1,6 +1,6 @@
 package com.codepoetics.octarine.deserialisation;
 
-import com.codepoetics.octarine.keys.Key;
+import com.codepoetics.octarine.api.Key;
 
 import java.util.HashMap;
 import java.util.Map;

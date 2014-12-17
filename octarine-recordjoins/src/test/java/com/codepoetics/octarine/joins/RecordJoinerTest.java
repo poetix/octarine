@@ -1,9 +1,9 @@
 package com.codepoetics.octarine.joins;
 
 import com.codepoetics.octarine.Octarine;
-import com.codepoetics.octarine.keys.Key;
-import com.codepoetics.octarine.keys.ListKey;
-import com.codepoetics.octarine.records.Record;
+import com.codepoetics.octarine.api.Key;
+import com.codepoetics.octarine.api.ListKey;
+import com.codepoetics.octarine.api.Record;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 

@@ -1,9 +1,10 @@
 package com.codepoetics.octarine.records;
 
+import com.codepoetics.octarine.api.Record;
 import com.codepoetics.octarine.functional.lenses.Lens;
-import com.codepoetics.octarine.keys.Key;
-import com.codepoetics.octarine.keys.ListKey;
-import com.codepoetics.octarine.keys.RecordKey;
+import com.codepoetics.octarine.api.Key;
+import com.codepoetics.octarine.api.ListKey;
+import com.codepoetics.octarine.api.RecordKey;
 import org.junit.Test;
 
 import java.util.Optional;
@@ -39,7 +40,7 @@ public class RecordTest {
                 equalTo($$(
                         name.of("Arthur Putey"),
                         age.of(43),
-                        address.of(Record.of(
+                        address.of($$(
                                 addressLines.of("23 Acacia Avenue", "Cirencester", "VB6 5UX")
                         ))
                 ))

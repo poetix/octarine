@@ -1,9 +1,8 @@
 package com.codepoetics.octarine.functional.matching;
 
-import com.codepoetics.octarine.Octarine;
+import com.codepoetics.octarine.api.Key;
+import com.codepoetics.octarine.api.Record;
 import com.codepoetics.octarine.functional.paths.Path;
-import com.codepoetics.octarine.keys.Key;
-import com.codepoetics.octarine.records.Record;
 import com.codepoetics.octarine.records.example.Address;
 import com.codepoetics.octarine.records.example.Person;
 import org.hamcrest.CoreMatchers;
@@ -11,15 +10,16 @@ import org.junit.Test;
 
 import java.awt.*;
 
+import static com.codepoetics.octarine.Octarine.$;
 import static com.codepoetics.octarine.Octarine.$$;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class MatchingTest {
 
-    private static final Key<String> title = Octarine.$("title");
-    private static final Key<String> director = Octarine.$("director");
-    private static final Key<Integer> rating = Octarine.$("rating");
+    private static final Key<String> title = $("title");
+    private static final Key<String> director = $("director");
+    private static final Key<Integer> rating = $("rating");
 
     private static final Record person = $$(
             Person.name.of("Richard Rotry"),
@@ -56,9 +56,9 @@ public class MatchingTest {
     @Test
     public void
     dispatches_on_predicates_and_present_keys() {
-        Record movie1 = Record.of(title.of("Existenz"), director.of("David Cronenberg"), rating.of(4));
-        Record movie2 = Record.of(title.of("Brazil"), director.of("Terry Gilliam"), rating.of(5));
-        Record movie3 = Record.of(title.of("Howard the Duck"), director.of("Willard Huyck"), rating.of(0));
+        Record movie1 = $$(title.of("Existenz"), director.of("David Cronenberg"), rating.of(4));
+        Record movie2 = $$(title.of("Brazil"), director.of("Terry Gilliam"), rating.of(5));
+        Record movie3 = $$(title.of("Howard the Duck"), director.of("Willard Huyck"), rating.of(0));
 
         assertThat(matching.extract(movie2), containsString("The 5-star movie 'Brazil', directed by Terry Gilliam"));
         assertThat(matching.extract(movie1), containsString("The movie 'Existenz', directed by David Cronenberg"));

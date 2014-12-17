@@ -3,17 +3,18 @@ package com.codepoetics.octarine.matchers;
 import com.codepoetics.octarine.json.JsonRecordDeserialiser;
 import com.codepoetics.octarine.json.JsonRecordSerialiser;
 import com.codepoetics.octarine.functional.paths.Path;
-import com.codepoetics.octarine.keys.Key;
-import com.codepoetics.octarine.keys.ListKey;
-import com.codepoetics.octarine.records.Record;
-import com.codepoetics.octarine.keys.RecordKey;
-import com.codepoetics.octarine.validation.KeySet;
-import com.codepoetics.octarine.validation.Schema;
-import com.codepoetics.octarine.validation.Valid;
+import com.codepoetics.octarine.api.Key;
+import com.codepoetics.octarine.api.ListKey;
+import com.codepoetics.octarine.api.Record;
+import com.codepoetics.octarine.api.RecordKey;
+import com.codepoetics.octarine.keys.KeySet;
+import com.codepoetics.octarine.validation.api.Schema;
+import com.codepoetics.octarine.validation.api.Valid;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 import org.junit.Test;
 
+import static com.codepoetics.octarine.Octarine.$$;
 import static com.codepoetics.octarine.json.JsonDeserialisers.*;
 import static com.codepoetics.octarine.json.JsonSerialisers.*;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -62,7 +63,7 @@ public class ARecordTest {
              .add(address, Address.writer);
     }
 
-    private final Record person = Record.of(
+    private final Record person = $$(
             Person.name.of("Arthur Putey"),
             Person.age.of(42),
             Person.address.of(

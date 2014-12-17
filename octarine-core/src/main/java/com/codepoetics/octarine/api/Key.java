@@ -1,20 +1,11 @@
-package com.codepoetics.octarine.keys;
+package com.codepoetics.octarine.api;
 
 import com.codepoetics.octarine.functional.lenses.OptionalLens;
 import com.codepoetics.octarine.functional.paths.Path;
-import com.codepoetics.octarine.records.Record;
 
 import java.util.Optional;
 
 public interface Key<T> extends OptionalLens<Record, T>, Path.Named<Record, T> {
-
-    static <T> Key<T> named(String name, Value... metadata) {
-        return named(name, Record.of(metadata));
-    }
-
-    static <T> Key<T> named(String name, Record metadata) {
-        return new SimpleKey<T>(name, metadata);
-    }
 
     @Override
     default public boolean test(Record instance) {
@@ -36,8 +27,6 @@ public interface Key<T> extends OptionalLens<Record, T>, Path.Named<Record, T> {
 
     Record metadata();
 
-    default Value of(T value) {
-        return new Value(this, value);
-    }
+    Value of(T value);
 
 }

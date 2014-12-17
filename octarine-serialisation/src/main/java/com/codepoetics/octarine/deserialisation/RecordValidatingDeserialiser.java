@@ -1,9 +1,9 @@
 package com.codepoetics.octarine.deserialisation;
 
-import com.codepoetics.octarine.records.Record;
-import com.codepoetics.octarine.validation.Schema;
-import com.codepoetics.octarine.validation.Valid;
-import com.codepoetics.octarine.validation.Validation;
+import com.codepoetics.octarine.api.Record;
+import com.codepoetics.octarine.validation.api.RecordValidationException;
+import com.codepoetics.octarine.validation.api.Schema;
+import com.codepoetics.octarine.validation.api.Validation;
 
 import java.io.Reader;
 
@@ -14,7 +14,7 @@ public interface RecordValidatingDeserialiser<T> extends Deserialiser<T, Record>
             public Validation<S> apply(T parser) {
                 try {
                     return validated(RecordValidatingDeserialiser.this.apply(parser));
-                } catch (Valid.RecordValidationException e) {
+                } catch (RecordValidationException e) {
                     return e.toValidation();
                 }
             }
@@ -23,7 +23,7 @@ public interface RecordValidatingDeserialiser<T> extends Deserialiser<T, Record>
             public Validation<S> fromReader(Reader reader) {
                 try {
                     return validated(RecordValidatingDeserialiser.this.fromReader(reader));
-                } catch (Valid.RecordValidationException e) {
+                } catch (RecordValidationException e) {
                     return e.toValidation();
                 }
             }

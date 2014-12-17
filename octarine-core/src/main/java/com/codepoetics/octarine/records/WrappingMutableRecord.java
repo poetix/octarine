@@ -1,10 +1,14 @@
 package com.codepoetics.octarine.records;
 
-import com.codepoetics.octarine.keys.Key;
+import com.codepoetics.octarine.api.Key;
+import com.codepoetics.octarine.api.MutableRecord;
+import com.codepoetics.octarine.api.Record;
+import com.codepoetics.octarine.api.Value;
 import org.pcollections.HashTreePSet;
-import org.pcollections.PMap;
 import org.pcollections.PSet;
 
+import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -20,8 +24,13 @@ final class WrappingMutableRecord implements MutableRecord {
 
     private WrappingMutableRecord(Record current) {
         this.current = current;
-        added = Record.empty();
+        added = HashRecord.empty();
         removed = HashTreePSet.empty();
+    }
+
+    @Override
+    public void set(Value... values) {
+        set(HashRecord.of(values));
     }
 
     @Override
@@ -32,7 +41,7 @@ final class WrappingMutableRecord implements MutableRecord {
     }
 
     @Override
-    public void unset(Set<Key<?>> keys) {
+    public void unset(Collection<Key<?>> keys) {
         added = added.without(keys);
         current = current.without(keys);
         removed = removed.plusAll(keys);
@@ -54,18 +63,43 @@ final class WrappingMutableRecord implements MutableRecord {
     }
 
     @Override
-    public PMap<Key<?>, Object> values() {
+    public Set<Key<?>> keys() {
+        return current.keys();
+    }
+
+    @Override
+    public Map<Key<?>, Object> values() {
         return current.values();
     }
 
     @Override
-    public Record with(PMap<Key<?>, Object> values) {
+    public boolean containsKey(Key<?> key) {
+        return current.containsKey(key);
+    }
+
+    @Override
+    public Record with(Value... values) {
         return current.with(values);
+    }
+
+    @Override
+    public Record with(Record other) {
+        return current.with(other);
+    }
+
+    @Override
+    public Record without(Collection<Key<?>> keys) {
+        return current.without(keys);
     }
 
     @Override
     public Record immutable() {
         return current;
+    }
+
+    @Override
+    public Record select(Collection<Key<?>> selectedKeys) {
+        return current.select(selectedKeys);
     }
 
     @Override

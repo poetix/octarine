@@ -3,10 +3,10 @@ package com.codepoetics.octarine.json.example;
 import com.codepoetics.octarine.json.JsonRecordDeserialiser;
 import com.codepoetics.octarine.json.JsonRecordSerialiser;
 import com.codepoetics.octarine.json.JsonSerialisers;
-import com.codepoetics.octarine.keys.ListKey;
-import com.codepoetics.octarine.records.Record;
-import com.codepoetics.octarine.validation.KeySet;
-import com.codepoetics.octarine.validation.Schema;
+import com.codepoetics.octarine.api.ListKey;
+import com.codepoetics.octarine.api.Record;
+import com.codepoetics.octarine.keys.KeySet;
+import com.codepoetics.octarine.validation.api.Schema;
 
 import java.util.function.Consumer;
 

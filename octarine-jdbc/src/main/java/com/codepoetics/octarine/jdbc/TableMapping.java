@@ -1,7 +1,7 @@
 package com.codepoetics.octarine.jdbc;
 
-import com.codepoetics.octarine.keys.Key;
-import com.codepoetics.octarine.records.Record;
+import com.codepoetics.octarine.api.Key;
+import com.codepoetics.octarine.api.Record;
 import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
 

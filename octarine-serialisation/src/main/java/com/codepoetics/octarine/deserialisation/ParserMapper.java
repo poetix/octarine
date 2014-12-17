@@ -1,6 +1,6 @@
 package com.codepoetics.octarine.deserialisation;
 
-import com.codepoetics.octarine.keys.Value;
+import com.codepoetics.octarine.api.Value;
 
 import java.util.Optional;
 

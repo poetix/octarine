@@ -1,10 +1,11 @@
 package com.codepoetics.octarine.json;
 
+import com.codepoetics.octarine.api.Record;
+import com.codepoetics.octarine.api.Value;
 import com.codepoetics.octarine.deserialisation.ParserMapper;
-import com.codepoetics.octarine.records.Record;
-import com.codepoetics.octarine.keys.Value;
-import com.codepoetics.octarine.validation.Valid;
-import com.codepoetics.octarine.validation.Validation;
+import com.codepoetics.octarine.records.HashRecord;
+import com.codepoetics.octarine.validation.api.Valid;
+import com.codepoetics.octarine.validation.api.Validation;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import org.pcollections.HashTreePMap;
@@ -57,7 +58,7 @@ public final class JsonDeserialisers {
             List<Value> values = new ArrayList<>();
 
             if (parser.nextToken() == JsonToken.END_OBJECT) {
-                return Record.empty();
+                return HashRecord.empty();
             }
 
             while (parser.nextValue() != JsonToken.END_OBJECT) {
@@ -65,7 +66,7 @@ public final class JsonDeserialisers {
                 mapper.getValue(fieldName, parser).ifPresent(values::add);
             }
 
-            return Record.of(values);
+            return HashRecord.of(values);
         };
     }
 

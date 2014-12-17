@@ -1,6 +1,6 @@
 package com.codepoetics.octarine.json;
 
-import com.codepoetics.octarine.records.Record;
+import com.codepoetics.octarine.api.Record;
 import com.codepoetics.octarine.serialisation.GeneratorMapperFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 

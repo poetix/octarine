@@ -1,23 +1,28 @@
 package com.codepoetics.octarine.keys;
 
+import com.codepoetics.octarine.api.Key;
+import com.codepoetics.octarine.api.Value;
+
 import java.util.Objects;
 
-public final class Value {
+final class ConcreteValue implements Value {
 
     private final Key<?> key;
     private final Object value;
 
-    public Value(Key<?> key, Object value) {
+    ConcreteValue(Key<?> key, Object value) {
         this.key = key;
         this.value = value;
     }
 
-    public Key<?> key() {
-        return key;
+    @Override
+    public <T> Key<T> key() {
+        return (Key<T>) key;
     }
 
-    public Object value() {
-        return value;
+    @Override
+    public <T> T value() {
+        return (T) value;
     }
 
     @Override
@@ -33,12 +38,12 @@ public final class Value {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        final Value other = (Value) obj;
+        final ConcreteValue other = (ConcreteValue) obj;
         return Objects.equals(this.key, other.key) && Objects.equals(this.value, other.value);
     }
 
     @Override
     public String toString() {
-        return String.format("%s: %s", key.name(), value);
+        return String.format("%s: %s", key, value);
     }
 }

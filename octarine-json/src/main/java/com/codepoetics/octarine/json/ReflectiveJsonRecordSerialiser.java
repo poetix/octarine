@@ -1,7 +1,7 @@
 package com.codepoetics.octarine.json;
 
-import com.codepoetics.octarine.keys.Key;
-import com.codepoetics.octarine.records.Record;
+import com.codepoetics.octarine.api.Key;
+import com.codepoetics.octarine.api.Record;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.Version;

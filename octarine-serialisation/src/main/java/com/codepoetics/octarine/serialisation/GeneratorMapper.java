@@ -1,6 +1,6 @@
 package com.codepoetics.octarine.serialisation;
 
-import com.codepoetics.octarine.keys.Key;
+import com.codepoetics.octarine.api.Key;
 
 import java.util.Optional;
 import java.util.function.Consumer;
