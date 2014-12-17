@@ -1,7 +1,5 @@
 package com.codepoetics.octarine.functional.functions;
 
-import com.codepoetics.octarine.functional.tuples.T4;
-
 import java.util.function.Function;
 
 public interface F4<A, B, C, D, R> {
@@ -25,9 +23,5 @@ public interface F4<A, B, C, D, R> {
 
     default <R2> F4<A, B, C, D, R2> andThen(Function<R, R2> f) {
         return (a, b, c, d) -> f.apply(apply(a, b, c, d));
-    }
-
-    default <S> Function<S, R> compose(Function<S, T4<A, B, C, D>> f) {
-        return s -> f.apply(s).sendTo(this);
     }
 }
