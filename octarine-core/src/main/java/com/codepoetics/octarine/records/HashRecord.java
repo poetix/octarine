@@ -24,7 +24,7 @@ public final class HashRecord implements Record {
     }
 
     public static Record of(Value...values) {
-        return of(Stream.of(values));
+        return values.length == 0 ? empty() : of(Stream.of(values));
     }
 
     public static Record of(Stream<Value> values) {

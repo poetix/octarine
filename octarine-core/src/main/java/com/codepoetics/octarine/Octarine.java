@@ -3,6 +3,8 @@ package com.codepoetics.octarine;
 import com.codepoetics.octarine.api.*;
 import com.codepoetics.octarine.keys.Keys;
 import com.codepoetics.octarine.records.HashRecord;
+import com.codepoetics.octarine.validation.api.Schema;
+import com.codepoetics.octarine.validation.api.ValidRecordKey;
 
 import java.util.stream.Stream;
 
@@ -41,7 +43,15 @@ public final class Octarine {
         return Keys.mapKey(name, metadata);
     }
 
-    public static Record $$(Value...values) { return values.length == 0 ? HashRecord.empty() : HashRecord.of(values); }
+    public static <T>ValidRecordKey<T> $V(String name, Schema<T> schema, Value...metadata) {
+        return $V(name, schema, $$(metadata));
+    }
+
+    public static <T>ValidRecordKey<T> $V(String name, Schema<T> schema, Record metadata) {
+        return Keys.validRecordKey(name, schema, metadata);
+    }
+
+    public static Record $$(Value...values) { return HashRecord.of(values); }
     public static Record $$(Record source, Value...values) { return source.with(values); }
     public static Record $$(Record...records) {
         return Stream.of(records).reduce(HashRecord.empty(), Record::with);
