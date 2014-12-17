@@ -62,9 +62,7 @@ public final class JsonDeserialisers {
 
             while (parser.nextValue() != JsonToken.END_OBJECT) {
                 String fieldName = parser.getCurrentName();
-                if (mapper.hasKeyFor(fieldName)) {
-                    values.add(mapper.getValue(fieldName, parser));
-                }
+                mapper.getValue(fieldName, parser).ifPresent(values::add);
             }
 
             return Record.of(values);

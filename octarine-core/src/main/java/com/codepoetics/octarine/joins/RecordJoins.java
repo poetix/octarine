@@ -6,7 +6,7 @@ import com.codepoetics.octarine.records.Record;
 import java.util.Collection;
 import java.util.stream.Stream;
 
-public class RecordJoins {
+public final class RecordJoins {
 
     private final Stream<? extends Record> lefts;
 

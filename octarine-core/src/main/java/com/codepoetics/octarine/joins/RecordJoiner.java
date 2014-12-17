@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 import static com.codepoetics.octarine.joins.RecordMerges.recordIntoRecord;
 import static com.codepoetics.octarine.joins.RecordMerges.recordsIntoRecord;
 
-public class RecordJoiner<K extends Comparable<K>> {
+public final class RecordJoiner<K extends Comparable<K>> {
 
     private final Index<K, Record> leftIndex;
     private final JoinKey<Record, K> primaryKey;

@@ -36,6 +36,17 @@ public class SerialisationTest {
         assertThat(json, equalTo("{\"name\":\"Dominic\",\"age\":39,\"favourite colour\":\"0xFF0000\",\"address\":{\"addressLines\":[\"13 Rue Morgue\",\"PO3 1TP\"]}}"));
     }
 
+    @Test
+    public void
+    tolerates_missing_values() {
+        String json = Person.serialiser.toString($$(
+                Person.name.of("Dominic"),
+                Person.age.of(39),
+                Person.address.of(Address.addressLines.of("13 Rue Morgue", "PO3 1TP"))));
+
+        assertThat(json, equalTo("{\"name\":\"Dominic\",\"age\":39,\"address\":{\"addressLines\":[\"13 Rue Morgue\",\"PO3 1TP\"]}}"));
+    }
+
     @Test public void
     writes_list_of_people_as_json() {
         String json = asArray(Person.serialiser).toString(asList(

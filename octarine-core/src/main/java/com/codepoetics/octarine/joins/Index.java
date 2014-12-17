@@ -10,7 +10,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class Index<K extends Comparable<K>, L> {
+public final class Index<K extends Comparable<K>, L> {
     private final SortedMap<K, Set<L>> indexed;
 
     private Index(SortedMap<K, Set<L>> indexed) {

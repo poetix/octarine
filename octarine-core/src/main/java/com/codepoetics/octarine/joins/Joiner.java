@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-public class Joiner<L, R, K extends Comparable<K>> {
+public final class Joiner<L, R, K extends Comparable<K>> {
 
     private final Index<K, L> leftIndex;
     private final JoinKey<R, K> primaryKey;

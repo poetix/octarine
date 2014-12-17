@@ -60,7 +60,7 @@ public final class JsonSerialisers {
                     throw new JsonWritingException(e);
                 }
             };
-            mapper.generateValues(j, fieldNameWriter, k -> k.extract(r));
+            mapper.generateValues(j, fieldNameWriter, k -> k.get(r));
             j.writeEndObject();
         };
     }

@@ -5,7 +5,7 @@ import com.codepoetics.octarine.records.Key;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -30,11 +30,13 @@ public interface GeneratorMapperFactory<T> {
 
     return new GeneratorMapper<T>() {
         @Override
-        public void generateValues(T generator, Consumer<String> fieldNameConsumer, Function<Key<?>, Object> valueGetter) {
+        public <V> void generateValues(T generator, Consumer<String> fieldNameConsumer, Function<Key<V>, Optional<V>> valueGetter) {
             keyMap.keySet().forEach(k -> {
-                fieldNameConsumer.accept(keyMap.get(k));
-                Object value = valueGetter.apply(k);
-                generateValue(k, value, generator);
+                Optional<V> maybeValue = valueGetter.apply((Key<V>) k);
+                maybeValue.ifPresent(value -> {
+                    fieldNameConsumer.accept(keyMap.get(k));
+                    generateValue(k, value, generator);
+                });
             });
         }
 

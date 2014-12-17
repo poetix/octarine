@@ -7,10 +7,6 @@ import java.util.Optional;
 
 public interface Key<T> extends OptionalLens<Record, T>, Path.Named<Record, T> {
 
-    static <T> Key<T> _(String name, Value...metadata) {
-        return named(name, metadata);
-    }
-
     static <T> Key<T> named(String name, Value... metadata) {
         return named(name, Record.of(metadata));
     }

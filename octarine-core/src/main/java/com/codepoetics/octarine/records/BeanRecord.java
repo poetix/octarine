@@ -9,7 +9,9 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -25,21 +27,45 @@ public class BeanRecord<B> implements Record {
         }
     }
 
+    private static ConcurrentMap<Class<?>, Map<String, Method>> readMethodMapCache = new ConcurrentHashMap<>();
+
     private static <B> BeanRecord<B> getBeanRecord(B bean, Set<Key<?>> keys) throws IntrospectionException {
-        BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass());
-        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-        Map<String, Method> readerMethods = Stream.of(propertyDescriptors).collect(Collectors.toMap(FeatureDescriptor::getDisplayName, PropertyDescriptor::getReadMethod));
-        return new BeanRecord<B>(bean, readerMethods, keys);
+        Map<String, Method> readerMethods = readMethodMapCache.computeIfAbsent(bean.getClass(), BeanRecord::getReaderMethods);
+
+        Map<Key<?>, String> methodNames = keys.stream().collect(Collectors.toMap(
+                k -> k,
+                k -> methodName.get(k.metadata()).orElseGet(k::name)
+        ));
+
+        Map<Key<?>, Method> keyedMethods = keys.stream()
+            .filter(k -> readerMethods.containsKey(methodNames.get(k)))
+            .collect(Collectors.toMap(
+                    k -> k,
+                    k -> readerMethods.get(methodNames.get(k))
+            ));
+
+        return new BeanRecord<B>(bean, keyedMethods);
+    }
+
+    private static <B> Map<String, Method> getReaderMethods(Class<B> beanClass) {
+        try {
+            BeanInfo beanInfo = Introspector.getBeanInfo(beanClass);
+            PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+            return Stream.of(propertyDescriptors)
+                    .collect(Collectors.toMap(
+                            FeatureDescriptor::getDisplayName,
+                            PropertyDescriptor::getReadMethod));
+        } catch (IntrospectionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private final B bean;
-    private final Map<String, Method> readMethods;
-    private final Set<Key<?>> keys;
+    private final Map<Key<?>, Method> keyedMethods;
 
-    private BeanRecord(B bean, Map<String, Method> readMethods, Set<Key<?>> keys) {
+    private BeanRecord(B bean, Map<Key<?>, Method> keyedMethods) {
         this.bean = bean;
-        this.readMethods = readMethods;
-        this.keys = keys;
+        this.keyedMethods = keyedMethods;
     }
 
     @Override
@@ -48,27 +74,37 @@ public class BeanRecord<B> implements Record {
             return Optional.empty();
         }
 
+        return getReflectively(key);
+    }
+
+    private <T> Optional<T> getReflectively(Key<T> key) {
         try {
-            return Optional.ofNullable((T) readMethods.get(getMethodName(key)).invoke(bean));
+            return Optional.ofNullable((T) keyedMethods.get(key).invoke(bean));
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private <T> String getMethodName(Key<T> key) {
-        return key.metadata().get(methodName).orElse(key.name());
-    }
-
     @Override
     public boolean containsKey(Key<?> key) {
-        return keys.contains(key) && readMethods.containsKey(getMethodName(key));
+        return keyedMethods.containsKey(key);
     }
 
     @Override
     public PMap<Key<?>, Object> values() {
-        return HashTreePMap.from(
-                keys.stream().filter(this::containsKey).collect(Collectors.toMap(
-                        Function.<Key<?>>identity(), k -> ((Key) k).extract(this))));
+        Map<Key<?>, Optional<?>> values = keyedMethods.keySet().stream()
+                .collect(Collectors.toMap(
+                        k -> k,
+                        this::getReflectively));
+
+        Map<Key<?>, Object> nonNullValues = values.entrySet().stream()
+                        .filter(e -> e.getValue().isPresent())
+                        .collect(Collectors.toMap(
+                                Map.Entry::getKey,
+                                e -> e.getValue().get()
+                        ));
+
+        return HashTreePMap.from(nonNullValues);
     }
 
     @Override

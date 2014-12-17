@@ -2,8 +2,8 @@ package com.codepoetics.octarine.deserialisation;
 
 import com.codepoetics.octarine.records.Value;
 
-public interface ParserMapper<T> {
-    boolean hasKeyFor(String fieldName);
+import java.util.Optional;
 
-    Value getValue(String fieldName, T parser);
+public interface ParserMapper<T> {
+    Optional<Value> getValue(String fieldName, T parser);
 }

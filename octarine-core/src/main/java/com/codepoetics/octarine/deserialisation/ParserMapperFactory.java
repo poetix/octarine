@@ -1,10 +1,10 @@
 package com.codepoetics.octarine.deserialisation;
 
 import com.codepoetics.octarine.records.Key;
-import com.codepoetics.octarine.records.Value;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 public interface ParserMapperFactory<T> {
@@ -14,6 +14,7 @@ public interface ParserMapperFactory<T> {
     default public ParserMapper<T> createMapper() {
         Map<String, Key<?>> keyMap = new HashMap<>();
         Map<String, Function<T, ?>> deserialiserMap = new HashMap<>();
+
         configure(new ParserMappingsConfigurator<T>() {
             @SuppressWarnings("unchecked")
             @Override
@@ -24,19 +25,8 @@ public interface ParserMapperFactory<T> {
             }
         });
 
-        return new ParserMapper<T>() {
-            @Override
-            public boolean hasKeyFor(String fieldName) {
-                return keyMap.containsKey(fieldName);
-            }
-
-            @SuppressWarnings("unchecked")
-            @Override
-            public Value getValue(String fieldName, T parser) {
-                Key key = keyMap.get(fieldName);
-                Function<T, ?> deserialiser = deserialiserMap.get(fieldName);
-                return key.of(deserialiser.apply(parser));
-            }
-        };
+        return (fieldName, parser) -> Optional.ofNullable(keyMap.get(fieldName)).map((Key key) ->
+            key.of(deserialiserMap.get(fieldName).apply(parser))
+        );
     }
 }

@@ -2,7 +2,7 @@ package com.codepoetics.octarine.joins;
 
 import java.util.stream.Stream;
 
-public class Joins<L> {
+public final class Joins<L> {
 
     private final Stream<L> lefts;
 
