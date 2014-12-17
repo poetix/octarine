@@ -1,5 +1,7 @@
 package com.codepoetics.octarine.records;
 
+import com.codepoetics.octarine.keys.Key;
+import com.codepoetics.octarine.keys.Value;
 import org.pcollections.PMap;
 
 import java.util.Set;

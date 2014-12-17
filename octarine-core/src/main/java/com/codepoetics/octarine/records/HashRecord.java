@@ -1,12 +1,13 @@
 package com.codepoetics.octarine.records;
 
+import com.codepoetics.octarine.keys.Key;
 import org.pcollections.PMap;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-class HashRecord implements Record {
+final class HashRecord implements Record {
 
     private final PMap<Key<?>, Object> values;
 

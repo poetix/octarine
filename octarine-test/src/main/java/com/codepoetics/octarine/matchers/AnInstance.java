@@ -1,6 +1,6 @@
 package com.codepoetics.octarine.matchers;
 
-import com.codepoetics.octarine.paths.Path;
+import com.codepoetics.octarine.functional.paths.Path;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;

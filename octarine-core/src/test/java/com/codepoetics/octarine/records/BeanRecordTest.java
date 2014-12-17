@@ -1,6 +1,7 @@
 package com.codepoetics.octarine.records;
 
-import com.codepoetics.octarine.extractors.Extractors;
+import com.codepoetics.octarine.functional.extractors.Extractors;
+import com.codepoetics.octarine.keys.Key;
 import com.codepoetics.octarine.testutils.ARecord;
 import org.junit.Test;
 

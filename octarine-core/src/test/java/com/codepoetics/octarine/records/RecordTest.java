@@ -1,6 +1,9 @@
 package com.codepoetics.octarine.records;
 
-import com.codepoetics.octarine.lenses.Lens;
+import com.codepoetics.octarine.functional.lenses.Lens;
+import com.codepoetics.octarine.keys.Key;
+import com.codepoetics.octarine.keys.ListKey;
+import com.codepoetics.octarine.keys.RecordKey;
 import org.junit.Test;
 
 import java.util.Optional;

@@ -1,5 +1,6 @@
 package com.codepoetics.octarine.records;
 
+import com.codepoetics.octarine.keys.Key;
 import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
 
@@ -11,11 +12,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class BeanRecord<B> implements Record {
+public final class BeanRecord<B> implements Record {
 
     public static final Key<String> methodName = Key.named("methodName");
 

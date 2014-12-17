@@ -1,5 +1,9 @@
 package com.codepoetics.octarine.validation;
 
+import com.codepoetics.octarine.keys.Key;
+import com.codepoetics.octarine.keys.ListKey;
+import com.codepoetics.octarine.keys.RecordKey;
+import com.codepoetics.octarine.keys.Value;
 import com.codepoetics.octarine.records.*;
 
 import java.util.HashSet;

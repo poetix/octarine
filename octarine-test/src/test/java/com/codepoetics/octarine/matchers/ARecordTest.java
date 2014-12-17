@@ -2,11 +2,11 @@ package com.codepoetics.octarine.matchers;
 
 import com.codepoetics.octarine.json.JsonRecordDeserialiser;
 import com.codepoetics.octarine.json.JsonRecordSerialiser;
-import com.codepoetics.octarine.paths.Path;
-import com.codepoetics.octarine.records.Key;
-import com.codepoetics.octarine.records.ListKey;
+import com.codepoetics.octarine.functional.paths.Path;
+import com.codepoetics.octarine.keys.Key;
+import com.codepoetics.octarine.keys.ListKey;
 import com.codepoetics.octarine.records.Record;
-import com.codepoetics.octarine.records.RecordKey;
+import com.codepoetics.octarine.keys.RecordKey;
 import com.codepoetics.octarine.validation.KeySet;
 import com.codepoetics.octarine.validation.Schema;
 import com.codepoetics.octarine.validation.Valid;

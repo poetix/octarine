@@ -1,5 +1,6 @@
 package com.codepoetics.octarine.records;
 
+import com.codepoetics.octarine.keys.Key;
 import org.pcollections.HashTreePSet;
 import org.pcollections.PMap;
 import org.pcollections.PSet;
@@ -7,7 +8,7 @@ import org.pcollections.PSet;
 import java.util.Optional;
 import java.util.Set;
 
-class WrappingMutableRecord implements MutableRecord {
+final class WrappingMutableRecord implements MutableRecord {
 
     public static MutableRecord wrap(Record record) {
         return new WrappingMutableRecord(record.with());
