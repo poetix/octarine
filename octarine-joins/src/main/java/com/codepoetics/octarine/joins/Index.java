@@ -18,7 +18,7 @@ public final class Index<K extends Comparable<K>, L> {
     }
 
     public static <K extends Comparable<K>, L> Index<K, L> on(Stream<? extends L> stream, Function<? super L, ? extends K> key) {
-        return new Index<K, L>(stream.collect(IndexCollector.on(key)));
+        return new Index<K, L>(stream.collect(IndexCollector.<K, L>on(key)));
     }
 
     public Set<Map.Entry<K, Set<L>>> entries() {
