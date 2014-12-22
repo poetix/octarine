@@ -14,13 +14,13 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class ReflectiveJsonRecordSerialiser extends JsonSerializer<Record> {
+public class ReflectiveRecordSerialiser extends JsonSerializer<Record> {
 
     public static ObjectMapper mapperWith(JsonSerializer<?>...extraSerialisers) {
         ObjectMapper mapper = new ObjectMapper();
         SimpleModule simpleModule = new SimpleModule("SimpleModule",
                 new Version(1,0,0,null));
-        simpleModule.addSerializer(new ReflectiveJsonRecordSerialiser());
+        simpleModule.addSerializer(new ReflectiveRecordSerialiser());
         Stream.of(extraSerialisers).forEach(simpleModule::addSerializer);
 
         mapper.registerModules(simpleModule);

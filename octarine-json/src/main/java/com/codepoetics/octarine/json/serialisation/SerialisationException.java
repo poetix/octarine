@@ -3,9 +3,9 @@ package com.codepoetics.octarine.json.serialisation;
 
 import java.io.IOException;
 
-public class JsonWritingException extends RuntimeException {
+public class SerialisationException extends RuntimeException {
 
-    public JsonWritingException(IOException cause) {
+    public SerialisationException(IOException cause) {
         super(cause);
     }
 

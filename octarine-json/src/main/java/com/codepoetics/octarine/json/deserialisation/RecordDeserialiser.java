@@ -46,6 +46,14 @@ public final class RecordDeserialiser implements SafeDeserialiser<Record> {
             return this;
         }
 
+        public <V> Builder read(Key<V> key, Supplier<Function<JsonParser, V>> deserialiserSupplier) {
+            return read(key, deserialiserSupplier.get());
+        }
+
+        public <V> Builder read(Key<V> key, String fieldName, Supplier<Function<JsonParser, V>> deserialiserSupplier) {
+            return read(key, fieldName, deserialiserSupplier.get());
+        }
+
         public Builder readString(Key<String> key) {
             return read(key, Deserialisers.ofString);
         }
@@ -76,14 +84,6 @@ public final class RecordDeserialiser implements SafeDeserialiser<Record> {
 
         public <V> Builder readMap(Key<PMap<String, V>> key, Function<JsonParser, ? extends V> deserialiser) {
             return read(key, MapDeserialiser.readingValuesWith(deserialiser));
-        }
-
-        public Builder readRecord(Key<Record> key, Function<JsonParser, Record> deserialiser) {
-            return read(key, deserialiser);
-        }
-
-        public Builder readRecord(Key<Record> key, Supplier<Function<JsonParser, Record>> deserialiserSupplier) {
-            return read(key, deserialiserSupplier.get());
         }
 
         public <V> Builder readValidRecord(Key<Valid<V>> key, Function<JsonParser, Validation<V>> deserialiser) {
@@ -120,14 +120,6 @@ public final class RecordDeserialiser implements SafeDeserialiser<Record> {
 
         public <V> Builder readMap(Key<PMap<String, V>> key, String fieldName, Function<JsonParser, ? extends V> deserialiser) {
             return read(key, fieldName, MapDeserialiser.readingValuesWith(deserialiser));
-        }
-
-        public Builder readRecord(Key<Record> key, String fieldName, Function<JsonParser, Record> deserialiser) {
-            return read(key, fieldName, deserialiser);
-        }
-
-        public Builder readRecord(Key<Record> key, String fieldName, Supplier<Function<JsonParser, Record>> deserialiserSupplier) {
-            return read(key, deserialiserSupplier.get());
         }
 
         public <V> Builder readValidRecord(Key<Valid<V>> key, String fieldName, Function<JsonParser, Validation<V>> deserialiser) {

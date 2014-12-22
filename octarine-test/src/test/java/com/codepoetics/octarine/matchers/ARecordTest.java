@@ -6,7 +6,7 @@ import com.codepoetics.octarine.api.Record;
 import com.codepoetics.octarine.api.RecordKey;
 import com.codepoetics.octarine.functional.paths.Path;
 import com.codepoetics.octarine.json.deserialisation.RecordDeserialiser;
-import com.codepoetics.octarine.json.serialisation.JsonRecordSerialiser;
+import com.codepoetics.octarine.json.serialisation.RecordSerialiser;
 import com.codepoetics.octarine.keys.KeySet;
 import com.codepoetics.octarine.validation.api.Schema;
 import com.codepoetics.octarine.validation.api.Valid;
@@ -16,7 +16,7 @@ import org.junit.Test;
 
 import static com.codepoetics.octarine.Octarine.$$;
 import static com.codepoetics.octarine.json.deserialisation.Deserialisers.*;
-import static com.codepoetics.octarine.json.serialisation.JsonSerialisers.*;
+import static com.codepoetics.octarine.json.serialisation.Serialisers.*;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -36,9 +36,10 @@ public class ARecordTest {
                 .readString(postcode)
                 .get();
 
-        JsonRecordSerialiser writer = p ->
-                p.add(addressLines, asArray(asString))
-                 .add(postcode, asString);
+        RecordSerialiser writer = RecordSerialiser.builder()
+                .writeList(addressLines, toString)
+                .writeString(postcode)
+                .get();
     }
 
     public static interface Person {
@@ -56,13 +57,14 @@ public class ARecordTest {
         RecordDeserialiser reader = RecordDeserialiser.builder()
                 .readString(name)
                 .readInteger(age)
-                .readRecord(address, Address.reader)
+                .read(address, Address.reader)
                 .get();
 
-        JsonRecordSerialiser writer = p ->
-            p.add(name, asString)
-             .add(age, asInteger)
-             .add(address, Address.writer);
+        RecordSerialiser writer = RecordSerialiser.builder()
+            .write(name, toString)
+            .write(age, toInteger)
+            .write(address, Address.writer)
+            .get();
     }
 
     private final Record person = $$(

@@ -2,16 +2,13 @@ package com.codepoetics.octarine.json.example;
 
 import com.codepoetics.octarine.api.Key;
 import com.codepoetics.octarine.json.deserialisation.RecordDeserialiser;
-import com.codepoetics.octarine.json.serialisation.JsonRecordSerialiser;
+import com.codepoetics.octarine.json.serialisation.RecordSerialiser;
 import com.codepoetics.octarine.keys.KeySet;
 import com.codepoetics.octarine.validation.api.Schema;
 import com.codepoetics.octarine.validation.api.ValidRecordKey;
 
 import java.awt.*;
 import java.util.function.Function;
-
-import static com.codepoetics.octarine.json.serialisation.JsonSerialisers.asInteger;
-import static com.codepoetics.octarine.json.serialisation.JsonSerialisers.asString;
 
 public interface Person {
 
@@ -32,11 +29,12 @@ public interface Person {
 
     public static final Function<Color, String> colourToString = c -> "0x" + Integer.toHexString(c.getRGB()).toUpperCase().substring(2);
 
-    public static final JsonRecordSerialiser serialiser = p ->
-            p.add(Person.name, asString)
-                    .add(age, asInteger)
-                    .add(favouriteColour, (g, c) -> asString.accept(g, colourToString.apply(c)))
-                    .add(address, Address.serialiser);
+    public static final RecordSerialiser serialiser = RecordSerialiser.builder()
+            .writeString(name)
+            .writeInteger(age)
+            .writeToString(favouriteColour, colourToString)
+            .write(address, Address.serialiser)
+            .get();
 
     public static final RecordDeserialiser deserialiser = RecordDeserialiser.builder()
             .readString(name)

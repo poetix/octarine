@@ -1,10 +1,11 @@
 package com.codepoetics.octarine.json;
 
-import com.codepoetics.octarine.Octarine;
+import com.codepoetics.octarine.api.Record;
 import com.codepoetics.octarine.json.example.Address;
 import com.codepoetics.octarine.json.example.Person;
-import com.codepoetics.octarine.api.Record;
-import com.codepoetics.octarine.json.serialisation.ReflectiveJsonRecordSerialiser;
+import com.codepoetics.octarine.json.serialisation.ListSerialiser;
+import com.codepoetics.octarine.json.serialisation.MapSerialiser;
+import com.codepoetics.octarine.json.serialisation.ReflectiveRecordSerialiser;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.codepoetics.octarine.Octarine.$$;
-import static com.codepoetics.octarine.json.serialisation.JsonSerialisers.*;
+import static com.codepoetics.octarine.json.serialisation.Serialisers.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -29,7 +30,7 @@ public class SerialisationTest {
     @Test
     public void
     writes_person_as_json() {
-        String json = Person.serialiser.toString(Octarine.$$(
+        String json = Person.serialiser.toString($$(
                 Person.name.of("Dominic"),
                 Person.age.of(39),
                 Person.favouriteColour.of(Color.RED),
@@ -51,7 +52,7 @@ public class SerialisationTest {
 
     @Test public void
     writes_list_of_people_as_json() {
-        String json = asArray(Person.serialiser).toString(asList(
+        String json = ListSerialiser.writingItemsWith(Person.serialiser).toString(asList(
                 $$(
                         Person.name.of("Dominic"),
                         Person.age.of(39),
@@ -78,7 +79,12 @@ public class SerialisationTest {
         map2.put("odds", asList(1,3,5,7,9));
         map2.put("powers", asList(2,4,8,16,32));
 
-        String json = asArray(asMap(asArray(asInteger))).toString(asList(map1, map2));
+        List<Map<String, List<Integer>>> data = asList(map1, map2);
+
+        String json = ListSerialiser.writingItemsWith(
+                MapSerialiser.writingValuesWith(
+                        ListSerialiser.writingItemsWith(toInteger)))
+                .toString(data);
 
         assertThat(json, equalTo("[{\"primes\":[1,2,3,5,7],\"evens\":[2,4,6,8,10]},{\"odds\":[1,3,5,7,9],\"powers\":[2,4,8,16,32]}]"));
     }
@@ -91,7 +97,7 @@ public class SerialisationTest {
                 Person.favouriteColour.of(Color.RED),
                 Person.address.of(Address.addressLines.of("13 Rue Morgue", "PO3 1TP")));
 
-        ObjectMapper mapper = ReflectiveJsonRecordSerialiser.mapperWith(new ColorJsonSerializer());
+        ObjectMapper mapper = ReflectiveRecordSerialiser.mapperWith(new ColorJsonSerializer());
 
         String json = mapper.writeValueAsString(me);
 
