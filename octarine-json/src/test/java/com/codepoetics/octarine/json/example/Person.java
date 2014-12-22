@@ -1,9 +1,8 @@
 package com.codepoetics.octarine.json.example;
 
-import com.codepoetics.octarine.json.JsonDeserialisers;
-import com.codepoetics.octarine.json.JsonRecordDeserialiser;
-import com.codepoetics.octarine.json.JsonRecordSerialiser;
 import com.codepoetics.octarine.api.Key;
+import com.codepoetics.octarine.json.deserialisation.RecordDeserialiser;
+import com.codepoetics.octarine.json.serialisation.JsonRecordSerialiser;
 import com.codepoetics.octarine.keys.KeySet;
 import com.codepoetics.octarine.validation.api.Schema;
 import com.codepoetics.octarine.validation.api.ValidRecordKey;
@@ -11,10 +10,8 @@ import com.codepoetics.octarine.validation.api.ValidRecordKey;
 import java.awt.*;
 import java.util.function.Function;
 
-import static com.codepoetics.octarine.json.JsonDeserialisers.fromInteger;
-import static com.codepoetics.octarine.json.JsonDeserialisers.fromString;
-import static com.codepoetics.octarine.json.JsonSerialisers.asInteger;
-import static com.codepoetics.octarine.json.JsonSerialisers.asString;
+import static com.codepoetics.octarine.json.serialisation.JsonSerialisers.asInteger;
+import static com.codepoetics.octarine.json.serialisation.JsonSerialisers.asString;
 
 public interface Person {
 
@@ -41,9 +38,10 @@ public interface Person {
                     .add(favouriteColour, (g, c) -> asString.accept(g, colourToString.apply(c)))
                     .add(address, Address.serialiser);
 
-    public static final JsonRecordDeserialiser deserialiser = i ->
-            i.add(name, fromString)
-                    .add(age, fromInteger)
-                    .add(favouriteColour, fromString.andThen(Color::decode))
-                    .add(address, JsonDeserialisers.fromValid(Address.deserialiser.validAgainst(Address.schema)));
+    public static final RecordDeserialiser deserialiser = RecordDeserialiser.builder()
+            .readString(name)
+            .readInteger(age)
+            .readFromString(favouriteColour, Color::decode)
+            .readValidRecord(address, Address.deserialiser.validAgainst(Address.schema))
+            .get();
 }

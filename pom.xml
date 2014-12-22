@@ -21,7 +21,6 @@
         <module>octarine-jdbc</module>
         <module>octarine-joins</module>
         <module>octarine-recordjoins</module>
-        <module>octarine-serialisation</module>
     </modules>
 
     <dependencies>

@@ -1,4 +1,4 @@
-package com.codepoetics.octarine.json;
+package com.codepoetics.octarine.json.serialisation;
 
 
 import java.io.IOException;

@@ -1,12 +1,12 @@
 package com.codepoetics.octarine.matchers;
 
-import com.codepoetics.octarine.json.JsonRecordDeserialiser;
-import com.codepoetics.octarine.json.JsonRecordSerialiser;
-import com.codepoetics.octarine.functional.paths.Path;
 import com.codepoetics.octarine.api.Key;
 import com.codepoetics.octarine.api.ListKey;
 import com.codepoetics.octarine.api.Record;
 import com.codepoetics.octarine.api.RecordKey;
+import com.codepoetics.octarine.functional.paths.Path;
+import com.codepoetics.octarine.json.deserialisation.RecordDeserialiser;
+import com.codepoetics.octarine.json.serialisation.JsonRecordSerialiser;
 import com.codepoetics.octarine.keys.KeySet;
 import com.codepoetics.octarine.validation.api.Schema;
 import com.codepoetics.octarine.validation.api.Valid;
@@ -15,8 +15,8 @@ import org.hamcrest.StringDescription;
 import org.junit.Test;
 
 import static com.codepoetics.octarine.Octarine.$$;
-import static com.codepoetics.octarine.json.JsonDeserialisers.*;
-import static com.codepoetics.octarine.json.JsonSerialisers.*;
+import static com.codepoetics.octarine.json.deserialisation.Deserialisers.*;
+import static com.codepoetics.octarine.json.serialisation.JsonSerialisers.*;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -31,9 +31,10 @@ public class ARecordTest {
 
         Schema<Address> schema = mandatoryKeys::accept;
 
-        JsonRecordDeserialiser reader = i ->
-                i.add(addressLines, fromList(fromString))
-                 .add(postcode, fromString);
+        RecordDeserialiser reader = RecordDeserialiser.builder()
+                .readList(addressLines, ofString)
+                .readString(postcode)
+                .get();
 
         JsonRecordSerialiser writer = p ->
                 p.add(addressLines, asArray(asString))
@@ -52,10 +53,11 @@ public class ARecordTest {
             address.apply(r).ifPresent(a -> Address.schema.accept(a, v));
         };
 
-        JsonRecordDeserialiser reader = i ->
-                i.add(name, fromString)
-                 .add(age, fromInteger)
-                 .add(address, Address.reader);
+        RecordDeserialiser reader = RecordDeserialiser.builder()
+                .readString(name)
+                .readInteger(age)
+                .readRecord(address, Address.reader)
+                .get();
 
         JsonRecordSerialiser writer = p ->
             p.add(name, asString)

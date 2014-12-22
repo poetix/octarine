@@ -1,6 +1,5 @@
-package com.codepoetics.octarine.json;
+package com.codepoetics.octarine.json.serialisation;
 
-import com.codepoetics.octarine.serialisation.Serialiser;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 

@@ -4,6 +4,7 @@ import com.codepoetics.octarine.Octarine;
 import com.codepoetics.octarine.json.example.Address;
 import com.codepoetics.octarine.json.example.Person;
 import com.codepoetics.octarine.api.Record;
+import com.codepoetics.octarine.json.serialisation.ReflectiveJsonRecordSerialiser;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.codepoetics.octarine.Octarine.$$;
-import static com.codepoetics.octarine.json.JsonSerialisers.*;
+import static com.codepoetics.octarine.json.serialisation.JsonSerialisers.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;

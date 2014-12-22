@@ -1,7 +1,6 @@
-package com.codepoetics.octarine.json;
+package com.codepoetics.octarine.json.serialisation;
 
 import com.codepoetics.octarine.api.Record;
-import com.codepoetics.octarine.serialisation.GeneratorMapperFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 
 public interface JsonRecordSerialiser extends JsonSerialiser<Record>,

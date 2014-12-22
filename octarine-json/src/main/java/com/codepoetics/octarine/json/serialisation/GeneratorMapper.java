@@ -1,4 +1,4 @@
-package com.codepoetics.octarine.serialisation;
+package com.codepoetics.octarine.json.serialisation;
 
 import com.codepoetics.octarine.api.Key;
 

@@ -4,13 +4,8 @@ import com.codepoetics.octarine.api.Key;
 import com.codepoetics.octarine.api.MutableRecord;
 import com.codepoetics.octarine.api.Record;
 import com.codepoetics.octarine.api.Value;
-import org.pcollections.HashTreePSet;
-import org.pcollections.PSet;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 final class WrappingMutableRecord implements MutableRecord {
 
@@ -20,12 +15,11 @@ final class WrappingMutableRecord implements MutableRecord {
 
     private Record current;
     private Record added;
-    private PSet<Key<?>> removed;
+    private final Set<Key<?>> removed = new HashSet<>();
 
     private WrappingMutableRecord(Record current) {
         this.current = current;
         added = HashRecord.empty();
-        removed = HashTreePSet.empty();
     }
 
     @Override
@@ -36,7 +30,7 @@ final class WrappingMutableRecord implements MutableRecord {
     @Override
     public void set(Record values) {
         added = added.with(values);
-        removed = removed.minus(values.values().keySet());
+        removed.removeAll(values.keys());
         current = current.with(values);
     }
 
@@ -44,7 +38,7 @@ final class WrappingMutableRecord implements MutableRecord {
     public void unset(Collection<Key<?>> keys) {
         added = added.without(keys);
         current = current.without(keys);
-        removed = removed.plusAll(keys);
+        removed.addAll(keys);
     }
 
     @Override
@@ -54,7 +48,7 @@ final class WrappingMutableRecord implements MutableRecord {
 
     @Override
     public Set<Key<?>> removed() {
-        return removed;
+        return new HashSet<>(removed);
     }
 
     @Override

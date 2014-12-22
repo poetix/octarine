@@ -1,18 +1,14 @@
 package com.codepoetics.octarine.json.example;
 
-import com.codepoetics.octarine.json.JsonRecordDeserialiser;
-import com.codepoetics.octarine.json.JsonRecordSerialiser;
-import com.codepoetics.octarine.json.JsonSerialisers;
 import com.codepoetics.octarine.api.ListKey;
-import com.codepoetics.octarine.api.Record;
+import com.codepoetics.octarine.json.deserialisation.RecordDeserialiser;
+import com.codepoetics.octarine.json.serialisation.JsonRecordSerialiser;
+import com.codepoetics.octarine.json.serialisation.JsonSerialisers;
 import com.codepoetics.octarine.keys.KeySet;
 import com.codepoetics.octarine.validation.api.Schema;
 
-import java.util.function.Consumer;
-
-import static com.codepoetics.octarine.json.JsonDeserialisers.fromList;
-import static com.codepoetics.octarine.json.JsonDeserialisers.fromString;
-import static com.codepoetics.octarine.json.JsonSerialisers.asString;
+import static com.codepoetics.octarine.json.deserialisation.Deserialisers.ofString;
+import static com.codepoetics.octarine.json.serialisation.JsonSerialisers.asString;
 
 public interface Address {
 
@@ -22,13 +18,10 @@ public interface Address {
     public static final JsonRecordSerialiser serialiser = p ->
             p.add(addressLines, JsonSerialisers.asArray(asString));
 
-    public static final JsonRecordDeserialiser deserialiser = i ->
-            i.add(addressLines, fromList(fromString));
+    public static final RecordDeserialiser deserialiser = RecordDeserialiser.builder()
+            .readList(addressLines, ofString)
+            .get();
 
-    public static final Schema<Address> schema = new Schema<Address>() {
-        @Override
-        public void accept(Record record, Consumer<String> validationErrors) {
+    public static final Schema<Address> schema = (record, validationErrors) ->
             mandatoryKeys.accept(record, validationErrors);
-        }
-    };
 }

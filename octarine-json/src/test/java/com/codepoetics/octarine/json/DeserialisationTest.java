@@ -4,6 +4,9 @@ import com.codepoetics.octarine.functional.paths.Path;
 import com.codepoetics.octarine.api.Key;
 import com.codepoetics.octarine.api.ListKey;
 import com.codepoetics.octarine.api.Record;
+import com.codepoetics.octarine.json.deserialisation.ListDeserialiser;
+import com.codepoetics.octarine.json.deserialisation.MapDeserialiser;
+import com.codepoetics.octarine.json.deserialisation.RecordDeserialiser;
 import com.codepoetics.octarine.json.example.Address;
 import com.codepoetics.octarine.json.example.Person;
 import com.codepoetics.octarine.testutils.ARecord;
@@ -21,7 +24,6 @@ import java.util.Map;
 
 import static com.codepoetics.octarine.Octarine.*;
 import static com.codepoetics.octarine.functional.paths.Path.toIndex;
-import static com.codepoetics.octarine.json.JsonDeserialisers.*;
 import static com.codepoetics.octarine.testutils.IsEmptyMatcher.isEmpty;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -30,12 +32,15 @@ public class DeserialisationTest {
 
     private static final Key<String> prefix = $("prefix");
     private static final Key<String> number = $("number");
-    private static final JsonRecordDeserialiser readNumber = c ->
-            c.add(prefix, fromString)
-                    .add(number, fromString);
+    private static final RecordDeserialiser readNumber = RecordDeserialiser.builder()
+            .readString(prefix)
+            .readString(number)
+            .get();
+
     private static final Key<PMap<String, Record>> numbers = $M("numbers");
-    private static final JsonRecordDeserialiser readNumbers = c ->
-            c.add(numbers, fromMap(readNumber));
+    private static final RecordDeserialiser readNumbers = RecordDeserialiser.builder()
+            .readMap(numbers, readNumber)
+            .get();
 
     @Test
     public void
@@ -92,7 +97,7 @@ public class DeserialisationTest {
     public void
     handles_arrays_of_empty_arrays() {
         Key<PVector<PVector<String>>> key = $L("emptiness");
-        JsonRecordDeserialiser deserialiser = i -> i.add(key, fromList(fromList(fromString)));
+        RecordDeserialiser deserialiser = RecordDeserialiser.builder().readList(key, ListDeserialiser.readingStrings()).get();
 
         assertThat(deserialiser.fromString("{\"emptiness\": [[],[],[]]}"), ARecord.instance().with(key, hasItems(isEmpty(), isEmpty(), isEmpty())));
     }
@@ -101,8 +106,8 @@ public class DeserialisationTest {
     public void
     handles_arrays_of_objects() {
         ListKey<Record> addresses = $L("addresses");
-        JsonRecordDeserialiser ds = i -> i.add(addresses, fromList(Address.deserialiser));
-        Record r = ds.fromString("{\"addresses\":[{\"addressLines\":[\"line 1\",\"line 2\"]},{\"addressLines\":[]}]}");
+        RecordDeserialiser deserialiser = RecordDeserialiser.builder().readList(addresses, Address.deserialiser).get();
+        Record r = deserialiser.fromString("{\"addresses\":[{\"addressLines\":[\"line 1\",\"line 2\"]},{\"addressLines\":[]}]}");
 
         assertThat(r, ARecord.instance()
                 .with(addresses.join(toIndex(0)).join(Address.addressLines).join(toIndex(0)), "line 1")
@@ -114,9 +119,9 @@ public class DeserialisationTest {
     public void
     handles_arrays_of_arrays() {
         ListKey<PVector<Integer>> rows = $L("rows");
-        JsonRecordDeserialiser ds = i -> i.add(rows, fromList(fromList(fromInteger)));
+        RecordDeserialiser deserialiser = RecordDeserialiser.builder().readList(rows, ListDeserialiser.readingIntegers()).get();
 
-        Record r = ds.fromString("{\"rows\":[[1,2,3],[4,5,6],[7,8,9]]}");
+        Record r = deserialiser.fromString("{\"rows\":[[1,2,3],[4,5,6],[7,8,9]]}");
 
         assertThat(rows.join(toIndex(1)).join(toIndex(1)).apply(r).get(), equalTo(5));
     }
@@ -126,7 +131,7 @@ public class DeserialisationTest {
     can_deserialise_a_list_of_records() {
         String json = "[{\"prefix\": \"0208\", \"number\": \"123456\"}, {\"prefix\": \"07775\", \"number\": \"654321\"}]";
 
-        List<Record> numbers = fromList(readNumber).fromString(json);
+        List<Record> numbers = ListDeserialiser.readingItemsWith(readNumber).fromString(json);
         assertThat(numbers, AnInstance.<List<Record>>ofGeneric(List.class)
                 .with(Path.<Record>toIndex(0).join(prefix), Present.and(equalTo("0208"))));
     }
@@ -136,7 +141,7 @@ public class DeserialisationTest {
     can_deserialise_a_map_of_records() {
         String json = "{\"home\": {\"prefix\": \"0208\", \"number\": \"123456\"}, \"work\": {\"prefix\": \"07775\", \"number\": \"654321\"}}";
 
-        Map<String, Record> numbers = fromMap(readNumber).fromString(json);
+        Map<String, Record> numbers = MapDeserialiser.readingValuesWith(readNumber).fromString(json);
         assertThat(numbers, AnInstance.<Map<String, Record>>ofGeneric(Map.class)
                 .with(Path.<String, Record>toKey("home").join(prefix), Present.and(equalTo("0208"))));
     }
@@ -148,7 +153,7 @@ public class DeserialisationTest {
                 "\"dominic\": {\"home\": {\"prefix\": \"0208\", \"number\": \"123456\"}, " +
                 "\"work\": {\"prefix\": \"07775\", \"number\": \"654321\"}}}";
 
-        Map<String, PMap<String, Record>> numbers = fromMap(fromMap(readNumber)).fromString(json);
+        Map<String, PMap<String, Record>> numbers = MapDeserialiser.readingValuesWith(MapDeserialiser.readingValuesWith(readNumber)).fromString(json);
         assertThat(numbers, AnInstance.<Map<String, PMap<String, Record>>>ofGeneric(Map.class)
                 .with(Path.<String, PMap<String, Record>>toKey("dominic").join(Path.<String, Record>toKey("home")).join(prefix), Present.and(equalTo("0208"))));
     }
