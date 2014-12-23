@@ -9,6 +9,7 @@ import java.util.SortedMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public final class Index<K extends Comparable<K>, L> {
     private final SortedMap<K, Set<L>> indexed;
@@ -188,7 +189,7 @@ public final class Index<K extends Comparable<K>, L> {
     }
 
     private <R> Stream<T2<Set<L>, Set<R>>> matchedSublists(Index<K, R> other) {
-        return MatchedSublistIterator.over(this, other).toStream();
+        return StreamSupport.stream(MatchedSublistSpliterator.over(this, other), false);
     }
 
     @Override
