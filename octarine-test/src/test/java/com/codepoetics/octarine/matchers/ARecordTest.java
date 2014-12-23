@@ -14,7 +14,7 @@ import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 import org.junit.Test;
 
-import static com.codepoetics.octarine.Octarine.$$;
+import static com.codepoetics.octarine.Octarine.*;
 import static com.codepoetics.octarine.json.deserialisation.Deserialisers.*;
 import static com.codepoetics.octarine.json.serialisation.Serialisers.*;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -26,8 +26,8 @@ public class ARecordTest {
 
     public static interface Address {
         static final KeySet mandatoryKeys = new KeySet();
-        static final ListKey<String> addressLines = mandatoryKeys.addList("addressLines");
-        static final Key<String> postcode = mandatoryKeys.add("postcode");
+        static final ListKey<String> addressLines = mandatoryKeys.add($L("addressLines"));
+        static final Key<String> postcode = mandatoryKeys.add($("postcode"));
 
         Schema<Address> schema = mandatoryKeys::accept;
 
@@ -44,9 +44,9 @@ public class ARecordTest {
 
     public static interface Person {
         static final KeySet mandatoryKeys = new KeySet();
-        static final Key<String> name = mandatoryKeys.add("name");
-        static final Key<Integer> age = mandatoryKeys.add("age");
-        static final RecordKey address = mandatoryKeys.addRecord("address");
+        static final Key<String> name = mandatoryKeys.add($("name"));
+        static final Key<Integer> age = mandatoryKeys.add($("age"));
+        static final RecordKey address = mandatoryKeys.add($R("address"));
 
         Schema<Person> schema = (r, v) -> {
             mandatoryKeys.accept(r, v);

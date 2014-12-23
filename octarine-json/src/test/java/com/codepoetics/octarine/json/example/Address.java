@@ -7,12 +7,13 @@ import com.codepoetics.octarine.json.serialisation.Serialisers;
 import com.codepoetics.octarine.keys.KeySet;
 import com.codepoetics.octarine.validation.api.Schema;
 
+import static com.codepoetics.octarine.Octarine.$L;
 import static com.codepoetics.octarine.json.deserialisation.Deserialisers.ofString;
 
 public interface Address {
 
     public static final KeySet mandatoryKeys = new KeySet();
-    public static final ListKey<String> addressLines = mandatoryKeys.addList("addressLines");
+    public static final ListKey<String> addressLines = mandatoryKeys.add($L("addressLines"));
 
     public static final RecordSerialiser serialiser = RecordSerialiser.builder()
             .writeList(addressLines, Serialisers.toString)

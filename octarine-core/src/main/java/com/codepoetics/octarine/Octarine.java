@@ -9,7 +9,7 @@ import com.codepoetics.octarine.validation.api.ValidRecordKey;
 import java.util.stream.Stream;
 
 /**
- * Entry point for creating keys and records.<br/>
+ * Entry point for creating keys and records.
  * There is a short "$" syntax, which some people will find convenient and others consider ugly.
  * If you cannot reconcile this with your coding standards then use the longer method names, which are synonyms.
  */
