@@ -10,15 +10,17 @@ import com.codepoetics.octarine.validation.api.ValidRecordKey;
 import java.awt.*;
 import java.util.function.Function;
 
+import static com.codepoetics.octarine.Octarine.*;
+
 public interface Person {
 
     static final KeySet mandatoryKeys = new KeySet();
-    static final Key<String> name = mandatoryKeys.add("name");
-    static final Key<Integer> age = mandatoryKeys.add("age");
-    public static final Key<Color> favouriteColour = mandatoryKeys.add("favourite colour");
+    static final Key<String> name = mandatoryKeys.add($("name"));
+    static final Key<Integer> age = mandatoryKeys.add($("age"));
+    public static final Key<Color> favouriteColour = mandatoryKeys.add($("favourite colour"));
 
     public static final ValidRecordKey<Address> address =
-            mandatoryKeys.addValidRecord("address", Address.schema);
+            mandatoryKeys.add($V("address", Address.schema));
 
     static final Schema<Person> schema = (record, validationErrors) -> {
         mandatoryKeys.accept(record, validationErrors);
