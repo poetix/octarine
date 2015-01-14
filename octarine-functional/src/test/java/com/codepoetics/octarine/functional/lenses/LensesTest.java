@@ -45,14 +45,14 @@ public class LensesTest {
     @Test
     public void
     lenses_can_be_composed_out_of_functions() {
-        assertThat(aIsFor.apply(pmap), equalTo("apple"));
+        assertThat(aIsFor.get(pmap), equalTo("apple"));
         assertThat(aIsFor.set(pmap, "artichoke").get("a"), equalTo("artichoke"));
     }
 
     @Test
     public void
     lenses_compose_with_bijections() {
-        assertThat(thirdChar.apply("Hello World"), equalTo('l'));
+        assertThat(thirdChar.get("Hello World"), equalTo('l'));
         assertThat(thirdChar.set("Hello World", 'f'), equalTo("Heflo World"));
     }
 
@@ -61,7 +61,7 @@ public class LensesTest {
     lenses_can_be_joined_together() {
         Lens<PMap<String, String>, Character> thirdCharOfA = aIsFor.join(thirdChar);
 
-        assertThat(thirdCharOfA.apply(pmap), equalTo('p'));
+        assertThat(thirdCharOfA.get(pmap), equalTo('p'));
         assertThat(thirdCharOfA.set(pmap, 's').get("a"), equalTo("apsle"));
     }
 

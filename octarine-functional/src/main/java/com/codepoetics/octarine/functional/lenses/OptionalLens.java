@@ -6,71 +6,63 @@ import org.pcollections.PVector;
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
-public interface OptionalLens<T, V> extends Lens<T, Optional<V>>, Extractor.FromOptionalFunction<T, V> {
+public interface OptionalLens<T, V> extends LensLike<T, Optional<V>, OptionalFocus<T, V>>, Extractor.FromOptionalFunction<T, V> {
+
+    static <T, V> OptionalLens<T, V> of(Function<T, Optional<V>> getter, BiFunction<T, Optional<V>, T> setter) {
+        return target -> OptionalFocus.with(target, getter, setter);
+    }
 
     static <T, V> OptionalLens<T, V> wrap(Lens<T, Optional<V>> lens) {
-        return new OptionalLens<T, V>() {
-            @Override
-            public Optional<V> get(T instance) {
-                return lens.get(instance);
-            }
-
-            @Override
-            public T set(T instance, Optional<V> newValue) {
-                return lens.set(instance, newValue);
-            }
-        };
+        return target -> OptionalFocus.from(lens.on(target));
     }
 
     static <T> OptionalLens<T[], T> intoArray(int index) {
-        return wrap(Lens.of(
+        return of(
                 (T[] ts) -> Optional.ofNullable(ts[index]),
                 (T[] ts, Optional<T> t) -> {
                     T[] copy = Arrays.copyOf(ts, ts.length);
                     copy[index] = t.orElse(null);
                     return copy;
                 }
-        ));
+        );
     }
 
     static <K, V> OptionalLens<PMap<K, V>, V> intoPMap(K key) {
-        return wrap(Lens.of(
+        return of(
                 (PMap<K, V> m) -> Optional.ofNullable(m.get(key)),
                 (PMap<K, V> m, Optional<V> v) -> v.isPresent() ? m.plus(key, v.get()) : m.minus(key)
-        ));
+        );
     }
 
     static <T> OptionalLens<PVector<T>, T> intoPVector(int index) {
-        return wrap(Lens.of(
+        return of(
                 ts -> index < ts.size() ? Optional.ofNullable(ts.get(index)) : Optional.empty(),
                 (PVector<T> ts, Optional<T> t) -> t.isPresent() ? ts.with(index, t.get()) : ts.with(index, null)
-        ));
+        );
     }
 
-    default V getOrElse(T target, V defaultValue) {
-        return get(target).orElse(defaultValue);
+    default Optional<V> apply(T target) {
+        return get(target);
+    }
+
+    default V orElse(T target, V defaultValue) {
+        return on(target).orElse(defaultValue);
     }
 
     default T setNullable(T target, V newValue) {
-        return set(target, Optional.ofNullable(newValue));
+        return on(target).apply(Optional.ofNullable(newValue));
     }
 
     default <V2> OptionalLens<T, V2> join(OptionalLens<V, V2> next, Supplier<V> missingValueSupplier) {
         OptionalLens<T, V> self = this;
-        return new OptionalLens<T, V2>() {
 
-            @Override
-            public Optional<V2> get(T instance) {
-                return self.get(instance).flatMap(next::get);
-            }
-
-            @Override
-            public T set(T instance, Optional<V2> newValue) {
-                return self.setNullable(instance, next.set(self.get(instance).orElseGet(missingValueSupplier), newValue));
-            }
-        };
+        return of(
+                (T t) -> self.get(t).flatMap(next::get),
+                (T t, Optional<V2> v2) -> self.set(t, Optional.of(next.set(self.get(t).orElseGet(missingValueSupplier), v2))));
     }
 
     default Lens<T, V> assertPresent() {
@@ -78,10 +70,12 @@ public interface OptionalLens<T, V> extends Lens<T, Optional<V>>, Extractor.From
     }
 
     default Lens<T, V> withDefault(V defaultValue) {
-        return withDefault(() -> defaultValue);
+        return Lens.of(
+                t -> on(t).orElse(defaultValue),
+                (t, v) -> on(t).apply(Optional.ofNullable(v)));
     }
 
     default Lens<T, V> withDefault(Supplier<V> defaultValue) {
-        return Lens.of(t -> get(t).orElseGet(defaultValue), (t, v) -> set(t, Optional.ofNullable(v)));
+        return Lens.of(t -> on(t).orElseGet(defaultValue), (t, v) -> on(t).apply(Optional.ofNullable(v)));
     }
 }

@@ -4,6 +4,7 @@ import com.codepoetics.octarine.functional.extractors.Extractor;
 import com.codepoetics.octarine.functional.functions.F1;
 import com.codepoetics.octarine.functional.functions.F2;
 import com.codepoetics.octarine.functional.lenses.Lens;
+import com.codepoetics.octarine.functional.lenses.OptionalLens;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -12,16 +13,16 @@ import java.util.function.Supplier;
 public interface Transformer<I, O> extends F2<O, I, O> {
 
     interface TransformerConfigurator<I, O> {
-        default <T> TransformerConfigurator<I, O> map(Function<? super I, ? extends T> extractor, Lens<O, Optional<T>> target) {
+        default <T> TransformerConfigurator<I, O> map(Function<? super I, ? extends T> extractor, OptionalLens<O, T> target) {
             Function<? super I, Optional<T>> optionalFunction = extractor.andThen(Optional::ofNullable);
             return map(Extractor.from(optionalFunction), target);
         }
 
-        <T> TransformerConfigurator<I, O> map(Extractor<? super I, ? extends T> extractor, Lens<O, Optional<T>> target);
+        <T> TransformerConfigurator<I, O> map(Extractor<? super I, ? extends T> extractor, OptionalLens<O, T> target);
 
-        <T> TransformerConfigurator<I, O> set(Supplier<? extends T> supplier, Lens<O, Optional<T>> target);
+        <T> TransformerConfigurator<I, O> set(Supplier<? extends T> supplier, OptionalLens<O, T> target);
 
-        default <T> TransformerConfigurator<I, O> set(T value, Lens<O, Optional<T>> target) {
+        default <T> TransformerConfigurator<I, O> set(T value, OptionalLens<O, T> target) {
             return set((Supplier<T>) () -> value, target);
         }
     }
@@ -46,13 +47,13 @@ public interface Transformer<I, O> extends F2<O, I, O> {
         }
 
         @Override
-        public <T> TransformerConfigurator<I, O> map(Extractor<? super I, ? extends T> extractor, Lens<O, Optional<T>> target) {
+        public <T> TransformerConfigurator<I, O> map(Extractor<? super I, ? extends T> extractor, OptionalLens<O, T> target) {
             output = target.set(output, (Optional<T>) extractor.apply(input));
             return this;
         }
 
         @Override
-        public <T> TransformerConfigurator<I, O> set(Supplier<? extends T> supplier, Lens<O, Optional<T>> target) {
+        public <T> TransformerConfigurator<I, O> set(Supplier<? extends T> supplier, OptionalLens<O, T> target) {
             output = target.set(output, Optional.ofNullable(supplier.get()));
             return this;
         }

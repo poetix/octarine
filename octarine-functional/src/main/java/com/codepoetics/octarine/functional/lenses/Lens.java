@@ -4,25 +4,13 @@ import org.pcollections.PMap;
 import org.pcollections.PVector;
 
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public interface Lens<T, V> extends Function<T, V> {
+public interface Lens<T, V> extends LensLike<T, V, Focus<T, V>> {
 
     public static <T, V> Lens<T, V> of(Function<T, V> getter, BiFunction<T, V, T> setter) {
-        return new Lens<T, V>() {
-
-            @Override
-            public V get(T instance) {
-                return getter.apply(instance);
-            }
-
-            @Override
-            public T set(T instance, V newValue) {
-                return setter.apply(instance, newValue);
-            }
-        };
+        return target -> Focus.with(target, getter, setter);
     }
 
     static <T> Lens<T[], T> intoArray(int index) {
@@ -47,40 +35,6 @@ public interface Lens<T, V> extends Function<T, V> {
         return of(
                 ts -> ts.get(index),
                 (ts, t) -> ts.with(index, t)
-        );
-    }
-
-    V get(T instance);
-
-    default V apply(T instance) {
-        return get(instance);
-    }
-
-    T set(T instance, V newValue);
-
-    default OptionalLens<T, V> asOptional() {
-        return OptionalLens.wrap(Lens.<T, Optional<V>>of(
-                t -> Optional.ofNullable(get(t)),
-                (t, v) -> set(t, v.orElse(null))
-        ));
-    }
-
-    default T update(T instance, Function<V, V> updater) {
-        return set(instance, updater.apply(get(instance)));
-    }
-
-    default Function<T, T> inject(V newValue) {
-        return t -> set(t, newValue);
-    }
-
-    default Function<T, T> inflect(Function<V, V> updater) {
-        return t -> update(t, updater);
-    }
-
-    default <V2> Lens<T, V2> join(Lens<V, V2> next) {
-        return of(
-                t -> next.get(get(t)),
-                (t, v) -> set(t, next.set(get(t), v))
         );
     }
 
