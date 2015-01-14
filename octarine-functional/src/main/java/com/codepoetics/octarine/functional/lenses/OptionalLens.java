@@ -1,6 +1,7 @@
 package com.codepoetics.octarine.functional.lenses;
 
 import com.codepoetics.octarine.functional.extractors.Extractor;
+import com.codepoetics.octarine.functional.functions.Partial;
 import org.pcollections.PMap;
 import org.pcollections.PVector;
 
@@ -9,6 +10,7 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 public interface OptionalLens<T, V> extends LensLike<T, Optional<V>, OptionalFocus<T, V>>, Extractor.FromOptionalFunction<T, V> {
 
@@ -49,6 +51,14 @@ public interface OptionalLens<T, V> extends LensLike<T, Optional<V>, OptionalFoc
         return get(target);
     }
 
+    default T updateIfPresent(T target, UnaryOperator<V> updater) {
+        return on(target).updateIfPresent(updater);
+    }
+
+    default T updateIfPresent(T target, Partial<V, V> partialUpdater) {
+        return on(target).updateIfPresent(partialUpdater);
+    }
+
     default V orElse(T target, V defaultValue) {
         return on(target).orElse(defaultValue);
     }
@@ -61,8 +71,13 @@ public interface OptionalLens<T, V> extends LensLike<T, Optional<V>, OptionalFoc
         OptionalLens<T, V> self = this;
 
         return of(
-                (T t) -> self.get(t).flatMap(next::get),
-                (T t, Optional<V2> v2) -> self.set(t, Optional.of(next.set(self.get(t).orElseGet(missingValueSupplier), v2))));
+                (T t) -> self.on(t).flatMap(next::get),
+                (T t, Optional<V2> v2) -> {
+                    OptionalFocus<T, V> focus = self.on(t);
+                    V value = focus.orElseGet(missingValueSupplier);
+                    return focus.apply(Optional.of(next.on(value).apply(v2)));
+                });
+
     }
 
     default Lens<T, V> assertPresent() {

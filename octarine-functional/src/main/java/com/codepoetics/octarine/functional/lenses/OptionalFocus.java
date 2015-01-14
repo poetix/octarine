@@ -48,4 +48,12 @@ public interface OptionalFocus<T, V> extends Focus<T, Optional<V>> {
         return apply(get().flatMap(partialUpdater));
     }
 
+    default <V2> Optional<V2> map(Function<V, V2> f) {
+        return get().map(f);
+    }
+
+    default <V2> Optional<V2> flatMap(Function<V, Optional<V2>> f) {
+        return get().flatMap(f);
+    }
+
 }
