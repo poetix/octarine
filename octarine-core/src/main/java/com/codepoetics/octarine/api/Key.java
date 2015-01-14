@@ -1,9 +1,8 @@
 package com.codepoetics.octarine.api;
 
+import com.codepoetics.octarine.functional.lenses.OptionalFocus;
 import com.codepoetics.octarine.functional.lenses.OptionalLens;
 import com.codepoetics.octarine.functional.paths.Path;
-
-import java.util.Optional;
 
 public interface Key<T> extends OptionalLens<Record, T>, Path.Named<Record, T> {
 
@@ -13,14 +12,11 @@ public interface Key<T> extends OptionalLens<Record, T>, Path.Named<Record, T> {
     }
 
     @Override
-    default public Optional<T> get(Record instance) {
-        return instance.get(this);
-    }
-
-    @Override
-    default public Record set(Record instance, Optional<T> newValue) {
-        return newValue.map(value -> instance.with(of(value)))
-                       .orElseGet(() -> instance.without(this));
+    default public OptionalFocus<Record, T> on(Record record) {
+        return OptionalFocus.with(
+                record,
+                r -> r.get(this),
+                (r, nv) -> nv.map(v -> r.with(of(v))).orElseGet(() -> r.without(this)));
     }
 
     String name();
