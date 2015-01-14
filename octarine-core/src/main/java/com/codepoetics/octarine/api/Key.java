@@ -13,10 +13,9 @@ public interface Key<T> extends OptionalLens<Record, T>, Path.Named<Record, T> {
 
     @Override
     default public OptionalFocus<Record, T> on(Record record) {
-        return OptionalFocus.with(
-                record,
-                r -> r.get(this),
-                (r, nv) -> nv.map(v -> r.with(of(v))).orElseGet(() -> r.without(this)));
+        return OptionalFocus.of(
+                () -> record.get(this),
+                nv -> nv.map(v -> record.with(of(v))).orElseGet(() -> record.without(this)));
     }
 
     String name();
