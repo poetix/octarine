@@ -68,12 +68,10 @@ public interface OptionalLens<T, V> extends LensLike<T, Optional<V>, OptionalFoc
     }
 
     default <V2> OptionalLens<T, V2> join(OptionalLens<V, V2> next, Supplier<V> missingValueSupplier) {
-        OptionalLens<T, V> self = this;
-
         return of(
-                (T t) -> self.on(t).flatMap(next::get),
+                (T t) -> this.on(t).flatMap(next::get),
                 (T t, Optional<V2> v2) -> {
-                    OptionalFocus<T, V> focus = self.on(t);
+                    OptionalFocus<T, V> focus = this.on(t);
                     V value = focus.orElseGet(missingValueSupplier);
                     return focus.apply(Optional.of(next.on(value).apply(v2)));
                 });

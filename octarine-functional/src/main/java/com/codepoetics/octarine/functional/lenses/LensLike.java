@@ -42,9 +42,9 @@ public interface LensLike<T, V, F extends Focus<T, V>> {
     }
 
     default <V2> OptionalLens<T, V2> join(OptionalLens<V, V2> next) {
-        return OptionalLens.wrap(Lens.of(
+        return OptionalLens.of(
                 t -> next.get(get(t)),
                 (t, v) -> set(t, next.set(get(t), v))
-        ));
+        );
     }
 }
