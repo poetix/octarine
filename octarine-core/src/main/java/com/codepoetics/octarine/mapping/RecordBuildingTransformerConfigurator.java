@@ -1,8 +1,7 @@
 package com.codepoetics.octarine.mapping;
 
-import com.codepoetics.octarine.api.Record;
-import com.codepoetics.octarine.api.Value;
-import com.codepoetics.octarine.records.HashRecord;
+import com.codepoetics.octarine.records.Record;
+import com.codepoetics.octarine.records.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +32,6 @@ final class RecordBuildingTransformerConfigurator<T> implements RecordTransforme
 
     @Override
     public Record get() {
-        return HashRecord.of(values);
+        return Record.of(values);
     }
 }

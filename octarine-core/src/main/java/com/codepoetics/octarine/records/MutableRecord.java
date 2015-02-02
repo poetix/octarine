@@ -1,4 +1,4 @@
-package com.codepoetics.octarine.api;
+package com.codepoetics.octarine.records;
 
 import java.util.Collection;
 import java.util.Set;

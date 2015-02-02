@@ -1,8 +1,8 @@
 package com.codepoetics.octarine.joins;
 
 import com.codepoetics.octarine.functional.tuples.T2;
-import com.codepoetics.octarine.api.ListKey;
-import com.codepoetics.octarine.api.Record;
+import com.codepoetics.octarine.records.ListKey;
+import com.codepoetics.octarine.records.Record;
 
 import java.util.Set;
 import java.util.function.Function;

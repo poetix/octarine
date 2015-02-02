@@ -1,18 +1,11 @@
-package com.codepoetics.octarine.validation;
-
-import com.codepoetics.octarine.api.Key;
-import com.codepoetics.octarine.api.MutableRecord;
-import com.codepoetics.octarine.api.Record;
-import com.codepoetics.octarine.api.Value;
-import com.codepoetics.octarine.validation.api.Schema;
-import com.codepoetics.octarine.validation.api.Valid;
+package com.codepoetics.octarine.records;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-public final class ValidRecord<T> implements Valid<T> {
+final class ValidRecord<T> implements Valid<T> {
     private final Record record;
     private final Schema schema;
 

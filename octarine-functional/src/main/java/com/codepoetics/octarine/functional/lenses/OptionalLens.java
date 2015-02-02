@@ -15,11 +15,31 @@ import java.util.function.UnaryOperator;
 public interface OptionalLens<T, V> extends LensLike<T, Optional<V>, OptionalFocus<T, V>>, Extractor.FromOptionalFunction<T, V> {
 
     static <T, V> OptionalLens<T, V> of(Function<T, Optional<V>> getter, BiFunction<T, Optional<V>, T> setter) {
-        return target -> OptionalFocus.with(target, getter, setter);
+        return new OptionalLens<T, V>() {
+            @Override
+            public Optional<V> get(T instance) {
+                return getter.apply(instance);
+            }
+
+            @Override
+            public T set(T instance, Optional<V> newValue) {
+                return setter.apply(instance, newValue);
+            }
+        };
     }
 
     static <T, V> OptionalLens<T, V> wrap(Lens<T, Optional<V>> lens) {
-        return target -> OptionalFocus.from(lens.on(target));
+        return new OptionalLens<T, V>() {
+            @Override
+            public Optional<V> get(T instance) {
+                return lens.get(instance);
+            }
+
+            @Override
+            public T set(T instance, Optional<V> newValue) {
+                return lens.set(instance, newValue);
+            }
+        };
     }
 
     static <T> OptionalLens<T[], T> intoArray(int index) {
@@ -47,34 +67,34 @@ public interface OptionalLens<T, V> extends LensLike<T, Optional<V>, OptionalFoc
         );
     }
 
+    default OptionalFocus<T, V> into(T instance) {
+        return OptionalFocus.of(() -> get(instance), v -> set(instance, v));
+    }
+
     default Optional<V> apply(T target) {
         return get(target);
     }
 
     default T updateIfPresent(T target, UnaryOperator<V> updater) {
-        return on(target).updateIfPresent(updater);
+        return set(target, get(target).map(updater));
     }
 
     default T updateIfPresent(T target, Partial<V, V> partialUpdater) {
-        return on(target).updateIfPresent(partialUpdater);
+        return set(target, get(target).flatMap(partialUpdater));
     }
 
     default V orElse(T target, V defaultValue) {
-        return on(target).orElse(defaultValue);
+        return get(target).orElse(defaultValue);
     }
 
     default T setNullable(T target, V newValue) {
-        return on(target).apply(Optional.ofNullable(newValue));
+        return set(target, Optional.ofNullable(newValue));
     }
 
     default <V2> OptionalLens<T, V2> join(OptionalLens<V, V2> next, Supplier<V> missingValueSupplier) {
         return of(
-                (T t) -> this.on(t).flatMap(next::get),
-                (T t, Optional<V2> v2) -> {
-                    OptionalFocus<T, V> focus = this.on(t);
-                    V value = focus.orElseGet(missingValueSupplier);
-                    return focus.apply(Optional.of(next.on(value).apply(v2)));
-                });
+                (T t) -> get(t).flatMap(next::get),
+                (T t, Optional<V2> v2) -> set(t, Optional.of(next.set(get(t).orElseGet(missingValueSupplier), v2))));
 
     }
 
@@ -84,11 +104,11 @@ public interface OptionalLens<T, V> extends LensLike<T, Optional<V>, OptionalFoc
 
     default Lens<T, V> withDefault(V defaultValue) {
         return Lens.of(
-                t -> on(t).orElse(defaultValue),
-                (t, v) -> on(t).apply(Optional.ofNullable(v)));
+                t -> get(t).orElse(defaultValue),
+                (t, v) -> set(t, Optional.ofNullable(v)));
     }
 
     default Lens<T, V> withDefault(Supplier<V> defaultValue) {
-        return Lens.of(t -> on(t).orElseGet(defaultValue), (t, v) -> on(t).apply(Optional.ofNullable(v)));
+        return Lens.of(t -> get(t).orElseGet(defaultValue), (t, v) -> set(t, Optional.ofNullable(v)));
     }
 }

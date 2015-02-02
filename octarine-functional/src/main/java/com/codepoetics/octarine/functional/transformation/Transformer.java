@@ -3,7 +3,6 @@ package com.codepoetics.octarine.functional.transformation;
 import com.codepoetics.octarine.functional.extractors.Extractor;
 import com.codepoetics.octarine.functional.functions.F1;
 import com.codepoetics.octarine.functional.functions.F2;
-import com.codepoetics.octarine.functional.lenses.Lens;
 import com.codepoetics.octarine.functional.lenses.OptionalLens;
 
 import java.util.Optional;

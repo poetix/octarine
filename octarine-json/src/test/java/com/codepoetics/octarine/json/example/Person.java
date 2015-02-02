@@ -1,11 +1,11 @@
 package com.codepoetics.octarine.json.example;
 
-import com.codepoetics.octarine.api.Key;
+import com.codepoetics.octarine.records.Key;
 import com.codepoetics.octarine.json.deserialisation.RecordDeserialiser;
 import com.codepoetics.octarine.json.serialisation.RecordSerialiser;
-import com.codepoetics.octarine.keys.KeySet;
-import com.codepoetics.octarine.validation.api.Schema;
-import com.codepoetics.octarine.validation.api.ValidRecordKey;
+import com.codepoetics.octarine.records.KeySet;
+import com.codepoetics.octarine.records.Schema;
+import com.codepoetics.octarine.records.ValidRecordKey;
 
 import java.awt.*;
 import java.util.function.Function;

@@ -1,12 +1,11 @@
 package com.codepoetics.octarine.json.deserialisation;
 
-import com.codepoetics.octarine.api.Key;
-import com.codepoetics.octarine.api.Record;
-import com.codepoetics.octarine.api.Value;
-import com.codepoetics.octarine.records.HashRecord;
-import com.codepoetics.octarine.validation.api.Schema;
-import com.codepoetics.octarine.validation.api.Valid;
-import com.codepoetics.octarine.validation.api.Validation;
+import com.codepoetics.octarine.records.Key;
+import com.codepoetics.octarine.records.Record;
+import com.codepoetics.octarine.records.Value;
+import com.codepoetics.octarine.records.Schema;
+import com.codepoetics.octarine.records.Valid;
+import com.codepoetics.octarine.records.Validation;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import org.pcollections.PMap;
@@ -138,7 +137,7 @@ public final class RecordDeserialiser implements SafeDeserialiser<Record> {
         List<Value> values = new ArrayList<>();
 
         if (parser.nextToken() == JsonToken.END_OBJECT) {
-            return HashRecord.empty();
+            return Record.empty();
         }
 
         while (parser.nextValue() != JsonToken.END_OBJECT) {
@@ -146,7 +145,7 @@ public final class RecordDeserialiser implements SafeDeserialiser<Record> {
             parserMapper.apply(fieldName, parser).ifPresent(values::add);
         }
 
-        return HashRecord.of(values);
+        return Record.of(values);
     }
 
     public <S> Deserialiser<Validation<S>> validAgainst(Schema<S> schema) {

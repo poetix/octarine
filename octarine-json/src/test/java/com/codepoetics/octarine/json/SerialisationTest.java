@@ -1,6 +1,6 @@
 package com.codepoetics.octarine.json;
 
-import com.codepoetics.octarine.api.Record;
+import com.codepoetics.octarine.records.Record;
 import com.codepoetics.octarine.json.example.Address;
 import com.codepoetics.octarine.json.example.Person;
 import com.codepoetics.octarine.json.serialisation.ListSerialiser;

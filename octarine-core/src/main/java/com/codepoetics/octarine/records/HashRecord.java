@@ -1,39 +1,16 @@
 package com.codepoetics.octarine.records;
 
-import com.codepoetics.octarine.api.Key;
-import com.codepoetics.octarine.api.MutableRecord;
-import com.codepoetics.octarine.api.Record;
-import com.codepoetics.octarine.api.Value;
-import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public final class HashRecord implements Record {
-
-    private static final Record EMPTY_RECORD = new HashRecord(HashTreePMap.empty());
-
-    public static Record empty() {
-        return EMPTY_RECORD;
-    }
-
-    public static Record of(Collection<Value> values) {
-        return of(values.stream());
-    }
-
-    public static Record of(Value...values) {
-        return values.length == 0 ? empty() : of(Stream.of(values));
-    }
-
-    public static Record of(Stream<Value> values) {
-        return new HashRecord(HashTreePMap.from(values.collect(Collectors.toMap(Value::key, Value::value))));
-    }
+final class HashRecord implements Record {
 
     private final PMap<Key<?>, Object> values;
 
-    private HashRecord(PMap<Key<?>, Object> values) {
+    HashRecord(PMap<Key<?>, Object> values) {
         this.values = values;
     }
 

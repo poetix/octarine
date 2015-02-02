@@ -1,15 +1,15 @@
 package com.codepoetics.octarine.matchers;
 
-import com.codepoetics.octarine.api.Key;
-import com.codepoetics.octarine.api.ListKey;
-import com.codepoetics.octarine.api.Record;
-import com.codepoetics.octarine.api.RecordKey;
+import com.codepoetics.octarine.records.Key;
+import com.codepoetics.octarine.records.ListKey;
+import com.codepoetics.octarine.records.Record;
+import com.codepoetics.octarine.records.RecordKey;
 import com.codepoetics.octarine.functional.paths.Path;
 import com.codepoetics.octarine.json.deserialisation.RecordDeserialiser;
 import com.codepoetics.octarine.json.serialisation.RecordSerialiser;
-import com.codepoetics.octarine.keys.KeySet;
-import com.codepoetics.octarine.validation.api.Schema;
-import com.codepoetics.octarine.validation.api.Valid;
+import com.codepoetics.octarine.records.KeySet;
+import com.codepoetics.octarine.records.Schema;
+import com.codepoetics.octarine.records.Valid;
 import org.hamcrest.Matcher;
 import org.hamcrest.StringDescription;
 import org.junit.Test;

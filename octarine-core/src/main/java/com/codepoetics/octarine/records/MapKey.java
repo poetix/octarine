@@ -1,4 +1,4 @@
-package com.codepoetics.octarine.api;
+package com.codepoetics.octarine.records;
 
 import org.pcollections.HashTreePMap;
 import org.pcollections.PMap;
@@ -7,6 +7,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 public interface MapKey<T> extends Key<PMap<String, T>> {
+
+    static <T> MapKey<T> named(String name, Value...metadata) {
+        return named(name, Record.of(metadata));
+    }
+
+    static <T> MapKey<T> named(String name, Record metadata) {
+        return new Impl<T>(name, metadata);
+    }
+
+    static final class Impl<T> extends BaseKey<PMap<String, T>> implements MapKey<T> {
+        Impl(String name, Record metadata) {
+            super(name, metadata);
+        }
+    }
 
     default Value of(Map<String, ? extends T> values) {
         return of(HashTreePMap.from(values));

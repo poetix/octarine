@@ -1,4 +1,4 @@
-package com.codepoetics.octarine.validation.api;
+package com.codepoetics.octarine.records;
 
 import java.util.List;
 

@@ -24,7 +24,23 @@ public interface OptionalFocus<T, V> extends Focus<T, Optional<V>> {
         };
     }
 
-    static <T, V> OptionalFocus<T, V> with(T target, Function<T, Optional<V>> getter, BiFunction<T, Optional<V>, T> setter) {
+    static final class OnTarget<T> {
+        private final T target;
+
+        private OnTarget(T target) {
+            this.target = target;
+        }
+
+        public <V> OptionalFocus<T, V> with(Function<T, Optional<V>> getter, BiFunction<T, Optional<V>, T> setter) {
+            return on(target, getter, setter);
+        }
+    }
+
+    static <T> OnTarget<T> on(T target) {
+        return new OnTarget<>(target);
+    }
+
+    static <T, V> OptionalFocus<T, V> on(T target, Function<T, Optional<V>> getter, BiFunction<T, Optional<V>, T> setter) {
         return of(() -> getter.apply(target), v -> setter.apply(target, v));
     }
 

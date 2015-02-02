@@ -1,11 +1,6 @@
 package com.codepoetics.octarine.jdbc;
 
-import com.codepoetics.octarine.api.Key;
-import com.codepoetics.octarine.api.Record;
-import com.codepoetics.octarine.api.Value;
-import com.codepoetics.octarine.records.HashRecord;
-import com.codepoetics.octarine.validation.api.Schema;
-import com.codepoetics.octarine.validation.api.Valid;
+import com.codepoetics.octarine.records.*;
 
 import java.sql.ResultSet;
 import java.util.LinkedList;
@@ -43,7 +38,7 @@ public interface RecordRowMapper extends RowMapper<Record> {
                 return this;
             }
         });
-        return HashRecord.of(columnValues);
+        return Record.of(columnValues);
     }
 
     default <T> RowMapper<Valid<T>> validAgainst(Schema<T> schema) {

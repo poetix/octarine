@@ -1,11 +1,11 @@
 package com.codepoetics.octarine.json.example;
 
-import com.codepoetics.octarine.api.ListKey;
+import com.codepoetics.octarine.records.ListKey;
 import com.codepoetics.octarine.json.deserialisation.RecordDeserialiser;
 import com.codepoetics.octarine.json.serialisation.RecordSerialiser;
 import com.codepoetics.octarine.json.serialisation.Serialisers;
-import com.codepoetics.octarine.keys.KeySet;
-import com.codepoetics.octarine.validation.api.Schema;
+import com.codepoetics.octarine.records.KeySet;
+import com.codepoetics.octarine.records.Schema;
 
 import static com.codepoetics.octarine.Octarine.$L;
 import static com.codepoetics.octarine.json.deserialisation.Deserialisers.ofString;

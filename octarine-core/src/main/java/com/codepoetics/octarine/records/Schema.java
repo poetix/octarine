@@ -1,10 +1,6 @@
-package com.codepoetics.octarine.validation.api;
+package com.codepoetics.octarine.records;
 
-import com.codepoetics.octarine.api.Record;
-import com.codepoetics.octarine.api.Value;
 import com.codepoetics.octarine.functional.extractors.Extractor;
-import com.codepoetics.octarine.records.HashRecord;
-import com.codepoetics.octarine.validation.ValidRecord;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -25,7 +21,7 @@ public interface Schema<T> extends BiConsumer<Record, Consumer<String>>, Extract
     }
 
     default Validation<T> validate(Value... values) {
-        return validate(HashRecord.of(values));
+        return validate(Record.of(values));
     }
 
     default Validation<T> validate(Record record) {

@@ -10,7 +10,17 @@ import java.util.function.Function;
 public interface Lens<T, V> extends LensLike<T, V, Focus<T, V>> {
 
     public static <T, V> Lens<T, V> of(Function<T, V> getter, BiFunction<T, V, T> setter) {
-        return target -> Focus.with(target, getter, setter);
+        return new Lens<T, V>() {
+            @Override
+            public V get(T target) {
+                return getter.apply(target);
+            }
+
+            @Override
+            public T set(T target, V newValue) {
+                return setter.apply(target, newValue);
+            }
+        };
     }
 
     static <T> Lens<T[], T> intoArray(int index) {
@@ -36,6 +46,10 @@ public interface Lens<T, V> extends LensLike<T, V, Focus<T, V>> {
                 ts -> ts.get(index),
                 (ts, t) -> ts.with(index, t)
         );
+    }
+
+    default Focus<T, V> into(T target) {
+        return Focus.of(() -> get(target), v -> set(target, v));
     }
 
 }

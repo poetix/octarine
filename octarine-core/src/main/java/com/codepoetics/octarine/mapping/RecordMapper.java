@@ -1,6 +1,6 @@
 package com.codepoetics.octarine.mapping;
 
-import com.codepoetics.octarine.api.Record;
+import com.codepoetics.octarine.records.Record;
 
 import java.util.function.Function;
 

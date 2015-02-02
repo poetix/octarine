@@ -1,10 +1,6 @@
 package com.codepoetics.octarine;
 
-import com.codepoetics.octarine.api.*;
-import com.codepoetics.octarine.keys.Keys;
-import com.codepoetics.octarine.records.HashRecord;
-import com.codepoetics.octarine.validation.api.Schema;
-import com.codepoetics.octarine.validation.api.ValidRecordKey;
+import com.codepoetics.octarine.records.*;
 
 import java.util.stream.Stream;
 
@@ -26,7 +22,7 @@ public final class Octarine {
      * @return The key.
      */
     public static <T> Key<T> $(String name, Value... metadata) {
-        return Keys.simpleKey(name, $$(metadata));
+        return Key.named(name, metadata);
     }
 
     /**
@@ -38,7 +34,7 @@ public final class Octarine {
      * @return The key.
      */
     public static <T> Key<T> $(String name, Record metadata) {
-        return Keys.simpleKey(name, metadata);
+        return Key.named(name, metadata);
     }
 
     /**
@@ -50,7 +46,7 @@ public final class Octarine {
      * @return The key.
      */
     public static <T> ListKey<T> $L(String name, Value... metadata) {
-        return $L(name, $$(metadata));
+        return ListKey.named(name, metadata);
     }
 
     /**
@@ -62,7 +58,7 @@ public final class Octarine {
      * @return The key.
      */
     public static <T> ListKey<T> $L(String name, Record metadata) {
-        return Keys.listKey(name, metadata);
+        return ListKey.named(name, metadata);
     }
 
     /**
@@ -73,7 +69,7 @@ public final class Octarine {
      * @return The key.
      */
     public static RecordKey $R(String name, Value... metadata) {
-        return $R(name, $$(metadata));
+        return RecordKey.named(name, metadata);
     }
 
     /**
@@ -84,7 +80,7 @@ public final class Octarine {
      * @return The key.
      */
     public static RecordKey $R(String name, Record metadata) {
-        return Keys.recordKey(name, metadata);
+        return RecordKey.named(name, metadata);
     }
 
     /**
@@ -96,7 +92,7 @@ public final class Octarine {
      * @return The key.
      */
     public static <T> MapKey<T> $M(String name, Value... metadata) {
-        return $M(name, $$(metadata));
+        return MapKey.named(name, metadata);
     }
 
     /**
@@ -108,7 +104,7 @@ public final class Octarine {
      * @return The key.
      */
     public static <T> MapKey<T> $M(String name, Record metadata) {
-        return Keys.mapKey(name, metadata);
+        return MapKey.named(name, metadata);
     }
 
     /**
@@ -121,7 +117,7 @@ public final class Octarine {
      * @return The key.
      */
     public static <T> ValidRecordKey<T> $V(String name, Schema<T> schema, Value... metadata) {
-        return $V(name, schema, $$(metadata));
+        return ValidRecordKey.named(name, schema, metadata);
     }
 
     /**
@@ -134,7 +130,7 @@ public final class Octarine {
      * @return The key.
      */
     public static <T> ValidRecordKey<T> $V(String name, Schema<T> schema, Record metadata) {
-        return Keys.validRecordKey(name, schema, metadata);
+        return ValidRecordKey.named(name, schema, metadata);
     }
 
     /**
@@ -144,7 +140,7 @@ public final class Octarine {
      * @return The record.
      */
     public static Record $$(Value... values) {
-        return HashRecord.of(values);
+        return Record.of(values);
     }
 
     /**
@@ -165,7 +161,7 @@ public final class Octarine {
      * @return The merged record.
      */
     public static Record $$(Record... records) {
-        return Stream.of(records).reduce(HashRecord.empty(), Record::with);
+        return Stream.of(records).reduce(Record.empty(), Record::with);
     }
 
     /**

@@ -1,7 +1,7 @@
 package com.codepoetics.octarine.json.serialisation;
 
-import com.codepoetics.octarine.api.Key;
-import com.codepoetics.octarine.api.Record;
+import com.codepoetics.octarine.records.Key;
+import com.codepoetics.octarine.records.Record;
 import com.fasterxml.jackson.core.JsonGenerator;
 import org.pcollections.PVector;
 

@@ -1,9 +1,9 @@
 package com.codepoetics.octarine.json;
 
 import com.codepoetics.octarine.functional.paths.Path;
-import com.codepoetics.octarine.api.Key;
-import com.codepoetics.octarine.api.ListKey;
-import com.codepoetics.octarine.api.Record;
+import com.codepoetics.octarine.records.Key;
+import com.codepoetics.octarine.records.ListKey;
+import com.codepoetics.octarine.records.Record;
 import com.codepoetics.octarine.json.deserialisation.ListDeserialiser;
 import com.codepoetics.octarine.json.deserialisation.MapDeserialiser;
 import com.codepoetics.octarine.json.deserialisation.RecordDeserialiser;
@@ -12,8 +12,8 @@ import com.codepoetics.octarine.json.example.Person;
 import com.codepoetics.octarine.testutils.ARecord;
 import com.codepoetics.octarine.testutils.AnInstance;
 import com.codepoetics.octarine.testutils.Present;
-import com.codepoetics.octarine.validation.api.Valid;
-import com.codepoetics.octarine.validation.api.Validation;
+import com.codepoetics.octarine.records.Valid;
+import com.codepoetics.octarine.records.Validation;
 import org.junit.Test;
 import org.pcollections.PMap;
 import org.pcollections.PVector;

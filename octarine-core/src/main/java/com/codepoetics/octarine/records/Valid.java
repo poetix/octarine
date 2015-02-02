@@ -1,8 +1,4 @@
-package com.codepoetics.octarine.validation.api;
-
-import com.codepoetics.octarine.api.Key;
-import com.codepoetics.octarine.api.Record;
-import com.codepoetics.octarine.api.Value;
+package com.codepoetics.octarine.records;
 
 import java.util.Collection;
 

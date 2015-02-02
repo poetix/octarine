@@ -3,17 +3,13 @@ package com.codepoetics.octarine.functional.lenses;
 import java.util.Optional;
 import java.util.function.Function;
 
-public interface LensLike<T, V, F extends Focus<T, V>> {
+interface LensLike<T, V, F extends Focus<T, V>> {
 
-    F on(T instance);
+    F into(T instance);
 
-    default V get(T instance) {
-        return on(instance).get();
-    }
+    V get(T instance);
 
-    default T set(T instance, V newValue) {
-        return on(instance).apply(newValue);
-    }
+    T set(T instance, V newValue);
 
     default OptionalLens<T, V> asOptional() {
         return OptionalLens.wrap(Lens.<T, Optional<V>>of(
@@ -34,7 +30,7 @@ public interface LensLike<T, V, F extends Focus<T, V>> {
         return t -> update(t, updater);
     }
 
-    default <V2> Lens<T, V2> join(LensLike<V, V2, ? extends Focus<V, V2>> next) {
+    default <V2> Lens<T, V2> join(Lens<V, V2> next) {
         return Lens.of(
                 t -> next.get(get(t)),
                 (t, v) -> set(t, next.set(get(t), v))

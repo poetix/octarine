@@ -1,6 +1,6 @@
 package com.codepoetics.octarine;
 
-import com.codepoetics.octarine.api.*;
+import com.codepoetics.octarine.records.*;
 import com.codepoetics.octarine.testutils.ARecord;
 import org.junit.Test;
 import org.pcollections.HashTreePMap;

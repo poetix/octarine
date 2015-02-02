@@ -1,7 +1,7 @@
 package com.codepoetics.octarine.mapping;
 
-import com.codepoetics.octarine.api.Key;
-import com.codepoetics.octarine.api.Value;
+import com.codepoetics.octarine.records.Key;
+import com.codepoetics.octarine.records.Value;
 import com.codepoetics.octarine.functional.extractors.Extractor;
 
 import java.util.Optional;

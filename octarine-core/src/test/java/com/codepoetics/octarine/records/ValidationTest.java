@@ -3,9 +3,6 @@ package com.codepoetics.octarine.records;
 import com.codepoetics.octarine.records.example.Address;
 import com.codepoetics.octarine.records.example.Person;
 import com.codepoetics.octarine.testutils.ARecord;
-import com.codepoetics.octarine.validation.api.RecordValidationException;
-import com.codepoetics.octarine.validation.api.Valid;
-import com.codepoetics.octarine.validation.api.Validation;
 import org.junit.Test;
 
 import java.awt.*;

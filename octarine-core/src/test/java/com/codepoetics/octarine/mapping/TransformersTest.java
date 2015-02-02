@@ -1,10 +1,9 @@
 package com.codepoetics.octarine.mapping;
 
-import com.codepoetics.octarine.api.Key;
-import com.codepoetics.octarine.api.Record;
+import com.codepoetics.octarine.records.Key;
+import com.codepoetics.octarine.records.Record;
 import com.codepoetics.octarine.functional.paths.Path;
 import com.codepoetics.octarine.functional.transformation.Transformer;
-import com.codepoetics.octarine.records.HashRecord;
 import org.databene.contiperf.PerfTest;
 import org.databene.contiperf.junit.ContiPerfRule;
 import org.junit.Ignore;
@@ -48,7 +47,7 @@ public class TransformersTest {
     @Test
     @PerfTest(invocations = 1000)
     public void transforms_records() {
-        transformMany(genericTransformer.seededWith(HashRecord.empty()));
+        transformMany(genericTransformer.seededWith(Record.empty()));
     }
 
     @Test

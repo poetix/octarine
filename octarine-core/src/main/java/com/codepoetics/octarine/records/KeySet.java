@@ -1,7 +1,4 @@
-package com.codepoetics.octarine.keys;
-
-import com.codepoetics.octarine.api.Key;
-import com.codepoetics.octarine.api.Record;
+package com.codepoetics.octarine.records;
 
 import java.util.HashSet;
 import java.util.Set;

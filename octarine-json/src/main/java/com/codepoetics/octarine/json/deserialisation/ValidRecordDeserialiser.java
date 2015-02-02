@@ -1,9 +1,9 @@
 package com.codepoetics.octarine.json.deserialisation;
 
-import com.codepoetics.octarine.api.Record;
-import com.codepoetics.octarine.validation.api.RecordValidationException;
-import com.codepoetics.octarine.validation.api.Schema;
-import com.codepoetics.octarine.validation.api.Validation;
+import com.codepoetics.octarine.records.Record;
+import com.codepoetics.octarine.records.RecordValidationException;
+import com.codepoetics.octarine.records.Schema;
+import com.codepoetics.octarine.records.Validation;
 import com.fasterxml.jackson.core.JsonParser;
 
 import java.io.Reader;

@@ -1,7 +1,7 @@
 package com.codepoetics.octarine.functional.matching;
 
-import com.codepoetics.octarine.api.Key;
-import com.codepoetics.octarine.api.Record;
+import com.codepoetics.octarine.records.Key;
+import com.codepoetics.octarine.records.Record;
 import com.codepoetics.octarine.functional.paths.Path;
 import com.codepoetics.octarine.records.example.Address;
 import com.codepoetics.octarine.records.example.Person;

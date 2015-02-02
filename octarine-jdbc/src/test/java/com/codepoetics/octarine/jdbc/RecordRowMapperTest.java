@@ -1,6 +1,6 @@
 package com.codepoetics.octarine.jdbc;
 
-import com.codepoetics.octarine.api.Key;
+import com.codepoetics.octarine.records.Key;
 import com.codepoetics.octarine.testutils.ARecord;
 import org.junit.Test;
 

@@ -1,10 +1,5 @@
 package com.codepoetics.octarine.records;
 
-import com.codepoetics.octarine.api.Key;
-import com.codepoetics.octarine.api.MutableRecord;
-import com.codepoetics.octarine.api.Record;
-import com.codepoetics.octarine.api.Value;
-
 import java.util.*;
 
 final class WrappingMutableRecord implements MutableRecord {
@@ -19,12 +14,12 @@ final class WrappingMutableRecord implements MutableRecord {
 
     private WrappingMutableRecord(Record current) {
         this.current = current;
-        added = HashRecord.empty();
+        added = Record.empty();
     }
 
     @Override
     public void set(Value... values) {
-        set(HashRecord.of(values));
+        set(Record.of(values));
     }
 
     @Override

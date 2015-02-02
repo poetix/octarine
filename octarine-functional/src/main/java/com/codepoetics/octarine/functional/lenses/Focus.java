@@ -21,7 +21,23 @@ public interface Focus<T, V> extends Supplier<V>, Function<V, T> {
         };
     }
 
-    static <T, V> Focus<T, V> with(T target, Function<T, V> getter, BiFunction<T, V, T> setter) {
+    static final class OnTarget<T> {
+        private final T target;
+
+        private OnTarget(T target) {
+            this.target = target;
+        }
+
+        public <V> Focus<T, V> with(Function<T, V> getter, BiFunction<T, V, T> setter) {
+            return on(target, getter, setter);
+        }
+    }
+
+    static <T> OnTarget<T> on(T target) {
+        return new OnTarget<>(target);
+    }
+
+    static <T, V> Focus<T, V> on(T target, Function<T, V> getter, BiFunction<T, V, T> setter) {
         return of(() -> getter.apply(target), v -> setter.apply(target, v));
     }
 

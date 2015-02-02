@@ -1,7 +1,7 @@
 package com.codepoetics.octarine.joins;
 
-import com.codepoetics.octarine.api.Key;
-import com.codepoetics.octarine.api.Record;
+import com.codepoetics.octarine.records.Key;
+import com.codepoetics.octarine.records.Record;
 
 import java.util.Collection;
 import java.util.stream.Stream;

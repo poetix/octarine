@@ -1,7 +1,7 @@
 package com.codepoetics.octarine.json.deserialisation;
 
-import com.codepoetics.octarine.validation.api.Valid;
-import com.codepoetics.octarine.validation.api.Validation;
+import com.codepoetics.octarine.records.Valid;
+import com.codepoetics.octarine.records.Validation;
 import com.fasterxml.jackson.core.JsonParser;
 
 import java.util.function.Function;
