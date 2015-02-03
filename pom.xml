@@ -18,7 +18,6 @@
         <module>octarine-core</module>
         <module>octarine-test</module>
         <module>octarine-json</module>
-        <module>octarine-jdbc</module>
         <module>octarine-joins</module>
         <module>octarine-recordjoins</module>
     </modules>

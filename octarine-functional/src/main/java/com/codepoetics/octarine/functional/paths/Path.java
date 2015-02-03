@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-public interface Path<T, V> extends Extractor.FromOptionalFunction<T, V> {
+public interface Path<T, V> extends Extractor.FromPartial<T, V> {
 
     static <T, V> Path<T, V> to(Function<T, Optional<V>> f, String name) {
         return new Named<T, V>() {

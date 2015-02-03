@@ -5,21 +5,29 @@ import com.codepoetics.octarine.functional.tuples.T2;
 import java.util.*;
 import java.util.function.Consumer;
 
-class MatchedSublistSpliterator<K extends Comparable<K>, L, R> implements Spliterator<T2<Set<L>, Set<R>>> {
+class MatchedSublistSpliterator<K, L, R> implements Spliterator<T2<Set<L>, Set<R>>> {
 
-    public static <K extends Comparable<K>, L, R> MatchedSublistSpliterator<K, L, R> over(Index<K, L> self, Index<K, R> other) {
+    public static <K, L, R> MatchedSublistSpliterator<K, L, R> over(
+            Index<K, L> self,
+            Index<K, R> other,
+            Comparator<? super K> comparator) {
        return new MatchedSublistSpliterator<K, L, R>(
-               self.entries().spliterator(),
-               other.entries().spliterator());
+               comparator,
+               self.spliterator(),
+               other.spliterator());
     }
 
+    private final Comparator<? super K> comparator;
     private final Spliterator<Map.Entry<K, Set<L>>> leftIter;
     private final Spliterator<Map.Entry<K, Set<R>>> rightIter;
     private boolean initialised = false;
     private Optional<Map.Entry<K, Set<L>>> lastLeft = Optional.empty();
     private Optional<Map.Entry<K, Set<R>>> lastRight = Optional.empty();
 
-    MatchedSublistSpliterator(Spliterator<Map.Entry<K, Set<L>>> leftIter, Spliterator<Map.Entry<K, Set<R>>> rightIter) {
+    MatchedSublistSpliterator(Comparator<? super K> comparator,
+                              Spliterator<Map.Entry<K, Set<L>>> leftIter,
+                              Spliterator<Map.Entry<K, Set<R>>> rightIter) {
+        this.comparator = comparator;
         this.leftIter = leftIter;
         this.rightIter = rightIter;
     }
@@ -39,7 +47,7 @@ class MatchedSublistSpliterator<K extends Comparable<K>, L, R> implements Splite
 
         if (lastLeft.isPresent() && lastRight.isPresent()) {
             lastLeft.ifPresent(left -> lastRight.ifPresent(right -> {
-                int cmp = left.getKey().compareTo(right.getKey());
+                int cmp = comparator.compare(left.getKey(), right.getKey());
 
                 if (cmp < 0) {
                     sendLeft(action, left);

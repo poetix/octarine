@@ -12,7 +12,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-public interface OptionalLens<T, V> extends LensLike<T, Optional<V>, OptionalFocus<T, V>>, Extractor.FromOptionalFunction<T, V> {
+public interface OptionalLens<T, V> extends Lens<T, Optional<V>>, Extractor.FromPartial<T, V> {
 
     static <T, V> OptionalLens<T, V> of(Function<T, Optional<V>> getter, BiFunction<T, Optional<V>, T> setter) {
         return new OptionalLens<T, V>() {
@@ -65,10 +65,6 @@ public interface OptionalLens<T, V> extends LensLike<T, Optional<V>, OptionalFoc
                 ts -> index < ts.size() ? Optional.ofNullable(ts.get(index)) : Optional.empty(),
                 (PVector<T> ts, Optional<T> t) -> t.isPresent() ? ts.with(index, t.get()) : ts.with(index, null)
         );
-    }
-
-    default OptionalFocus<T, V> into(T instance) {
-        return OptionalFocus.of(() -> get(instance), v -> set(instance, v));
     }
 
     default Optional<V> apply(T target) {

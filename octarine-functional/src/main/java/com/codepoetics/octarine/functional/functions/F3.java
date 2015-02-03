@@ -17,7 +17,7 @@ public interface F3<A, B, C, R> {
         return () -> apply(a, b, c);
     }
 
-    default <R2> F3<A, B, C, R2> andThen(Function<R, R2> f) {
+    default <R2> F3<A, B, C, R2> andThen(Function<? super R, ? extends R2> f) {
         return (a, b, c) -> f.apply(apply(a, b, c));
     }
 

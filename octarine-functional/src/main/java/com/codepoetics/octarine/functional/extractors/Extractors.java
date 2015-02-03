@@ -19,10 +19,10 @@ public class Extractors {
     public static <S, A, B, J> Extractor<S, J> join(
             Extractor<? super S, ? extends A> first,
             Extractor<? super S, ? extends B> second,
-            BiFunction<? super A, ? super B, ? extends J> joiner) {
+            BiFunction<? super A, ? super B, ? extends J> receiver) {
         return Extractor.from(
                 input -> first.test(input) && second.test(input),
-                input -> joiner.apply(first.extract(input), second.extract(input)));
+                input -> receiver.apply(first.extract(input), second.extract(input)));
     }
 
     public static <S, A, B, C, T> Extractor<S, T> join(
@@ -64,6 +64,6 @@ public class Extractors {
             Extractor<? super S, ? extends T> extractor) {
         return Extractor.from(
                 input -> predicate.test(input) && extractor.test(input),
-                input -> extractor.extract(input));
+                input -> extractor.extract(input)); // method reference won't compile
     }
 }

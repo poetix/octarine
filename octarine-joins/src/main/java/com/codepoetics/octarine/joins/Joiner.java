@@ -4,10 +4,9 @@ import com.codepoetics.octarine.functional.tuples.T2;
 
 import java.util.Collection;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
-public final class Joiner<L, R, K extends Comparable<K>> {
+public final class Joiner<L, R, K> {
 
     private final Index<K, L> leftIndex;
     private final JoinKey<R, K> primaryKey;
@@ -17,92 +16,69 @@ public final class Joiner<L, R, K extends Comparable<K>> {
         this.primaryKey = primaryKey;
     }
 
-    @SuppressWarnings("unchecked")
+    // Many to one
     public Stream<T2<L, R>> manyToOne(Collection<? extends R> rights) {
-        return merge(rights, leftIndex::manyToOne);
+        return manyToOne(rights.stream());
     }
 
-    @SuppressWarnings("unchecked")
-    public Stream<T2<L, R>> manyToOne(Stream<R> rights) {
-        return merge(rights, leftIndex::manyToOne);
-    }
-
-    @SuppressWarnings("unchecked")
     public Stream<T2<L, R>> manyToOne(Fetcher<K, R> fetcher) {
-        return fetchAndMerge(fetcher, leftIndex::manyToOne);
+        return manyToOne(fetcher.fetch(leftIndex.keys()));
     }
 
+    public Stream<T2<L, R>> manyToOne(Stream<? extends R> rights) {
+        return leftIndex.manyToOne(primaryKey.index(rights));
+    }
 
-    @SuppressWarnings("unchecked")
+    // Strict many to one
     public Stream<T2<L, R>> strictManyToOne(Collection<? extends R> rights) {
-        return merge(rights, leftIndex::strictManyToOne);
+        return strictManyToOne(rights.stream());
     }
 
-    @SuppressWarnings("unchecked")
-    public Stream<T2<L, R>> strictManyToOne(Stream<R> rights) {
-        return merge(rights, leftIndex::strictManyToOne);
-    }
-
-    @SuppressWarnings("unchecked")
     public Stream<T2<L, R>> strictManyToOne(Fetcher<K, R> fetcher) {
-        return fetchAndMerge(fetcher, leftIndex::strictManyToOne);
+        return strictManyToOne(fetcher.fetch(leftIndex.keys()));
     }
 
-    @SuppressWarnings("unchecked")
+    public Stream<T2<L, R>> strictManyToOne(Stream<? extends R> rights) {
+        return leftIndex.strictManyToOne(primaryKey.index(rights));
+    }
+
+    // One to many
     public Stream<T2<L, Set<R>>> oneToMany(Collection<? extends R> rights) {
-        return merge(rights, leftIndex::oneToMany);
+        return oneToMany(rights.stream());
     }
 
-    @SuppressWarnings("unchecked")
-    public Stream<T2<L, Set<R>>> oneToMany(Stream<R> rights) {
-        return merge(rights, leftIndex::oneToMany);
-    }
-
-    @SuppressWarnings("unchecked")
     public Stream<T2<L, Set<R>>> oneToMany(Fetcher<K, R> fetcher) {
-        return fetchAndMerge(fetcher, leftIndex::oneToMany);
+        return oneToMany(fetcher.fetch(leftIndex.keys()));
     }
 
-    @SuppressWarnings("unchecked")
+    public Stream<T2<L, Set<R>>> oneToMany(Stream<? extends R> rights) {
+        return leftIndex.oneToMany(primaryKey.index(rights));
+    }
+
+    // Strict one to many
     public Stream<T2<L, Set<R>>> strictOneToMany(Collection<? extends R> rights) {
-        return merge(rights, leftIndex::strictOneToMany);
+        return strictOneToMany(rights.stream());
     }
 
-    @SuppressWarnings("unchecked")
-    public Stream<T2<L, Set<R>>> strictOneToMany(Stream<R> rights) {
-        return merge(rights, leftIndex::strictOneToMany);
-    }
-
-    @SuppressWarnings("unchecked")
     public Stream<T2<L, Set<R>>> strictOneToMany(Fetcher<K, R> fetcher) {
-        return fetchAndMerge(fetcher, leftIndex::strictOneToMany);
+        return strictOneToMany(fetcher.fetch(leftIndex.keys()));
     }
 
-    @SuppressWarnings("unchecked")
+    public Stream<T2<L, Set<R>>> strictOneToMany(Stream<? extends R> rights) {
+        return leftIndex.strictOneToMany(primaryKey.index(rights));
+    }
+
+    // Strict one to one
     public Stream<T2<L, R>> strictOneToOne(Collection<? extends R> rights) {
-        return merge(rights, leftIndex::strictOneToOne);
+        return strictOneToOne(rights.stream());
     }
 
-    @SuppressWarnings("unchecked")
-    public Stream<T2<L, R>> strictOneToOne(Stream<R> rights) {
-        return merge(rights, leftIndex::strictOneToOne);
-    }
-
-    @SuppressWarnings("unchecked")
     public Stream<T2<L, R>> strictOneToOne(Fetcher<K, R> fetcher) {
-        return fetchAndMerge(fetcher, leftIndex::strictOneToOne);
+        return strictOneToOne(fetcher.fetch(leftIndex.keys()));
     }
 
-    private <RS> Stream<T2<L, RS>> merge(Stream<? extends R> rights, Function<Index<K, R>, Stream<T2<L, RS>>> merger) {
-        return merger.apply(primaryKey.index(rights));
+    public Stream<T2<L, R>> strictOneToOne(Stream<? extends R> rights) {
+        return leftIndex.strictOneToOne(primaryKey.index(rights));
     }
 
-    private <RS> Stream<T2<L, RS>> merge(Collection<? extends R> rights, Function<Index<K, R>, Stream<T2<L, RS>>> merger) {
-        return merge(rights.stream(), merger);
-    }
-
-    private <RS> Stream<T2<L, RS>> fetchAndMerge(Fetcher<K, R> fetcher, Function<Index<K, R>, Stream<T2<L, RS>>> merger) {
-        Collection<? extends R> rights = fetcher.fetch(leftIndex.keys());
-        return merge(rights, merger);
-    }
 }

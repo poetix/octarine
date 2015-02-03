@@ -1,10 +1,12 @@
 package com.codepoetics.octarine.functional.extractors;
 
+import com.codepoetics.octarine.functional.functions.Partial;
+
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-public interface Extractor<S, T> extends Predicate<S>, Function<S, Optional<T>> {
+public interface Extractor<S, T> extends Predicate<S>, Partial<S, T> {
 
     static <S, T> Extractor<S, T> from(Predicate<? super S> predicate, Function<? super S, ? extends T> f) {
         return new FromPredicate<S, T>() {
@@ -15,19 +17,19 @@ public interface Extractor<S, T> extends Predicate<S>, Function<S, Optional<T>> 
 
             @Override
             public T extract(S input) {
-                return f.apply(input);
+                if (test(input)) {
+                    return f.apply(input);
+                }
+                throw new IllegalArgumentException(String.format("%s does not match predicate", input));
             }
         };
     }
 
-    static <S, T> FromOptionalFunction<S, T> from(Function<? super S, Optional<T>> f) {
+    static <S, T> FromPartial<S, T> from(Function<? super S, Optional<T>> f) {
         return f::apply;
     }
 
     T extract(S input);
-
-    <T2> Extractor<S, T2> mappedWith(Function<? super T, ? extends T2> f);
-    <T2> Extractor<S, T2> flatMappedWith(Function<? super T, Optional<T2>> f);
 
     default Extractor<S, T> is(T expected) {
         return is(Predicate.isEqual(expected));
@@ -39,6 +41,14 @@ public interface Extractor<S, T> extends Predicate<S>, Function<S, Optional<T>> 
                 this);
     }
 
+    default <T2> Extractor<S, T2> mappedWith(Function<T, T2> next) {
+        return from(bind(next));
+    }
+
+    default <T2> Extractor<S, T2> flatMappedWith(Function<T, Optional<T2>> next) {
+        return from(bind(Partial.of(next)));
+    }
+
     interface FromPredicate<S, T> extends Extractor<S, T> {
         @Override
         default Optional<T> apply(S input) {
@@ -47,19 +57,9 @@ public interface Extractor<S, T> extends Predicate<S>, Function<S, Optional<T>> 
             }
             return Optional.of(extract(input));
         }
-
-        @Override
-        default <T2> Extractor<S, T2> mappedWith(Function<? super T, ? extends T2> next) {
-            return from(input -> apply(input).map(next));
-        }
-
-        @Override
-        default <T2> Extractor<S, T2> flatMappedWith(Function<? super T, Optional<T2>> next) {
-            return from(input -> apply(input).flatMap(next));
-        }
     }
 
-    interface FromOptionalFunction<S, T> extends Extractor<S, T> {
+    interface FromPartial<S, T> extends Extractor<S, T> {
         @Override
         default boolean test(S input) {
             return apply(input).isPresent();
@@ -67,18 +67,11 @@ public interface Extractor<S, T> extends Predicate<S>, Function<S, Optional<T>> 
 
         @Override
         default T extract(S input) {
-            return apply(input).get();
+            return apply(input).orElseThrow(() ->
+                    new IllegalArgumentException(
+                            String.format("%s does not have a value for this extractor", input)));
         }
 
-        @Override
-        default <T2> Extractor<S, T2> mappedWith(Function<? super T, ? extends T2> next) {
-            return from(s -> apply(s).map(next));
-        }
-
-        @Override
-        default <T2> Extractor<S, T2> flatMappedWith(Function<? super T, Optional<T2>> next) {
-            return from(s -> apply(s).flatMap(next));
-        }
     }
 
 }

@@ -42,12 +42,7 @@ public interface RecordRowMapper extends RowMapper<Record> {
     }
 
     default <T> RowMapper<Valid<T>> validAgainst(Schema<T> schema) {
-        return new RowMapper<Valid<T>>() {
-            @Override
-            public Valid<T> map(ResultSet resultSet) {
-                return schema.extract(RecordRowMapper.this.map(resultSet));
-            }
-        };
+        return resultSet -> schema.extract(RecordRowMapper.this.map(resultSet));
     }
 
     interface ColumnMappings {

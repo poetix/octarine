@@ -21,7 +21,7 @@ public interface F5<A, B, C, D, E, R> {
         return e -> apply(a, b, c, d, e);
     }
 
-    default <R2> F5<A, B, C, D, E, R2> andThen(Function<R, R2> f) {
+    default <R2> F5<A, B, C, D, E, R2> andThen(Function<? super R, ? extends R2> f) {
         return (a, b, c, d, e) -> f.apply(apply(a, b, c, d, e));
     }
 }

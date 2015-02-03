@@ -1,7 +1,8 @@
 package com.codepoetics.octarine.joins;
 
 import java.util.Collection;
+import java.util.stream.Stream;
 
 public interface Fetcher<K, R> {
-    Collection<? extends R> fetch(Collection<? extends K> keys);
+    Stream<? extends R> fetch(Collection<? extends K> keys);
 }

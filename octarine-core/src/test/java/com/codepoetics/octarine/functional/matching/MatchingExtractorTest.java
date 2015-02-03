@@ -15,7 +15,7 @@ import static com.codepoetics.octarine.Octarine.$$;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class MatchingTest {
+public class MatchingExtractorTest {
 
     private static final Key<String> title = $("title");
     private static final Key<String> director = $("director");
@@ -30,14 +30,14 @@ public class MatchingTest {
             )
     );
 
-    private static final Matching<Record, String> matching = Matching.build(m ->
-            m.matching(Person.schema, v -> "A valid person: " + v)
-                    .matching(Address.schema, a -> "A valid address: " + a)
-                    .when(rating.is(5))
-                    .matching(title, director, (t, d) -> String.format("The 5-star movie '%s', directed by %s", t, d))
-                    .unless(rating.is(0))
-                    .matching(title, director, (t, d) -> String.format("The movie '%s', directed by %s", t, d))
-                    .matching(title, director, (t, d) -> String.format("The utter stinker '%s', directed by %s", t, d)));
+    private static final MatchingExtractor<Record, String> matching = MatchingExtractor.build(m -> m
+            .matching(Person.schema, v -> "A valid person: " + v)
+            .matching(Address.schema, a -> "A valid address: " + a)
+            .when(rating.is(5))
+            .matching(title, director, (t, d) -> String.format("The 5-star movie '%s', directed by %s", t, d))
+            .unless(rating.is(0))
+            .matching(title, director, (t, d) -> String.format("The movie '%s', directed by %s", t, d))
+            .matching(title, director, (t, d) -> String.format("The utter stinker '%s', directed by %s", t, d)));
 
     @Test
     public void
@@ -68,11 +68,11 @@ public class MatchingTest {
     @Test
     public void
     dispatches_on_paths() {
-        Matching<Record, String> matching = Matching.build(m ->
+        MatchingExtractor<Record, String> matchingExtractor = MatchingExtractor.build(m ->
                 m.matching(Person.address.join(Address.addressLines).join(Path.toIndex(1)),
                         s -> "Lives in " + s));
 
-        assertThat(matching.extract(person), CoreMatchers.equalTo("Lives in Sutton"));
+        assertThat(matchingExtractor.extract(person), CoreMatchers.equalTo("Lives in Sutton"));
     }
 
 

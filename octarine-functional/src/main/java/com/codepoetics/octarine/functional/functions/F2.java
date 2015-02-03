@@ -3,6 +3,11 @@ package com.codepoetics.octarine.functional.functions;
 import java.util.function.BiFunction;
 
 public interface F2<A, B, R> extends BiFunction<A, B, R> {
+
+    static <A, B, R> F2<A, B, R> of(BiFunction<A, B, R> f) {
+        return f::apply;
+    }
+
     default F1<B, R> curry(A a) {
         return b -> apply(a, b);
     }

@@ -2,36 +2,35 @@ package com.codepoetics.octarine.joins;
 
 import com.codepoetics.octarine.functional.tuples.T2;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.SortedMap;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public final class Index<K extends Comparable<K>, L> {
+public final class Index<K, L> {
+    private final Comparator<? super K> comparator;
     private final SortedMap<K, Set<L>> indexed;
 
-    private Index(SortedMap<K, Set<L>> indexed) {
+    private Index(Comparator<? super K> comparator, SortedMap<K, Set<L>> indexed) {
+        this.comparator = comparator;
         this.indexed = indexed;
     }
 
     public static <K extends Comparable<K>, L> Index<K, L> on(Stream<? extends L> stream, Function<? super L, ? extends K> key) {
-        return new Index<K, L>(stream.collect(IndexCollector.<K, L>on(key)));
+        return on(stream, key, Comparator.naturalOrder());
     }
 
-    public Set<Map.Entry<K, Set<L>>> entries() {
-        return indexed.entrySet();
+    public static <K, L> Index<K, L> on(Stream<? extends L> stream, Function<? super L, ? extends K> key, Comparator<? super K> comparator) {
+        return new Index<K, L>(comparator, stream.collect(IndexCollector.on(key, comparator)));
+    }
+
+    public Spliterator<Map.Entry<K, Set<L>>> spliterator() {
+        return indexed.entrySet().spliterator();
     }
 
     public Set<K> keys() {
         return indexed.keySet();
-    }
-
-    public Stream<L> values() {
-        return indexed.values().stream().flatMap(s -> s.stream());
     }
 
     public <R> Stream<T2<L, Set<R>>> oneToMany(Index<K, R> other) {
@@ -73,8 +72,7 @@ public final class Index<K extends Comparable<K>, L> {
 
     private <R> BiFunction<Set<L>, Set<R>, Stream<T2<L, R>>> manyToOneMerger() {
         return (lefts, rights) ->
-                lefts.stream().flatMap(l ->
-                        rights.stream().map(r -> T2.of(l, r)));
+                lefts.stream().flatMap(l -> rights.stream().map(r -> T2.of(l, r)));
     }
 
     private <R> BiFunction<Set<L>, Set<R>, Stream<T2<L, R>>> strictManyToOneMerger() {
@@ -124,11 +122,7 @@ public final class Index<K extends Comparable<K>, L> {
                 return lefts.stream().map(l -> T2.of(l, Optional.<R>empty()));
             }
 
-            return lefts.stream().flatMap(l ->
-                            rights.stream().map(r ->
-                                            T2.of(l, Optional.<R>of(r))
-                            )
-            );
+            return lefts.stream().flatMap(l -> rights.stream().map(r -> T2.of(l, Optional.<R>of(r))));
         };
     }
 
@@ -143,11 +137,7 @@ public final class Index<K extends Comparable<K>, L> {
                 return rights.stream().map(r -> T2.of(Optional.<L>empty(), r));
             }
 
-            return rights.stream().flatMap(r ->
-                            lefts.stream().map(l ->
-                                            T2.of(Optional.of(l), r)
-                            )
-            );
+            return rights.stream().flatMap(r -> lefts.stream().map(l -> T2.of(Optional.of(l), r)));
         };
     }
 
@@ -156,13 +146,8 @@ public final class Index<K extends Comparable<K>, L> {
     }
 
     private <R> BiFunction<Set<L>, Set<R>, Stream<T2<L, R>>> innerJoinMerger() {
-        return (lefts, rights) -> {
-            return lefts.stream().flatMap(l ->
-                            rights.stream().map(r ->
-                                            T2.of(l, r)
-                            )
-            );
-        };
+        return (lefts, rights) -> lefts.stream().flatMap(l ->
+            rights.stream().map(r -> T2.of(l, r)));
     }
 
     public <R> Stream<T2<Optional<L>, Optional<R>>> outerJoin(Index<K, R> other) {
@@ -189,7 +174,7 @@ public final class Index<K extends Comparable<K>, L> {
     }
 
     private <R> Stream<T2<Set<L>, Set<R>>> matchedSublists(Index<K, R> other) {
-        return StreamSupport.stream(MatchedSublistSpliterator.over(this, other), false);
+        return StreamSupport.stream(MatchedSublistSpliterator.over(this, other, comparator), false);
     }
 
     @Override
