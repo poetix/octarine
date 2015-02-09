@@ -6,4 +6,11 @@ public interface C0 extends Runnable {
     }
 
     void accept();
+
+    default C0 andThen(C0 next) {
+        return () -> {
+            accept();
+            next.accept();;
+        };
+    }
 }
