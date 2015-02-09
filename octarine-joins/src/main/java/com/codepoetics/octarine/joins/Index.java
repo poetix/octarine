@@ -22,7 +22,7 @@ public final class Index<K, L> {
     }
 
     public static <K, L> Index<K, L> on(Stream<? extends L> stream, Function<? super L, ? extends K> key, Comparator<? super K> comparator) {
-        return new Index<K, L>(comparator, stream.collect(IndexCollector.on(key, comparator)));
+        return new Index<K, L>(comparator, stream.collect(IndexCollector.<K, L>on(key, comparator)));
     }
 
     public Spliterator<Map.Entry<K, Set<L>>> entrySpliterator() {
