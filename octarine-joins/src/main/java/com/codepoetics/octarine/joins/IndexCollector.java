@@ -14,15 +14,18 @@ final class IndexCollector {
         return Collector.of(
                 () -> new TreeMap<>(comparator),
                 (map, element) -> map.computeIfAbsent(key.apply(element), k -> new HashSet<>()).add(element),
-                (m1, m2) -> {
-                    m2.entrySet().forEach(e ->
-                                    m1.merge(e.getKey(), e.getValue(), (s1, s2) -> {
-                                        s1.addAll(s2);
-                                        return s1;
-                                    })
-                    );
-                    return m1;
-                }
+                IndexCollector::destructiveMergeMaps
         );
+    }
+
+    static <K, S> SortedMap<K, Set<S>> destructiveMergeMaps(SortedMap<K, Set<S>> left, SortedMap<K, Set<S>> right) {
+        right.entrySet().forEach(e ->
+            right.merge(e.getKey(), e.getValue(), IndexCollector::destructiveMergeSets));
+        return left;
+    }
+
+    static <S> Set<S> destructiveMergeSets(Set<S> left, Set<S> right) {
+        left.addAll(right);
+        return left;
     }
 }

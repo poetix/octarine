@@ -1,6 +1,5 @@
 package com.codepoetics.octarine.joins;
 
-import com.codepoetics.octarine.Octarine;
 import com.codepoetics.octarine.records.Key;
 import com.codepoetics.octarine.records.ListKey;
 import com.codepoetics.octarine.records.Record;
@@ -11,8 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.codepoetics.octarine.Octarine.$;
-import static com.codepoetics.octarine.Octarine.$$;
+import static com.codepoetics.octarine.Octarine.*;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -24,6 +22,7 @@ public class RecordJoinerTest {
     public static final Key<String> bookName = $("bookName");
     public static final Key<String> publisherName = $("publisherName");
     public static final Key<String> publisherId = $("publisherId");
+
     public static final Record billsAndMoon = $$(
             publisherName.of("Bills And Moon"),
             id.of("BM")
@@ -72,7 +71,8 @@ public class RecordJoinerTest {
             butIsThisNot,
             amorousEncounters
     );
-    final ListKey<Record> authored = Octarine.$L("authored");
+
+    final ListKey<Record> authored = $L("authored");
 
     @Test
     public void

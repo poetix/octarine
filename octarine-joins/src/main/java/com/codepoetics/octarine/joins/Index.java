@@ -25,7 +25,7 @@ public final class Index<K, L> {
         return new Index<K, L>(comparator, stream.collect(IndexCollector.on(key, comparator)));
     }
 
-    public Spliterator<Map.Entry<K, Set<L>>> spliterator() {
+    public Spliterator<Map.Entry<K, Set<L>>> entrySpliterator() {
         return indexed.entrySet().spliterator();
     }
 
@@ -63,16 +63,11 @@ public final class Index<K, L> {
     }
 
     public <R> Stream<T2<L, R>> manyToOne(Index<K, R> other) {
-        return matchAndMerge(other, manyToOneMerger());
+        return innerJoin(other);
     }
 
     public <R> Stream<T2<L, R>> strictManyToOne(Index<K, R> other) {
         return matchAndMerge(other, strictManyToOneMerger());
-    }
-
-    private <R> BiFunction<Set<L>, Set<R>, Stream<T2<L, R>>> manyToOneMerger() {
-        return (lefts, rights) ->
-                lefts.stream().flatMap(l -> rights.stream().map(r -> T2.of(l, r)));
     }
 
     private <R> BiFunction<Set<L>, Set<R>, Stream<T2<L, R>>> strictManyToOneMerger() {
@@ -174,7 +169,12 @@ public final class Index<K, L> {
     }
 
     private <R> Stream<T2<Set<L>, Set<R>>> matchedSublists(Index<K, R> other) {
-        return StreamSupport.stream(MatchedSublistSpliterator.over(this, other, comparator), false);
+        return StreamSupport.stream(KeyMatchingSpliterator.over(
+                comparator,
+                entrySpliterator(),
+                other.entrySpliterator(),
+                Collections.emptySet(),
+                Collections.emptySet()), false);
     }
 
     @Override
