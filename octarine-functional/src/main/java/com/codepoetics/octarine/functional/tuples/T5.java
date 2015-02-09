@@ -113,7 +113,7 @@ public final class T5<A, B, C, D, E> {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || !(o instanceof T5)) {
+        if (!(o instanceof T5)) {
             return false;
         }
         T5 other = (T5) o;

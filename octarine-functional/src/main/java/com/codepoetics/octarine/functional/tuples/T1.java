@@ -52,7 +52,7 @@ public final class T1<A> implements Supplier<A> {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || !(o instanceof T1)) {
+        if (!(o instanceof T1)) {
             return false;
         }
         T1 other = (T1) o;

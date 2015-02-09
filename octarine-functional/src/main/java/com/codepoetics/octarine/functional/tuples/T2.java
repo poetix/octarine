@@ -65,9 +65,13 @@ public final class T2<A, B> {
         return Tuple.of(a, Tuple.of(b));
     }
 
+    public T2<B, A> swap() {
+        return T2.of(b, a);
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (o == null || !(o instanceof T2)) {
+        if (!(o instanceof T2)) {
             return false;
         }
         T2 other = (T2) o;

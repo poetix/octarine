@@ -100,7 +100,7 @@ public final class T4<A, B, C, D> {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || !(o instanceof T4)) {
+        if (!(o instanceof T4)) {
             return false;
         }
         T4 other = (T4) o;

@@ -83,7 +83,7 @@ public final class T3<A, B, C> {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || !(o instanceof T3)) {
+        if (!(o instanceof T3)) {
             return false;
         }
         T3 other = (T3) o;
