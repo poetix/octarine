@@ -21,6 +21,6 @@ public class PathTest {
                         .join(Path.toIndex(2))
                         .join(Path.<String, String>to(s -> Optional.of(s.substring(2, 1)), "thirdChar"));
 
-        assertThat(path.describe(), equalTo("['a'][3]['class java.lang.String'][2].thirdChar"));
+        assertThat(path.describe(), equalTo("[a][3][class java.lang.String][2].thirdChar"));
     }
 }

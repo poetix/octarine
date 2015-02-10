@@ -4,7 +4,7 @@ import java.util.function.BiFunction;
 
 public interface F2<A, B, R> extends BiFunction<A, B, R> {
 
-    static <A, B, R> F2<A, B, R> of(BiFunction<A, B, R> f) {
+    static <A, B, R> F2<A, B, R> of(BiFunction<? super A, ? super B, ? extends R> f) {
         return f::apply;
     }
 

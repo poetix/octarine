@@ -4,7 +4,7 @@ import java.util.function.Supplier;
 
 public final class T0 {
 
-    public static final T0 instance = new T0();
+    public static final T0 INSTANCE = new T0();
 
     private T0() {
     }
@@ -13,7 +13,7 @@ public final class T0 {
         return T1.of(a);
     }
 
-    public <R> R sendTo(Supplier<R> supplier) {
+    public <R> R pack(Supplier<? extends R> supplier) {
         return supplier.get();
     }
 

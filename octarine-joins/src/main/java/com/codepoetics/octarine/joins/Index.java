@@ -42,7 +42,7 @@ public final class Index<K, L> {
     }
 
     private <R, T> Stream<T> matchAndMerge(Index<K, R> other, BiFunction<Set<L>, Set<R>, Stream<T>> merger) {
-        return matchedSublists(other).flatMap(t -> t.sendTo(merger));
+        return matchedSublists(other).flatMap(t -> t.pack(merger));
     }
 
     private <R> BiFunction<Set<L>, Set<R>, Stream<T2<L, Set<R>>>> oneToManyMerger() {

@@ -5,7 +5,7 @@ import com.codepoetics.octarine.functional.paths.Path;
 
 import java.util.Optional;
 
-public interface Key<T> extends OptionalLens<Record, T>, Path.Named<Record, T> {
+public interface Key<T> extends OptionalLens<Record, T>, Path<Record, T> {
 
     static <T> Key<T> named(String name, Value...metadata) {
         return named(name, Record.of(metadata));

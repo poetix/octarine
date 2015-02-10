@@ -1,9 +1,9 @@
 package com.codepoetics.octarine.functional.tuples;
 
 import com.codepoetics.octarine.functional.functions.F5;
-import com.codepoetics.octarine.functional.lenses.Lens;
 
 import java.util.Objects;
+import java.util.function.Function;
 
 public final class T5<A, B, C, D, E> {
     private final A a;
@@ -20,36 +20,50 @@ public final class T5<A, B, C, D, E> {
         this.e = e;
     }
 
-    public static <A, B, C, D, E> Lens<T5<A, B, C, D, E>, A> first() {
-        return Lens.of(
+
+    public static <S, A, B, C, D, E> Function<S, T5<A, B, C, D, E>> unpacker(Function<? super S, ? extends A> first,
+                                                                             Function<? super S, ? extends B> second,
+                                                                             Function<? super S, ? extends C> third,
+                                                                             Function<? super S, ? extends D> fourth,
+                                                                             Function<? super S, ? extends E> fifth) {
+        return s -> T5.of(first.apply(s), second.apply(s), third.apply(s), fourth.apply(s), fifth.apply(s));
+    }
+
+    public static <A, B, C, D, E> TupleLens<T5<A, B, C, D, E>, A> first() {
+        return TupleLens.of(
+                0,
                 T5::getFirst,
                 T5::withFirst
         );
     }
 
-    public static <A, B, C, D, E> Lens<T5<A, B, C, D, E>, B> second() {
-        return Lens.of(
+    public static <A, B, C, D, E> TupleLens<T5<A, B, C, D, E>, B> second() {
+        return TupleLens.of(
+                1,
                 T5::getSecond,
                 T5::withSecond
         );
     }
 
-    public static <A, B, C, D, E> Lens<T5<A, B, C, D, E>, C> third() {
-        return Lens.of(
+    public static <A, B, C, D, E> TupleLens<T5<A, B, C, D, E>, C> third() {
+        return TupleLens.of(
+                2,
                 T5::getThird,
                 T5::withThird
         );
     }
 
-    public static <A, B, C, D, E> Lens<T5<A, B, C, D, E>, D> fourth() {
-        return Lens.of(
+    public static <A, B, C, D, E> TupleLens<T5<A, B, C, D, E>, D> fourth() {
+        return TupleLens.of(
+                3,
                 T5::getFourth,
                 T5::withFourth
         );
     }
 
-    public static <A, B, C, D, E> Lens<T5<A, B, C, D, E>, E> fifth() {
-        return Lens.of(
+    public static <A, B, C, D, E> TupleLens<T5<A, B, C, D, E>, E> fifth() {
+        return TupleLens.of(
+                4,
                 T5::getFifth,
                 T5::withFifth
         );
@@ -99,7 +113,7 @@ public final class T5<A, B, C, D, E> {
         return T5.of(a, b, c, d, e2);
     }
 
-    public <R> R sendTo(F5<A, B, C, D, E, R> f) {
+    public <R> R pack(F5<? super A, ? super B, ? super C, ? super D, ? super E, ? extends R> f) {
         return f.apply(a, b, c, d, e);
     }
 

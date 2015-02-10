@@ -1,9 +1,9 @@
 package com.codepoetics.octarine.functional.tuples;
 
 import com.codepoetics.octarine.functional.functions.F3;
-import com.codepoetics.octarine.functional.lenses.Lens;
 
 import java.util.Objects;
+import java.util.function.Function;
 
 public final class T3<A, B, C> {
     private final A a;
@@ -16,22 +16,31 @@ public final class T3<A, B, C> {
         this.c = c;
     }
 
-    public static <A, B, C> Lens<T3<A, B, C>, A> first() {
-        return Lens.of(
+    public static <S, A, B, C> Function<S, T3<A, B, C>> unpacker(Function<? super S, ? extends A> first,
+                                                                 Function<? super S, ? extends B> second,
+                                                                 Function<? super S, ? extends C> third) {
+        return s -> T3.of(first.apply(s), second.apply(s), third.apply(s));
+    }
+
+    public static <A, B, C> TupleLens<T3<A, B, C>, A> first() {
+        return TupleLens.of(
+                0,
                 T3::getFirst,
                 T3::withFirst
         );
     }
 
-    public static <A, B, C> Lens<T3<A, B, C>, B> second() {
-        return Lens.of(
+    public static <A, B, C> TupleLens<T3<A, B, C>, B> second() {
+        return TupleLens.of(
+                1,
                 T3::getSecond,
                 T3::withSecond
         );
     }
 
-    public static <A, B, C> Lens<T3<A, B, C>, C> third() {
-        return Lens.of(
+    public static <A, B, C> TupleLens<T3<A, B, C>, C> third() {
+        return TupleLens.of(
+                2,
                 T3::getThird,
                 T3::withThird
         );
@@ -65,7 +74,7 @@ public final class T3<A, B, C> {
         return T3.of(a, b, c2);
     }
 
-    public <R> R sendTo(F3<A, B, C, R> f) {
+    public <R> R pack(F3<? super A, ? super B, ? super C, ? extends R> f) {
         return f.apply(a, b, c);
     }
 

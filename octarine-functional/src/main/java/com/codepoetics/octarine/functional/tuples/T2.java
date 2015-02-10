@@ -1,9 +1,8 @@
 package com.codepoetics.octarine.functional.tuples;
 
-import com.codepoetics.octarine.functional.lenses.Lens;
-
 import java.util.Objects;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public final class T2<A, B> {
 
@@ -15,15 +14,22 @@ public final class T2<A, B> {
         this.b = b;
     }
 
-    public static <A, B> Lens<T2<A, B>, A> first() {
-        return Lens.of(
+    public static <S, A, B> Function<S, T2<A, B>> unpacker(Function<? super S, ? extends A> first,
+                                                           Function<? super S, ? extends B> second) {
+        return s -> T2.of(first.apply(s), second.apply(s));
+    }
+
+    public static <A, B> TupleLens<T2<A, B>, A> first() {
+        return TupleLens.of(
+                0,
                 T2::getFirst,
                 T2::withFirst
         );
     }
 
-    public static <A, B> Lens<T2<A, B>, B> second() {
-        return Lens.of(
+    public static <A, B> TupleLens<T2<A, B>, B> second() {
+        return TupleLens.of(
+                1,
                 T2::getSecond,
                 T2::withSecond
         );
@@ -49,7 +55,7 @@ public final class T2<A, B> {
         return T2.of(a, b2);
     }
 
-    public <R> R sendTo(BiFunction<A, B, R> f) {
+    public <R> R pack(BiFunction<? super A, ? super B, ? extends R> f) {
         return f.apply(a, b);
     }
 

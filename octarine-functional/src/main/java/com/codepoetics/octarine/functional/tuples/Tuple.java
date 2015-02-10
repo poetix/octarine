@@ -5,7 +5,7 @@ public final class Tuple {
     }
 
     public static T0 empty() {
-        return T0.instance;
+        return T0.INSTANCE;
     }
 
     public static <A> T1<A> of(A a) {

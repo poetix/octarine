@@ -1,9 +1,9 @@
 package com.codepoetics.octarine.functional.tuples;
 
 import com.codepoetics.octarine.functional.functions.F4;
-import com.codepoetics.octarine.functional.lenses.Lens;
 
 import java.util.Objects;
+import java.util.function.Function;
 
 public final class T4<A, B, C, D> {
     private final A a;
@@ -18,29 +18,40 @@ public final class T4<A, B, C, D> {
         this.d = d;
     }
 
-    public static <A, B, C, D> Lens<T4<A, B, C, D>, A> first() {
-        return Lens.of(
+    public static <S, A, B, C, D> Function<S, T4<A, B, C, D>> reader(Function<? super S, ? extends A> first,
+                                                               Function<? super S, ? extends B> second,
+                                                               Function<? super S, ? extends C> third,
+                                                               Function<? super S, ? extends D> fourth) {
+        return s -> T4.of(first.apply(s), second.apply(s), third.apply(s), fourth.apply(s));
+    }
+
+    public static <A, B, C, D> TupleLens<T4<A, B, C, D>, A> first() {
+        return TupleLens.of(
+                0,
                 T4::getFirst,
                 T4::withFirst
         );
     }
 
-    public static <A, B, C, D> Lens<T4<A, B, C, D>, B> second() {
-        return Lens.of(
+    public static <A, B, C, D> TupleLens<T4<A, B, C, D>, B> second() {
+        return TupleLens.of(
+                1,
                 T4::getSecond,
                 T4::withSecond
         );
     }
 
-    public static <A, B, C, D> Lens<T4<A, B, C, D>, C> third() {
-        return Lens.of(
+    public static <A, B, C, D> TupleLens<T4<A, B, C, D>, C> third() {
+        return TupleLens.of(
+                2,
                 T4::getThird,
                 T4::withThird
         );
     }
 
-    public static <A, B, C, D> Lens<T4<A, B, C, D>, D> fourth() {
-        return Lens.of(
+    public static <A, B, C, D> TupleLens<T4<A, B, C, D>, D> fourth() {
+        return TupleLens.of(
+                3,
                 T4::getFourth,
                 T4::withFourth
         );
@@ -82,7 +93,7 @@ public final class T4<A, B, C, D> {
         return T4.of(a, b, c, d2);
     }
 
-    public <R> R sendTo(F4<A, B, C, D, R> f) {
+    public <R> R pack(F4<? super A, ? super B, ? super C, ? super D, ? extends R> f) {
         return f.apply(a, b, c, d);
     }
 

@@ -85,10 +85,10 @@ public final class RecordJoiner<K> {
     }
 
     private Function<T2<Record, Record>, Record> recordIntoRecord() {
-        return t -> t.sendTo(Record::with);
+        return t -> t.pack(Record::with);
     }
 
     private Function<T2<Record, Set<Record>>, Record> recordsIntoRecord(ListKey<Record> key) {
-        return t -> t.sendTo((f, s) -> f.with(key.of(s)));
+        return t -> t.pack((f, s) -> f.with(key.of(s)));
     }
 }

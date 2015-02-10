@@ -32,6 +32,15 @@ abstract class BaseKey<T> implements Key<T> {
     }
 
     @Override
+    public void describe(StringBuilder sb) {
+        if (sb.length() > 0) {
+            sb.append(".");
+        }
+
+        sb.append(name);
+    }
+
+    @Override
     public String toString() {
         return String.format("$%s %s", name, metadata);
     }

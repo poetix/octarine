@@ -1,7 +1,5 @@
 package com.codepoetics.octarine.functional.tuples;
 
-import com.codepoetics.octarine.functional.lenses.Lens;
-
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -14,8 +12,13 @@ public final class T1<A> implements Supplier<A> {
         this.a = a;
     }
 
-    public static <A> Lens<T1<A>, A> first() {
-        return Lens.of(
+    public static <S, A> Function<S, T1<A>> unpacker(Function<? super S, ? extends A> first) {
+        return s -> T1.of(first.apply(s));
+    }
+
+    public static <A> TupleLens<T1<A>, A> first() {
+        return TupleLens.of(
+                0,
                 T1::getFirst,
                 T1::withFirst
         );
@@ -25,7 +28,7 @@ public final class T1<A> implements Supplier<A> {
         return new T1<>(a);
     }
 
-    public <R> R sendTo(Function<A, R> f) {
+    public <R> R pack(Function<? super A, ? extends R> f) {
         return f.apply(a);
     }
 
@@ -43,11 +46,11 @@ public final class T1<A> implements Supplier<A> {
     }
 
     public T2<A, T0> pop() {
-        return Tuple.of(a, T0.instance);
+        return Tuple.of(a, T0.INSTANCE);
     }
 
     public T2<A, T0> shift() {
-        return Tuple.of(a, T0.instance);
+        return Tuple.of(a, T0.INSTANCE);
     }
 
     @Override
