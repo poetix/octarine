@@ -43,7 +43,7 @@ public interface Key<T> extends OptionalLens<Record, T>, Path<Record, T> {
 
     Value of(T value);
 
-    default <S> Function<S, Value> from(Function<? super S, ? extends T> reader) {
+    default <S> Function<S, Value> reading(Function<? super S, ? extends T> reader) {
         return s -> of(reader.apply(s));
     }
 

@@ -63,9 +63,9 @@ public class RecordTest {
         Key<Character> thirdChar = $("thirdChar");
 
         Function<String, Record> reader = Record.reader(
-                firstChar.from(F2.of(String::charAt, 0)),
-                secondChar.from(F2.of(String::charAt, 1)),
-                thirdChar.from(F2.of(String::charAt, 2)));
+                firstChar.reading(F2.of(String::charAt, 0)),
+                secondChar.reading(F2.of(String::charAt, 1)),
+                thirdChar.reading(F2.of(String::charAt, 2)));
 
         assertThat(reader.apply("abc"), equalTo($$(firstChar.of('a'), secondChar.of('b'), thirdChar.of('c'))));
     }

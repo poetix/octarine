@@ -20,6 +20,22 @@ public interface F4<A, B, C, D, R> {
         return a -> f.apply(a, b, c, d);
     }
 
+    static <A, B, C, D, R> F4<A, B, C, D, R> unsafe(Unsafe<A, B, C, D, R> f) {
+        return f;
+    }
+
+    static <A, B, C, D, R> F3<A, C, D, R> unsafe(Unsafe<A, B, C, D, R> f, B b) {
+        return (a, c, d) -> f.apply(a, b, c, d);
+    }
+
+    static <A, B, C, D, R> F2<A, D, R> unsafe(Unsafe<A, B, C, D, R> f, B b, C c) {
+        return (a, d) -> f.apply(a, b, c, d);
+    }
+
+    static <A, B, C, D, R> F1<A, R> unsafe(Unsafe<A, B, C, D, R> f, B b, C c, D d) {
+        return a -> f.apply(a, b, c, d);
+    }
+
     R apply(A a, B b, C c, D d);
 
     default F3<B, C, D, R> curry(A a) {
@@ -44,5 +60,17 @@ public interface F4<A, B, C, D, R> {
 
     default <R2> F4<A, B, C, D, R2> andThen(Function<? super R, ? extends R2> f) {
         return (a, b, c, d) -> f.apply(apply(a, b, c, d));
+    }
+
+    static interface Unsafe<A, B, C, D, R> extends F4<A, B, C, D, R> {
+        default R apply(A a, B b, C c, D d) {
+            try {
+                return applyUnsafe(a, b, c, d);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        R applyUnsafe(A a, B b, C c, D d) throws Exception;
     }
 }
