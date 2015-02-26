@@ -3,6 +3,27 @@ package com.codepoetics.octarine.functional.functions;
 import java.util.function.Function;
 
 public interface F5<A, B, C, D, E, R> {
+
+    static <A, B, C, D, E, R> F5<A, B, C, D, E, R> of(F5<A, B, C, D, E, R> f) {
+        return f;
+    }
+
+    static <A, B, C, D, E, R> F4<A, C, D, E, R> of(F5<A, B, C, D, E, R> f, B b) {
+        return (a, c, d, e) -> f.apply(a, b, c, d, e);
+    }
+
+    static <A, B, C, D, E, R> F3<A, D, E, R> of(F5<A, B, C, D, E, R> f, B b, C c) {
+        return (a, d, e) -> f.apply(a, b, c, d, e);
+    }
+
+    static <A, B, C, D, E, R> F2<A, E, R> of(F5<A, B, C, D, E, R> f, B b, C c, D d) {
+        return (a, e) -> f.apply(a, b, c, d, e);
+    }
+
+    static <A, B, C, D, E, R> F1<A, R> of(F5<A, B, C, D, E, R> f, B b, C c, D d, E e) {
+        return a -> f.apply(a, b, c, d, e);
+    }
+
     R apply(A a, B b, C c, D d, E e);
 
     default F4<B, C, D, E, R> curry(A a) {
@@ -19,6 +40,10 @@ public interface F5<A, B, C, D, E, R> {
 
     default F1<E, R> curry(A a, B b, C c, D d) {
         return e -> apply(a, b, c, d, e);
+    }
+
+    default F1<A, R> withParams(B b, C c, D d, E e) {
+        return a -> apply(a, b, c, d, e);
     }
 
     default <R2> F5<A, B, C, D, E, R2> andThen(Function<? super R, ? extends R2> f) {

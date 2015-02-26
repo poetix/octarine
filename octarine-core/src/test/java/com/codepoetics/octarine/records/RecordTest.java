@@ -1,13 +1,15 @@
 package com.codepoetics.octarine.records;
 
+import com.codepoetics.octarine.functional.functions.F2;
 import com.codepoetics.octarine.functional.lenses.Lens;
 import org.junit.Test;
 
 import java.util.Optional;
+import java.util.function.Function;
 
+import static com.codepoetics.octarine.Octarine.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static com.codepoetics.octarine.Octarine.*;
 
 public class RecordTest {
 
@@ -52,6 +54,20 @@ public class RecordTest {
         assertThat(name.extract(testRecord), equalTo("Arthur Putey"));
         assertThat(name.get(testRecord), equalTo(Optional.of("Arthur Putey")));
         assertThat(notAppearingInThisRecord.get(testRecord), equalTo(Optional.empty()));
+    }
+
+    @Test public void
+    reading_from_a_value() {
+        Key<Character> firstChar = $("firstChar");
+        Key<Character> secondChar = $("secondChar");
+        Key<Character> thirdChar = $("thirdChar");
+
+        Function<String, Record> reader = Record.reader(
+                firstChar.from(F2.of(String::charAt, 0)),
+                secondChar.from(F2.of(String::charAt, 1)),
+                thirdChar.from(F2.of(String::charAt, 2)));
+
+        assertThat(reader.apply("abc"), equalTo($$(firstChar.of('a'), secondChar.of('b'), thirdChar.of('c'))));
     }
 
 }

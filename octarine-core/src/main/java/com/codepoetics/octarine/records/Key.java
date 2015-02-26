@@ -4,6 +4,7 @@ import com.codepoetics.octarine.functional.lenses.OptionalLens;
 import com.codepoetics.octarine.functional.paths.Path;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 public interface Key<T> extends OptionalLens<Record, T>, Path<Record, T> {
 
@@ -41,5 +42,9 @@ public interface Key<T> extends OptionalLens<Record, T>, Path<Record, T> {
     Record metadata();
 
     Value of(T value);
+
+    default <S> Function<S, Value> from(Function<? super S, ? extends T> reader) {
+        return s -> of(reader.apply(s));
+    }
 
 }

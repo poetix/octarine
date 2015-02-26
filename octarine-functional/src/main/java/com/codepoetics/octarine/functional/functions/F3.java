@@ -3,6 +3,19 @@ package com.codepoetics.octarine.functional.functions;
 import java.util.function.Function;
 
 public interface F3<A, B, C, R> {
+
+    static <A, B, C, R> F3<A, B, C, R> of(F3<A, B, C, R> f) {
+        return f;
+    }
+
+    static <A, B, C, R> F2<A, C, R> of(F3<A, B, C, R> f, B b) {
+        return (a, c) -> f.apply(a, b, c);
+    }
+
+    static <A, B, C, R> F1<A, R> of(F3<A, B, C, R> f, B b, C c) {
+        return a -> f.apply(a, b, c);
+    }
+
     R apply(A a, B b, C c);
 
     default F2<B, C, R> curry(A a) {
@@ -15,6 +28,10 @@ public interface F3<A, B, C, R> {
 
     default F0<R> curry(A a, B b, C c) {
         return () -> apply(a, b, c);
+    }
+
+    default F1<A, R> withParams(B b, C c) {
+        return a -> apply(a, b, c);
     }
 
     default <R2> F3<A, B, C, R2> andThen(Function<? super R, ? extends R2> f) {

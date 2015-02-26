@@ -6,12 +6,18 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public interface Record {
 
     static final Record EMPTY_RECORD = new HashRecord(HashTreePMap.empty());
+
+    @SafeVarargs
+    public static <S> Function<S, Record> reader(Function<S, Value>...readers) {
+        return s -> of(Stream.of(readers).map(r -> r.apply(s)));
+    }
 
     public static Record empty() {
         return EMPTY_RECORD;
