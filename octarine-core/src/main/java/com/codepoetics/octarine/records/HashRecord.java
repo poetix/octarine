@@ -16,7 +16,7 @@ final class HashRecord implements Record {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> Optional<T> get(Key<T> key) {
+    public <T> Optional<T> get(Key<? extends T> key) {
         return Optional.ofNullable((T) values.get(key));
     }
 

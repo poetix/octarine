@@ -15,7 +15,7 @@ final class ValidRecord<T> implements Valid<T> {
     }
 
     @Override
-    public <S> Optional<S> get(Key<S> key) {
+    public <S> Optional<S> get(Key<? extends S> key) {
         return record.get(key);
     }
 

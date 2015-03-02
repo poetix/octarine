@@ -47,7 +47,7 @@ final class WrappingMutableRecord implements MutableRecord {
     }
 
     @Override
-    public <T> Optional<T> get(Key<T> key) {
+    public <T> Optional<T> get(Key<? extends T> key) {
         return current.get(key);
     }
 

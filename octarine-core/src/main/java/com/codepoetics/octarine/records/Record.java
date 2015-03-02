@@ -35,7 +35,11 @@ public interface Record {
         return new HashRecord(HashTreePMap.from(values.collect(Collectors.toMap(Value::key, Value::value))));
     }
 
-    <T> Optional<T> get(Key<T> key);
+    <T> Optional<T> get(Key<? extends T> key);
+
+    default <T> T getOrElse(Key<? extends T> key, T defaultValue) {
+        return get(key).orElse(defaultValue);
+    }
 
     Set<Key<?>> keys();
 

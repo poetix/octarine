@@ -9,6 +9,7 @@ import java.util.function.Function;
 
 import static com.codepoetics.octarine.Octarine.*;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class RecordTest {
@@ -26,6 +27,13 @@ public class RecordTest {
                     addressLines.of("23 Acacia Avenue", "Sunderland", "VB6 5UX")
             )
     );
+
+    @Test public void
+    getKeysFromRecord() {
+        assertThat(testRecord.get(address).flatMap(address ->
+                address.get(addressLines)).get(),
+                hasItems("23 Acacia Avenue", "Sunderland", "VB6 5UX"));
+    }
 
     @Test
     public void
