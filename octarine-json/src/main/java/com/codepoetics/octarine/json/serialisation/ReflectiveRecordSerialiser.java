@@ -11,15 +11,17 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Stream;
 
 public class ReflectiveRecordSerialiser extends JsonSerializer<Record> {
 
+    private static final ObjectMapper DEFAULT_MAPPER = mapperWith();
+
     public static ObjectMapper mapperWith(JsonSerializer<?>...extraSerialisers) {
         ObjectMapper mapper = new ObjectMapper();
-        SimpleModule simpleModule = new SimpleModule("SimpleModule",
-                new Version(1,0,0,null));
+        SimpleModule simpleModule = new SimpleModule("SimpleModule", Version.unknownVersion());
         simpleModule.addSerializer(new ReflectiveRecordSerialiser());
         Stream.of(extraSerialisers).forEach(simpleModule::addSerializer);
 
@@ -28,12 +30,32 @@ public class ReflectiveRecordSerialiser extends JsonSerializer<Record> {
         return mapper;
     }
 
-    public static String toString(Record record) throws JsonProcessingException {
-        return mapperWith().writeValueAsString(record);
+    public static String toJson(Record record) throws JsonProcessingException {
+        return DEFAULT_MAPPER.writeValueAsString(record);
+    }
+
+    public static String toJson(Record record, JsonSerializer<?>...extraSerialisers) throws JsonProcessingException {
+        return mapperWith(extraSerialisers).writeValueAsString(record);
+    }
+
+    public static String toJson(Collection<Record> records) throws JsonProcessingException {
+        return DEFAULT_MAPPER.writeValueAsString(records);
+    }
+
+    public static String toJson(Collection<Record> records, JsonSerializer<?>...extraSerialisers) throws JsonProcessingException {
+        return mapperWith(extraSerialisers).writeValueAsString(records);
+    }
+
+    public static String toJson(Map<String, Record> records) throws JsonProcessingException {
+        return DEFAULT_MAPPER.writeValueAsString(records);
+    }
+
+    public static String toJson(Map<String, Record> records, JsonSerializer<?>...extraSerialisers) throws JsonProcessingException {
+        return mapperWith(extraSerialisers).writeValueAsString(records);
     }
 
     @Override
-    public Class handledType() { return Record.class; }
+    public Class<Record> handledType() { return Record.class; }
 
     @Override
     public void serialize(Record o, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
