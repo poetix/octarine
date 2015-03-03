@@ -1,11 +1,12 @@
 package com.codepoetics.octarine.json;
 
-import com.codepoetics.octarine.records.Record;
+import com.codepoetics.octarine.json.deserialisation.ListDeserialiser;
 import com.codepoetics.octarine.json.example.Address;
 import com.codepoetics.octarine.json.example.Person;
 import com.codepoetics.octarine.json.serialisation.ListSerialiser;
 import com.codepoetics.octarine.json.serialisation.MapSerialiser;
 import com.codepoetics.octarine.json.serialisation.ReflectiveRecordSerialiser;
+import com.codepoetics.octarine.records.Record;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
@@ -15,12 +16,14 @@ import org.junit.Test;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import static com.codepoetics.octarine.Octarine.$$;
-import static com.codepoetics.octarine.json.serialisation.Serialisers.*;
+import static com.codepoetics.octarine.json.serialisation.Serialisers.toInteger;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -104,6 +107,27 @@ public class SerialisationTest {
         Record meToo = Person.deserialiser.fromString(json);
 
         assertThat(meToo, equalTo(me));
+    }
+
+    @Test public void
+    reflectively_serialise_multiple_records() throws JsonProcessingException {
+        Record me = $$(
+                Person.name.of("Dominic"),
+                Person.age.of(39),
+                Person.favouriteColour.of(Color.RED),
+                Person.address.of(Address.addressLines.of("13 Rue Morgue", "PO3 1TP")));
+
+        Record you = $$(
+                Person.name.of("Doppelganger"),
+                Person.age.of(40),
+                Person.favouriteColour.of(Color.BLUE),
+                Person.address.of(Address.addressLines.of("23 Acacia Avenue", "VB6 5UX")));
+
+        String json = ReflectiveRecordSerialiser.toJson(Stream.of(me, you), new ColorJsonSerializer());
+
+        List<Record> people = ListDeserialiser.readingItemsWith(Person.deserialiser).fromString(json);
+
+        assertThat(people, equalTo(Arrays.asList(me, you)));
     }
 
     private static class ColorJsonSerializer extends JsonSerializer<Color> {
