@@ -23,7 +23,7 @@ abstract class BaseKey<T> implements Key<T> {
 
     @Override
     public Value of(T value) {
-        return new ConcreteValue(this, value);
+        return new Value(this, value);
     }
 
     @Override
