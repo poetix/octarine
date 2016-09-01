@@ -32,7 +32,11 @@ public interface Record {
     }
 
     public static Record of(Stream<Value> values) {
-        return new HashRecord(HashTreePMap.from(values.collect(Collectors.toMap(Value::key, Value::value))));
+        /*
+         * Collectors.toMap will call HashMap.merge() which will throw a NullPointerException if supplied with a null
+         * for the value parameter, so filter out null values first.
+         */
+        return new HashRecord(HashTreePMap.from(values.filter(v -> null != v.value()).collect(Collectors.toMap(Value::key, Value::value))));
     }
 
     <T> Optional<T> get(Key<? extends T> key);
