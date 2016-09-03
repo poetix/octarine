@@ -167,4 +167,13 @@ public class DeserialisationTest {
         assertThat(theNumbers, ARecord.instance()
                 .with(numbers.join(Path.toKey("home")).join(prefix), "0208"));
     }
+
+    @Test
+    public void
+    can_deserialise_a_record_containing_explicit_nulls() {
+        String json = "{\"numbers\": {\"home\": {\"prefix\": null, \"number\": \"123456\"}}}";
+        Record theNumbers = readNumbers.fromString(json);
+        assertThat(theNumbers, ARecord.instance()
+                .with(numbers.join(Path.toKey("home")).join(number), "123456"));
+    }
 }
