@@ -1,19 +1,20 @@
 package com.codepoetics.octarine.json;
 
 import com.codepoetics.octarine.functional.paths.Path;
-import com.codepoetics.octarine.records.Key;
-import com.codepoetics.octarine.records.ListKey;
-import com.codepoetics.octarine.records.Record;
 import com.codepoetics.octarine.json.deserialisation.ListDeserialiser;
 import com.codepoetics.octarine.json.deserialisation.MapDeserialiser;
 import com.codepoetics.octarine.json.deserialisation.RecordDeserialiser;
 import com.codepoetics.octarine.json.example.Address;
 import com.codepoetics.octarine.json.example.Person;
+import com.codepoetics.octarine.records.Key;
+import com.codepoetics.octarine.records.ListKey;
+import com.codepoetics.octarine.records.Record;
+import com.codepoetics.octarine.records.RecordKey;
+import com.codepoetics.octarine.records.Valid;
+import com.codepoetics.octarine.records.Validation;
 import com.codepoetics.octarine.testutils.ARecord;
 import com.codepoetics.octarine.testutils.AnInstance;
 import com.codepoetics.octarine.testutils.Present;
-import com.codepoetics.octarine.records.Valid;
-import com.codepoetics.octarine.records.Validation;
 import org.junit.Test;
 import org.pcollections.PMap;
 import org.pcollections.PVector;
@@ -27,6 +28,7 @@ import static com.codepoetics.octarine.functional.paths.Path.toIndex;
 import static com.codepoetics.octarine.testutils.IsEmptyMatcher.isEmpty;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+
 
 public class DeserialisationTest {
 
@@ -60,10 +62,10 @@ public class DeserialisationTest {
         ).get();
 
         assertThat(person, ARecord.instance()
-            .with(Person.name, "Dominic")
-            .with(Person.age, 39)
-            .with(Person.favouriteColour, Color.RED)
-            .with(Person.address.join(Address.addressLines).join(toIndex(1)), "PO3 1TP"));
+                .with(Person.name, "Dominic")
+                .with(Person.age, 39)
+                .with(Person.favouriteColour, Color.RED)
+                .with(Person.address.join(Address.addressLines).join(toIndex(1)), "PO3 1TP"));
     }
 
     @Test
@@ -175,5 +177,59 @@ public class DeserialisationTest {
         Record theNumbers = readNumbers.fromString(json);
         assertThat(theNumbers, ARecord.instance()
                 .with(numbers.join(Path.toKey("home")).join(number), "123456"));
+    }
+
+    @Test
+    public void
+    can_deserialise_records_containing_keys_with_same_name() {
+        String json = String.join("\n",
+                "{",
+                "    \"id\": \"12\",",
+                "    \"child\": {",
+                "        \"id\": \"34\",",
+                "        \"name\": \"Fred\"",
+                "    }",
+                "}");
+
+
+        Key<String> childId = $("id");
+        Key<String> name = $("name");
+        RecordDeserialiser readChild = RecordDeserialiser.builder()
+                .readString(childId)
+                .readString(name)
+                .get();
+
+        Key<String> id = $("id");
+        RecordKey child = $R("child");
+        RecordDeserialiser readNested = RecordDeserialiser.builder()
+                .readString(id)
+                .read(child, readChild)
+                .get();
+        Record theNested = readNested.fromString(json);
+        assertThat(theNested, ARecord.instance()
+                        .with(id, "12")
+                        .with(child.join(name), "Fred")
+                        .with(child.join(childId), "34")
+        );
+    }
+
+    @Test
+    public void
+    can_deserialise_records_with_ignored_children() {
+        String json = String.join("\n",
+                "{",
+                "    \"id\": \"12\",",
+                "    \"dontcare\": {",
+                "        \"id\": \"56\",",
+                "        \"name\": \"Don't want\"",
+                "    }",
+                "}");
+
+        Key<String> id = $("id");
+        RecordDeserialiser readNested = RecordDeserialiser.builder()
+                .readString(id)
+                .get();
+        Record theNested = readNested.fromString(json);
+        assertThat(theNested, ARecord.instance().with(id, "12"));
     }
 }
