@@ -3,7 +3,7 @@
     <parent>
         <artifactId>octarine</artifactId>
         <groupId>com.codepoetics</groupId>
-        <version>0.16-SNAPSHOT</version>
+        <version>0.16</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -13,7 +13,7 @@
         <dependency>
             <groupId>com.codepoetics</groupId>
             <artifactId>octarine-functional</artifactId>
-            <version>0.16-SNAPSHOT</version>
+            <version>0.16</version>
         </dependency>
     </dependencies>
 
