@@ -142,10 +142,25 @@ public final class RecordDeserialiser implements SafeDeserialiser<Record> {
 
         while (parser.nextValue() != JsonToken.END_OBJECT) {
             String fieldName = parser.getCurrentName();
-            parserMapper.apply(fieldName, parser).ifPresent(values::add);
+            Optional<Value> result = parserMapper.apply(fieldName, parser);
+            if (result.isPresent()) {
+                values.add(result.get());
+            } else {
+                consumeUnwanted(parser);
+            }
         }
 
         return Record.of(values);
+    }
+
+    private void consumeUnwanted(JsonParser parser) throws IOException {
+        if (parser.getCurrentToken() == JsonToken.START_OBJECT) {
+            while (parser.nextValue() != JsonToken.END_OBJECT) {
+                if (parser.getCurrentToken() == JsonToken.START_OBJECT) {
+                    consumeUnwanted(parser);
+                }
+            }
+        }
     }
 
     public <S> Deserialiser<Validation<S>> validAgainst(Schema<S> schema) {
