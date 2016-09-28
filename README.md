@@ -163,45 +163,60 @@ Note however that a ```MutableRecord``` is a mutable copy of an immutable ```Rec
 We define keys, schemas, serialisers and deserialisers for two record types, `Person` and `Address`.
 
 ```java
-public static interface Address {
-    static final KeySet mandatoryKeys = new KeySet();
-    static final ListKey<String> addressLines = mandatoryKeys.addList("addressLines");
-    static final Key<String> postcode = mandatoryKeys.add("postcode");
+public interface Address {
+    KeySet mandatoryKeys = new KeySet();
+    ListKey<String> addressLines = mandatoryKeys.add(ListKey.named("addressLines"));
+    Key<String> postcode = mandatoryKeys.add(Key.named("postcode"));
 
     Schema<Address> schema = mandatoryKeys::accept;
 
-    JsonDeserialiser reader = i ->
-            i.addList(addressLines, fromString)
-             .add(postcode, fromString);
+    RecordSerialiser serialiser = RecordSerialiser.builder()
+            .writeList(addressLines, Serialisers.toString)
+            .writeString(postcode)
+            .get();
 
-    JsonSerialiser writer = p ->
-            p.addList(addressLines, asString)
-             .add(postcode, asString);
+    RecordDeserialiser deserialiser = RecordDeserialiser.builder()
+            .readList(addressLines, ofString)
+            .readString(postcode)
+            .get();
 }
 ```
 
 ```java
-public static interface Person {
-    static final KeySet mandatoryKeys = new KeySet();
-    static final Key<String> name = mandatoryKeys.add("name");
-    static final Key<Integer> age = mandatoryKeys.add("age");
-    static final RecordKey address = mandatoryKeys.addRecord("address");
+public interface Person {
+    KeySet mandatoryKeys = new KeySet();
+    Key<String> name = mandatoryKeys.add(Key.named("name"));
+    Key<Integer> age = mandatoryKeys.add(Key.named("age"));
+    ValidRecordKey<Address> address = mandatoryKeys.add(ValidRecordKey.named("address", Address.schema));
 
-    Schema<Person> schema = (r, v) -> {
-        mandatoryKeys.accept(r, v);
-        age.get(r).ifPresent(a -> { if (a < 0) v.accept("Age must be 0 or greater"); });
-        address.get(r).ifPresent(a -> Address.schema.accept(a, v));
+    Schema<Person> schema = (record, validationErrors) -> {
+        mandatoryKeys.accept(record, validationErrors);
+        age.get(record).ifPresent(a -> {
+            if (a < 0) validationErrors.accept("Age must be 0 or greater");
+        });
+    };
 
-    JsonDeserialiser reader = i ->
-            i.add(name, fromString)
-             .add(age, fromInteger)
-             .add(address, Address.reader);
+    RecordSerialiser serialiser = RecordSerialiser.builder()
+            .writeString(name)
+            .writeInteger(age)
+            .write(address, Address.serialiser)
+            .get();
 
-    JsonSerialiser writer = p ->
-        p.add(name, asString)
-         .add(age, asInteger)
-         .add(address, Address.writer);
+    RecordDeserialiser deserialiser = RecordDeserialiser.builder()
+            .readString(name)
+            .readInteger(age)
+            .readValidRecord(address, Address.deserialiser.validAgainst(Address.schema))
+            .get();
 }
+```
+
+There is also a short-hand syntax we can use to define keys
+
+```java
+    KeySet mandatoryKeys = new KeySet();
+    Key<String> name = mandatoryKeys.add($("name"));
+    Key<Integer> age = mandatoryKeys.add($("age"));
+    ValidRecordKey<Address> address = mandatoryKeys.add($V("address", Address.schema));
 ```
 
 We can now read a `Person`'s details from Json, validate the record against the schema and make test assertions against it, created an updated copy with one value changed, and write the updated copy back out to Json.
@@ -209,7 +224,7 @@ We can now read a `Person`'s details from Json, validate the record against the 
 ```java
 @Test public void
 deserialise_validate_update_serialise() {
-    Record record = Person.reader.readFromString(
+    Record record = Person.deserialiser.fromString(
             "{\"name\": \"Arthur Putey\",\n" +"" +
             " \"age\": 42,\n" +
             " \"address\": {\n" +
@@ -229,7 +244,7 @@ deserialise_validate_update_serialise() {
     Record changed = Person.age.update(
         record, age -> age.map(v -> v + 1));
 
-    assertThat(Person.writer.toString(changed), equalTo(
+    assertThat(Person.serialiser.toString(changed), equalTo(
             "{\"name\":\"Arthur Putey\"," +"" +
                     "\"age\":43," +
                     "\"address\":{" +
