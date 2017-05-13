@@ -94,4 +94,17 @@ public class LensesTest {
 
         assertThat(secondItemPluraliser.apply(strings), equalTo(new String[]{"cow", "ducks"}));
     }
+
+    @Test public void
+    constant_lens_always_returns_same_value() {
+        final Lens<PMap<String, String>, String> bIsFor = Lens.constant("bicycle");
+        assertThat(bIsFor.get(pmap), equalTo("bicycle"));
+
+    }
+
+    @Test public void
+    constant_lens_set_does_not_modify_supplied_value() {
+        final Lens<PMap<String, String>, String> bIsFor = Lens.constant("bicycle");
+        assertThat(bIsFor.set(pmap, "artichoke").get("a"), equalTo("apple"));
+    }
 }

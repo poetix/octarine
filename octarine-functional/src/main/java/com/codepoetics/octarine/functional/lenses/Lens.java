@@ -86,4 +86,14 @@ public interface Lens<T, V> {
         );
     }
 
+    /**
+     * Used to construct a lens that always returns the given value.
+     * When set method is used the supplied value is returned unchanged.
+     */
+    static <T, V2> Lens<T, V2> constant(V2 value) {
+        return Lens.of(
+                t -> value,
+                (t, v) -> t
+        );
+    }
 }
