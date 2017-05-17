@@ -9,20 +9,20 @@ In Maven:
 <dependency>
     <groupId>com.codepoetics</groupId>
     <artifactId>octarine-core</artifactId>
-    <version>0.16</version>
+    <version>0.17</version>
 </dependency>
 
 <!-- If JSON serialisation / deserialisation is required -->
 <dependency>
     <groupId>com.codepoetics</groupId>
     <artifactId>octarine-json</artifactId>
-    <version>0.16</version>
+    <version>0.17</version>
 </dependency>
 
 <dependency>
     <groupId>com.codepoetics</groupId>
     <artifactId>octarine-test</artifactId>
-    <version>0.16</version>
+    <version>0.17</version>
     <scope>test</scope>
 </dependency>
 ```
