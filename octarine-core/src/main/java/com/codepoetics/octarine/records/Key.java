@@ -1,5 +1,6 @@
 package com.codepoetics.octarine.records;
 
+import com.codepoetics.octarine.functional.lenses.Lens;
 import com.codepoetics.octarine.functional.lenses.OptionalLens;
 import com.codepoetics.octarine.functional.paths.Path;
 
@@ -8,7 +9,7 @@ import java.util.function.Function;
 
 public interface Key<T> extends OptionalLens<Record, T>, Path<Record, T> {
 
-    static <T> Key<T> named(String name, Value...metadata) {
+    static <T> Key<T> named(String name, Value... metadata) {
         return named(name, Record.of(metadata));
     }
 
@@ -47,4 +48,15 @@ public interface Key<T> extends OptionalLens<Record, T>, Path<Record, T> {
         return s -> of(reader.apply(s));
     }
 
+    default <V> OptionalLens<Valid<V>, T> assertValid(Schema<V> schema) {
+        return OptionalLens.of(
+                valid -> valid.get(this),
+                (valid, newValue) -> schema.extract(
+                        newValue.map(value -> valid.with(of(value))).orElseGet(() -> valid.without(this)))
+        );
+    }
+
+    default <V> Lens<Valid<V>, T> assertValidPresent(Schema<V> schema) {
+        return assertValid(schema).assertPresent();
+    }
 }
