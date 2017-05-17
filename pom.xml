@@ -20,6 +20,7 @@
         <module>octarine-json</module>
         <module>octarine-joins</module>
         <module>octarine-recordjoins</module>
+        <module>octarine-bson</module>
     </modules>
 
     <dependencies>
