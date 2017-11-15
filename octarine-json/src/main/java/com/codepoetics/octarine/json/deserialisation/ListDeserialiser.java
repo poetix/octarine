@@ -1,6 +1,7 @@
 package com.codepoetics.octarine.json.deserialisation;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonStreamContext;
 import com.fasterxml.jackson.core.JsonToken;
 import org.pcollections.PVector;
 import org.pcollections.TreePVector;
@@ -45,8 +46,25 @@ public final class ListDeserialiser<V> implements SafeDeserialiser<PVector<V>> {
     @Override
     public PVector<V> applyUnsafe(JsonParser p) throws IOException {
         List<V> values = new LinkedList<>();
-        while (p.nextToken() != JsonToken.END_ARRAY) {
-            values.add(itemDeserialiser.apply(p));
+
+        /*
+         * If we are in the root context (not inside an object or list) then we need to consume the next token
+         * before attempting to call child deserialisers.
+         */
+        if (p.getParsingContext().inRoot()) {
+            if (p.nextToken() == JsonToken.END_ARRAY) {
+                return TreePVector.empty();
+            }
+        }
+
+        if (JsonToken.VALUE_NULL != p.getCurrentToken()) {
+            /*
+             * When the parser has hit the end of input nextToken() will always return null.
+             * So need to prevent infinite loops we check the parser closed flag.
+             */
+            while (!p.isClosed() && (p.nextToken() != JsonToken.END_ARRAY)) {
+                values.add(itemDeserialiser.apply(p));
+            }
         }
         return TreePVector.from(values);
     }

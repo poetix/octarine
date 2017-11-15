@@ -140,7 +140,11 @@ public final class RecordDeserialiser implements SafeDeserialiser<Record> {
             return Record.empty();
         }
 
-        while (parser.nextValue() != JsonToken.END_OBJECT) {
+        /*
+         * When the parser has hit the end of input nextToken() will always return null.
+         * So need to prevent infinite loops we check the parser closed flag.
+         */
+        while (!parser.isClosed() && (parser.nextValue() != JsonToken.END_OBJECT)) {
             String fieldName = parser.getCurrentName();
             Optional<Value> result = parserMapper.apply(fieldName, parser);
             if (result.isPresent()) {
