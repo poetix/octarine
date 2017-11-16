@@ -11,6 +11,7 @@ import com.codepoetics.octarine.bson.serialisation.BsonSerialisers;
 import com.codepoetics.octarine.records.Key;
 import com.codepoetics.octarine.records.Record;
 import org.bson.BsonDocument;
+import org.bson.BsonInvalidOperationException;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 
@@ -23,6 +24,7 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class SerialisationTest {
     Random random = new Random();
@@ -39,6 +41,25 @@ public class SerialisationTest {
 
         assertEquals("invalid foo", 42, doc.getInt32("foo").getValue());
         assertEquals("invalid bar", 666, doc.getInt32("bar").getValue());
+    }
+
+    @Test public void
+    write_map_with_null_values_to_bson() {
+        Map<String, Integer> mapToSerialise = new HashMap<>();
+        mapToSerialise.put("foo", 42);
+        mapToSerialise.put("bar", null);
+
+        BsonDocument doc = (BsonDocument) BsonMapSerialiser
+                .writingValuesWith(BsonSerialisers.toInteger)
+                .apply(mapToSerialise);
+
+        assertEquals("invalid foo", 42, doc.getInt32("foo").getValue());
+        try {
+            Integer value = doc.getInt32("bar").getValue();
+            fail("bar should not have been written to the document");
+        } catch (BsonInvalidOperationException e) {
+            // expected
+        }
     }
 
     @Test public void
