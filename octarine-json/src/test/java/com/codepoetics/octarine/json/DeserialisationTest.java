@@ -20,13 +20,20 @@ import org.pcollections.PMap;
 import org.pcollections.PVector;
 
 import java.awt.*;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static com.codepoetics.octarine.Octarine.*;
+import static com.codepoetics.octarine.Octarine.$;
+import static com.codepoetics.octarine.Octarine.$L;
+import static com.codepoetics.octarine.Octarine.$M;
+import static com.codepoetics.octarine.Octarine.$R;
 import static com.codepoetics.octarine.functional.paths.Path.toIndex;
 import static com.codepoetics.octarine.testutils.IsEmptyMatcher.isEmpty;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 
@@ -136,6 +143,40 @@ public class DeserialisationTest {
         List<Record> numbers = ListDeserialiser.readingItemsWith(readNumber).fromString(json);
         assertThat(numbers, AnInstance.<List<Record>>ofGeneric(List.class)
                 .with(Path.<Record>toIndex(0).join(prefix), Present.and(equalTo("0208"))));
+    }
+
+    @Test(timeout=500)
+    public void
+    can_deserialise_an_empty_top_level_list() {
+        String json = "[]";
+
+        List<Record> numbers = ListDeserialiser.readingItemsWith(readNumber).fromString(json);
+        assertThat(numbers, isEmpty());
+    }
+
+    @Test(timeout=500)
+    public void
+    list_deserialiser_does_not_go_into_infinite_loop_with_non_list() {
+        List<Record> numbers = ListDeserialiser.readingItemsWith(readNumber).fromString("");
+        assertThat(numbers, isEmpty());
+
+        numbers = ListDeserialiser.readingItemsWith(readNumber).fromString("null");
+        assertThat(numbers, isEmpty());
+
+        // given we are using a record deserialiser in a degenerate case, getting an empty record is probably OK
+        final List<Record> oneEmptyRecord = Arrays.asList(Record.empty());
+        numbers = ListDeserialiser.readingItemsWith(readNumber).fromString("5");
+        assertThat(numbers, equalTo(oneEmptyRecord));
+    }
+
+    @Test(timeout=500)
+    public void
+    list_deserialiser_does_not_go_into_infinite_loop_with_null_value_in_record() {
+        ListKey<Record> addresses = $L("addresses");
+        RecordDeserialiser deserialiser = RecordDeserialiser.builder().readList(addresses, Address.deserialiser).get();
+        Record r = deserialiser.fromString("{\"addresses\": null}");
+
+        assertThat(r, ARecord.instance().with(addresses, isEmpty()));
     }
 
     @Test
