@@ -146,11 +146,13 @@ public final class RecordDeserialiser implements SafeDeserialiser<Record> {
          */
         while (!parser.isClosed() && (parser.nextValue() != JsonToken.END_OBJECT)) {
             String fieldName = parser.getCurrentName();
-            Optional<Value> result = parserMapper.apply(fieldName, parser);
-            if (result.isPresent()) {
-                values.add(result.get());
-            } else {
-                consumeUnwanted(parser);
+            if (JsonToken.VALUE_NULL != parser.getCurrentToken()) {
+                Optional<Value> result = parserMapper.apply(fieldName, parser);
+                if (result.isPresent()) {
+                    values.add(result.get());
+                } else {
+                    consumeUnwanted(parser);
+                }
             }
         }
 
