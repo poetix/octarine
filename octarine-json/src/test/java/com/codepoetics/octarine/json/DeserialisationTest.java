@@ -55,17 +55,17 @@ public class DeserialisationTest {
     public void
     deserialises_json_to_record() {
         Valid<Person> person = Person.deserialiser.validAgainst(Person.schema).fromString(String.join("\n",
-                        "{",
-                        "    \"name\": \"Dominic\",",
-                        "    \"age\": 39,",
-                        "    \"favourite colour\": \"0xFF0000\",",
-                        "    \"address\": {",
-                        "        \"addressLines\": [",
-                        "            \"13 Rue Morgue\",",
-                        "            \"PO3 1TP\"",
-                        "        ]",
-                        "    }",
-                        "}")
+                "{",
+                "    \"name\": \"Dominic\",",
+                "    \"age\": 39,",
+                "    \"favourite colour\": \"0xFF0000\",",
+                "    \"address\": {",
+                "        \"addressLines\": [",
+                "            \"13 Rue Morgue\",",
+                "            \"PO3 1TP\"",
+                "        ]",
+                "    }",
+                "}")
         ).get();
 
         assertThat(person, ARecord.instance()
@@ -145,7 +145,7 @@ public class DeserialisationTest {
                 .with(Path.<Record>toIndex(0).join(prefix), Present.and(equalTo("0208"))));
     }
 
-    @Test(timeout=500)
+    @Test(timeout = 500)
     public void
     can_deserialise_an_empty_top_level_list() {
         String json = "[]";
@@ -154,7 +154,7 @@ public class DeserialisationTest {
         assertThat(numbers, isEmpty());
     }
 
-    @Test(timeout=500)
+    @Test(timeout = 500)
     public void
     list_deserialiser_does_not_go_into_infinite_loop_with_non_list() {
         List<Record> numbers = ListDeserialiser.readingItemsWith(readNumber).fromString("");
@@ -169,14 +169,14 @@ public class DeserialisationTest {
         assertThat(numbers, equalTo(oneEmptyRecord));
     }
 
-    @Test(timeout=500)
+    @Test(timeout = 500)
     public void
     list_deserialiser_does_not_go_into_infinite_loop_with_null_value_in_record() {
         ListKey<Record> addresses = $L("addresses");
         RecordDeserialiser deserialiser = RecordDeserialiser.builder().readList(addresses, Address.deserialiser).get();
         Record r = deserialiser.fromString("{\"addresses\": null}");
 
-        assertThat(r, ARecord.instance().with(addresses, isEmpty()));
+        assertThat(r, ARecord.instance());
     }
 
     @Test
@@ -248,9 +248,9 @@ public class DeserialisationTest {
                 .get();
         Record theNested = readNested.fromString(json);
         assertThat(theNested, ARecord.instance()
-                        .with(id, "12")
-                        .with(child.join(name), "Fred")
-                        .with(child.join(childId), "34")
+                .with(id, "12")
+                .with(child.join(name), "Fred")
+                .with(child.join(childId), "34")
         );
     }
 
@@ -269,6 +269,49 @@ public class DeserialisationTest {
         Key<String> id = $("id");
         RecordDeserialiser readNested = RecordDeserialiser.builder()
                 .readString(id)
+                .get();
+        Record theNested = readNested.fromString(json);
+        assertThat(theNested, ARecord.instance().with(id, "12"));
+    }
+
+    // check we no longer hit infinite loop when sub-records are null
+    @Test(timeout = 500)
+    public void
+    can_deserialise_records_with_null_sub_records() {
+        String json = String.join("\n",
+                "{",
+                "    \"id\": \"12\",",
+                "    \"address\": null",
+                "}");
+
+        Key<String> id = $("id");
+        RecordKey address = $R("address");
+        RecordDeserialiser readNested = RecordDeserialiser.builder()
+                .readString(id)
+                .read(address, Address.deserialiser)
+                .get();
+        Record theNested = readNested.fromString(json);
+        assertThat(theNested, ARecord.instance().with(id, "12"));
+    }
+
+    /*
+     * check that values appearing in record after null are not lost (previously RecordDeserialiser would keep
+     * consuming input indefinitely on hitting a null value)
+     */
+    @Test(timeout = 500)
+    public void
+    can_deserialise_records_with_value_after_null() {
+        String json = String.join("\n",
+                "{",
+                "    \"address\": null,",
+                "    \"id\": \"12\"",
+                "}");
+
+        Key<String> id = $("id");
+        RecordKey address = $R("address");
+        RecordDeserialiser readNested = RecordDeserialiser.builder()
+                .readString(id)
+                .read(address, Address.deserialiser)
                 .get();
         Record theNested = readNested.fromString(json);
         assertThat(theNested, ARecord.instance().with(id, "12"));
