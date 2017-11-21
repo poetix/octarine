@@ -26,7 +26,9 @@ public class BsonMapSerialiser<T> implements SafeBsonSerialiser<Map<String, ? ex
     public BsonValue applyUnsafe(Map<String, ? extends T> values) throws IOException {
         final BsonDocument doc = new BsonDocument();
         for (Map.Entry<String, ? extends T> e : values.entrySet()) {
-            doc.put(e.getKey(), valueSerialiser.apply(e.getValue()));
+            if (null != e.getValue()) {
+                doc.put(e.getKey(), valueSerialiser.apply(e.getValue()));
+            }
         }
         return doc;
     }
