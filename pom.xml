@@ -5,7 +5,7 @@
     <groupId>com.codepoetics</groupId>
     <artifactId>octarine</artifactId>
     <packaging>pom</packaging>
-    <version>0.20-SNAPSHOT</version>
+    <version>0.20</version>
 
     <modules>
         <module>octarine-functional</module>
@@ -70,7 +70,7 @@
         <connection>scm:git:git://github.com/poetix/octarine.git</connection>
         <developerConnection>scm:git:git@github.com:poetix/octarine.git</developerConnection>
         <url>http://github.com/poetix/octarine</url>
-      <tag>HEAD</tag>
+      <tag>octarine-0.20</tag>
   </scm>
 
 </project>
